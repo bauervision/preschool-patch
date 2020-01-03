@@ -1,0 +1,117 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  
+  .PublicLanding{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: stretch;
+   background-color: greenyellow;
+  }
+
+  .CreateAccount{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   background-color: yellowgreen;
+  }
+
+  .Login{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   background-color: lightblue;
+  }
+
+  .PreFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: lightgrey;
+    div{
+      margin: 40px;
+    }
+    
+  }
+  .Footer {
+    background-color: grey;
+    color: darkslategray;
+    font-size: 14px;
+    padding: 30px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Social {
+    border-radius: 60px;
+  }
+  .Card{
+    display: flex;
+    max-width: 600px;
+    padding: 10px;
+    margin: 5px;
+    border: solid blue 2px;
+    border-radius: 10px;
+    background-color: wheat;
+    &:hover{
+        border: solid pink 2px;
+        background-color: white;
+    }
+  }
+
+  .profileText {
+    color:grey
+  }
+  
+  .textMargin{
+    margin: 5px;
+  }
+
+ .InputStyle {
+   padding: 10px;
+   margin: 10px;
+   border-radius: 5px;
+   border-style: solid;
+   border-color: greenyellow;
+ }
+
+ .Red {
+   border-color: darkred;
+ }
+
+ .LoginBox{
+   border: solid green 2px;
+   border-radius: 10px;
+   margin: 20px;
+   padding: 20px;
+ }
+
+ button {
+   color:green;
+   margin: 10px;
+   padding: 10px;
+   border-radius: 5px;
+   border: solid;
+
+   &:hover{
+     background-color: lightgreen;
+     color:white;
+   }
+ }
+  header{
+    background-color: goldenrod;
+    padding: 10px;
+    margin-bottom: 5px;
+  }
+
+  footer{
+    margin-top: 20px;
+    background-color: gray;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    
+  }
+}

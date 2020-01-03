@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Footer } from "./Footer";
+
 export const CreateAccount = ({ pageUpdate }) => {
   const returnHome = () => pageUpdate(0);
   return (
@@ -13,6 +15,8 @@ export const CreateAccount = ({ pageUpdate }) => {
         <div>Find a local preschool teacher for your child!</div>
         <input />
       </div>
+
+      <Footer />
     </div>
   );
 };

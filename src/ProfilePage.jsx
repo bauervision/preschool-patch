@@ -1,4 +1,5 @@
 import React from "react";
+import { Footer } from "./Footer";
 
 export const ProfilePage = ({ pageUpdate, data }) => {
   // pull out public data
@@ -118,6 +119,8 @@ export const ProfilePage = ({ pageUpdate, data }) => {
         {/* Contact Button */}
         <button onClick={handleContact}>{`Contact ${name}`}</button>
       </div>
+
+      <Footer />
     </div>
   );
 };

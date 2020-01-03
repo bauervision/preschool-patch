@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Footer } from "./Footer";
 
 export const Login = ({ pageUpdate }) => {
   // handle local state
@@ -124,6 +125,8 @@ export const Login = ({ pageUpdate }) => {
           )}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

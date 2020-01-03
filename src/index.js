@@ -21,7 +21,7 @@ const App = () => {
     handlePageUpdate(3);
   };
 
-  /* Which page do we render? */
+  /* Page Router */
   const onPage = page => {
     switch (page) {
       case 3:

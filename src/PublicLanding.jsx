@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import { ProfileCard } from "./ProfileCard";
+import { Header } from "./Header";
 import { Footer } from "./Footer";
 
+import { Logo } from "./images";
 
 export const PublicLanding = ({ pageUpdate, data, handleMemberSelection }) => {
   // handle local state
@@ -67,14 +69,10 @@ export const PublicLanding = ({ pageUpdate, data, handleMemberSelection }) => {
 
   return (
     <div className="PublicLanding">
-      <header>
-        <button onClick={loginPressed}>Login</button>
-        <input placeholder="Search" />
-        <button onClick={newAccountPressed}>Become a Patch Leader!</button>
-      </header>
+      <Header pageUpdate={pageUpdate} isHome />
 
       <div style={{ marginBottom: 20 }}>
-        <h1>Preschool Patch</h1>
+        <img src={Logo} alt="logo" />
         <div style={{ margin: 20 }}>
           Find a local preschool teacher for your child!
         </div>
@@ -109,13 +107,7 @@ export const PublicLanding = ({ pageUpdate, data, handleMemberSelection }) => {
       </div>
 
       {/* Content */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
-      >
+      <div className="PublicLanding_Content">
         {filteredData.map((elem, index) => (
           <ProfileCard
             key={elem.public.name}

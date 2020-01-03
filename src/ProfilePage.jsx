@@ -1,4 +1,6 @@
 import React from "react";
+
+import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 export const ProfilePage = ({ pageUpdate, data }) => {
@@ -37,9 +39,7 @@ export const ProfilePage = ({ pageUpdate, data }) => {
   return (
     <div>
       <div>
-        <header>
-          <button onClick={returnHome}>Home</button>
-        </header>
+        <Header pageUpdate={pageUpdate} />
 
         <h1>Profile Page</h1>
 

@@ -1,41 +1,81 @@
 .App {
   font-family: sans-serif;
   text-align: center;
-  
-  .PublicLanding{
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: stretch;
-   background-color: greenyellow;
+  background-color: mediumaquamarine;
+
+  .PublicLanding {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    background-color: greenyellow;
+
+    &_Content {
+      display: flex;
+      flex-wrap: wrap;
+      overflow: auto;
+      max-height: 400px;
+      background-color: mediumaquamarine;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      margin: 40px;
+      margin-left: 80px;
+      margin-right: 80px;
+      border-radius: 10px;
+    }
   }
 
-  .CreateAccount{
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   background-color: yellowgreen;
+  .CreateAccount {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: yellowgreen;
   }
 
-  .Login{
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   background-color: lightblue;
+  .Login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: lightblue;
+  }
+
+  .Header {
+    background-color: mediumaquamarine;
+    position: fixed;
+    top: 0;
+    right: 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 40px;
+    border-top-left-radius: 0px;
+
+    &_Logo {
+      height: 40px;
+      width: auto;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
   .PreFooter {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: lightgrey;
-    div{
+    background-color: lightgreen;
+    div {
       margin: 40px;
     }
-    
   }
   .Footer {
-    background-color: grey;
+    background-color: mediumaquamarine;
     color: darkslategray;
     font-size: 14px;
     padding: 30px;
@@ -47,7 +87,7 @@
   .Social {
     border-radius: 60px;
   }
-  .Card{
+  .Card {
     display: flex;
     max-width: 600px;
     padding: 10px;
@@ -55,63 +95,57 @@
     border: solid blue 2px;
     border-radius: 10px;
     background-color: wheat;
-    &:hover{
-        border: solid pink 2px;
-        background-color: white;
+    &:hover {
+      border: solid pink 2px;
+      background-color: white;
     }
   }
 
   .profileText {
-    color:grey
+    color: grey;
   }
-  
-  .textMargin{
+
+  .textMargin {
     margin: 5px;
   }
 
- .InputStyle {
-   padding: 10px;
-   margin: 10px;
-   border-radius: 5px;
-   border-style: solid;
-   border-color: greenyellow;
- }
-
- .Red {
-   border-color: darkred;
- }
-
- .LoginBox{
-   border: solid green 2px;
-   border-radius: 10px;
-   margin: 20px;
-   padding: 20px;
- }
-
- button {
-   color:green;
-   margin: 10px;
-   padding: 10px;
-   border-radius: 5px;
-   border: solid;
-
-   &:hover{
-     background-color: lightgreen;
-     color:white;
-   }
- }
-  header{
-    background-color: goldenrod;
+  .InputStyle {
     padding: 10px;
-    margin-bottom: 5px;
+    margin: 10px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: greenyellow;
   }
 
-  footer{
+  .Red {
+    border-color: darkred;
+  }
+
+  .LoginBox {
+    border: solid green 2px;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  button {
+    color: green;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: solid;
+
+    &:hover {
+      background-color: lightgreen;
+      color: white;
+    }
+  }
+
+  footer {
     margin-top: 20px;
     background-color: gray;
     padding: 10px;
     display: flex;
     justify-content: center;
-    
   }
 }

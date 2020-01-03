@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 export const Login = ({ pageUpdate }) => {
@@ -43,9 +45,7 @@ export const Login = ({ pageUpdate }) => {
   return (
     <div className="Login">
       <div>
-        <header>
-          <button onClick={returnHome}>Home</button>
-        </header>
+        <Header pageUpdate={pageUpdate} isLogin />
 
         <h2>Login Page</h2>
         <div className="LoginBox">

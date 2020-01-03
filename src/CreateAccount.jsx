@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 export const CreateAccount = ({ pageUpdate }) => {
@@ -7,9 +8,7 @@ export const CreateAccount = ({ pageUpdate }) => {
   return (
     <div className="CreateAccount">
       <div>
-        <header>
-          <button onClick={returnHome}>Home</button>
-        </header>
+        <Header pageUpdate={pageUpdate} isCreate />
 
         <h1>Create Account</h1>
         <div>Find a local preschool teacher for your child!</div>

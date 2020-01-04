@@ -3,7 +3,7 @@ import React from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 
-export const ProfilePage = ({ pageUpdate, data }) => {
+export const MyProfilePage = ({ pageUpdate, data }) => {
   // pull out public data
   const {
     public: {
@@ -33,15 +33,12 @@ export const ProfilePage = ({ pageUpdate, data }) => {
     }
   };
 
-  const handleContact = () => pageUpdate(1);
-  // const returnHome = () => pageUpdate(0);
-
   return (
-    <div>
+    <div className="CreateAccount">
       <div>
-        <Header pageUpdate={pageUpdate} />
+        <Header pageUpdate={pageUpdate} myProfile />
 
-        <h1>Profile Page</h1>
+        <h1>My Profile Page</h1>
 
         {/* Profile Pic */}
         <div
@@ -116,8 +113,6 @@ export const ProfilePage = ({ pageUpdate, data }) => {
       >
         <h3>About Me</h3>
         <p>{aboutMe}</p>
-        {/* Contact Button */}
-        <button onClick={handleContact}>{`Contact ${name}`}</button>
       </div>
 
       <Footer />

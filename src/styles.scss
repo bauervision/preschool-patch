@@ -2,6 +2,7 @@
   font-family: sans-serif;
   text-align: center;
   background-color: mediumaquamarine;
+  margin: 0;
 
   .PublicLanding {
     display: flex;
@@ -9,6 +10,7 @@
     justify-content: center;
     align-items: stretch;
     background-color: greenyellow;
+    padding-top: 20px;
 
     &_Content {
       display: flex;
@@ -56,12 +58,14 @@
     border-top-left-radius: 0px;
 
     &_Logo {
-      height: 40px;
-      width: auto;
-
       &:hover {
         cursor: pointer;
       }
+    }
+
+    &_Align {
+      display: flex;
+      align-items: center;
     }
   }
 

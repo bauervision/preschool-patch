@@ -1,4 +1,7 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
+import "firebase/storage";
 
 const preschoolPatch = {
   apiKey: "AIzaSyBdBdI8yyFc4Pb9TEZyFLGYyEi0sDzpWyE",
@@ -11,7 +14,7 @@ const preschoolPatch = {
 };
 // Initialize Firebase
 firebase.initializeApp(preschoolPatch);
-
+export const f = firebase;
 export const database = firebase.database();
 export const auth = firebase.auth();
 export const storage = firebase.storage();

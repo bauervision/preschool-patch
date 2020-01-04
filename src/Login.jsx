@@ -3,18 +3,21 @@ import React, { useState } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 
-export const Login = ({ pageUpdate }) => {
+import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
+
+export const Login = ({ pageUpdate, handleLogin }) => {
   // handle local state
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
   const [email, setEmailLogin] = useState("");
   const [password, setPasswordLogin] = useState("");
   const [userType, setUserType] = useState(null);
-  const returnHome = () => pageUpdate(0);
+
+  // const returnHome = () => pageUpdate(0);
 
   const handleSubmitLogin = e => {
     e.preventDefault();
-    console.log("Login: ", email);
+    let user = LoginUserEmailPassword(email, password);
   };
 
   const validEmailRegex = RegExp(
@@ -22,8 +25,10 @@ export const Login = ({ pageUpdate }) => {
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
 
-  const handleSubmitNew = () => {
-    console.log("New Account");
+  const handleSubmitNew = e => {
+    e.preventDefault();
+    const newUser = RegisterUser(email, password);
+    handleLogin(newUser);
   };
 
   const setEmail = email => {
@@ -58,7 +63,7 @@ export const Login = ({ pageUpdate }) => {
             <>
               {userType === 0 ? (
                 // New User
-                <form onSubmit={handleSubmitLogin}>
+                <form onSubmit={handleSubmitNew}>
                   <h3>Thank you for Joining Preschool Patch!!</h3>
                   <div>
                     <input
@@ -83,9 +88,7 @@ export const Login = ({ pageUpdate }) => {
                   {emailError || passwordError ? (
                     <div>Enter Valid Email and Password</div>
                   ) : (
-                    <button disabled={!validateForm()} type="submit">
-                      Login
-                    </button>
+                    <button type="submit">Login</button>
                   )}
                 </form>
               ) : (
@@ -115,9 +118,7 @@ export const Login = ({ pageUpdate }) => {
                   {emailError || passwordError ? (
                     <div>Enter Valid Email and Password</div>
                   ) : (
-                    <button disabled={!validateForm()} type="submit">
-                      Login
-                    </button>
+                    <button type="submit">Login</button>
                   )}
                 </form>
               )}

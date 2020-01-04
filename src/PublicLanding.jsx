@@ -1,22 +1,46 @@
 import React, { useState, useEffect } from "react";
 
+import { f } from "./config";
+
 import { ProfileCard } from "./ProfileCard";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 import { Logo } from "./images";
 
-export const PublicLanding = ({ pageUpdate, data, handleMemberSelection }) => {
+export const PublicLanding = ({
+  pageUpdate,
+  data,
+  handleMemberSelection,
+  handleLogin,
+  loggedInUser
+}) => {
   // handle local state
   const [filteredData, setFilteredData] = useState(data);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
 
-  /* On Mount, fetch data */
+  /* On Mount, fetch data, check login */
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
 
+  // check login status
+  const handleLoginCheck = () => {
+    f.auth().onAuthStateChanged(user => {
+      if (user) {
+        // logged in
+        handleLogin(user);
+      } else {
+        // logged out
+        handleLogin(null);
+      }
+    });
+  };
+
+  const handleMount = data => {
+    handleLoginCheck();
+  };
   // handleFilters
   const filterAvailable = e => {
     const checked = e.target.checked;
@@ -63,13 +87,9 @@ export const PublicLanding = ({ pageUpdate, data, handleMemberSelection }) => {
     handleMemberSelection(memberData);
   };
 
-  // jump to pages
-  const loginPressed = () => pageUpdate(1);
-  const newAccountPressed = () => pageUpdate(2);
-
   return (
     <div className="PublicLanding">
-      <Header pageUpdate={pageUpdate} isHome />
+      <Header pageUpdate={pageUpdate} isHome loggedInUser={loggedInUser} />
 
       <div style={{ marginBottom: 20 }}>
         <img src={Logo} alt="logo" />

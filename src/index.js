@@ -8,7 +8,8 @@ import { Login } from "./Login";
 import { ProfilePage } from "./ProfilePage";
 import { MyProfilePage } from "./MyProfilePage";
 
-import { database } from "./config";
+import { f, database } from "./config";
+
 const defaultUser = {
   private: {
     email: "mike@bauer.com",
@@ -36,6 +37,25 @@ const App = () => {
   const [selection, setSelection] = useState(defaultUser);
   const [loggedInUser, setLoggedInUser] = useState({});
 
+  /* On Mount, fetch data, check login */
+  useEffect(() => {
+    handleLoginCheck(selection);
+  }, [selection]);
+
+  // check login status
+  const handleLoginCheck = selection => {
+    f.auth().onAuthStateChanged(user => {
+      if (user === selection) {
+        // logged in
+        console.log("Logged in!");
+      } else {
+        // logged out
+        console.log("Logged OUT!");
+        setLoggedInUser(null);
+      }
+    });
+  };
+
   const handlePageUpdate = page => setPage(page);
 
   const handleMemberSelection = member => {
@@ -47,6 +67,10 @@ const App = () => {
     setLoggedInUser(user);
   };
 
+  const handleLogOut = () => {
+    setLoggedInUser(null);
+  };
+
   /* Page Router */
   const onPage = page => {
     switch (page) {
@@ -56,6 +80,7 @@ const App = () => {
             pageUpdate={handlePageUpdate}
             data={selection}
             loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
           />
         );
       case 3:
@@ -68,6 +93,7 @@ const App = () => {
             pageUpdate={handlePageUpdate}
             data={data}
             handleLogin={handleLogin}
+            handleLogOut={handleLogOut}
           />
         );
       default:
@@ -77,6 +103,7 @@ const App = () => {
             data={data}
             handleMemberSelection={handleMemberSelection}
             handleLogin={handleLogin}
+            handleLogOut={handleLogOut}
             loggedInUser={loggedInUser}
           />
         );

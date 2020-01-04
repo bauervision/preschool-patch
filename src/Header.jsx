@@ -7,17 +7,14 @@ import { SignUserOut } from "./helpers/auth";
 export const Header = ({
   pageUpdate,
   isHome,
+  isLogin,
   myProfile,
   isCreate,
   loggedInUser
 }) => {
-  const handleLogOut = () => {
-    let loggedOut = false;
-    loggedOut = SignUserOut();
-    console.log(loggedOut);
-    if (loggedOut) {
-      pageUpdate(1);
-    }
+  const LogOut = () => {
+    SignUserOut();
+    pageUpdate(0);
   };
 
   return (
@@ -36,9 +33,13 @@ export const Header = ({
         {!loggedInUser ? (
           <div>
             {myProfile || isCreate ? (
-              <button onClick={handleLogOut}>Logout</button>
+              <button onClick={LogOut}>Logout</button>
             ) : (
-              <button onClick={() => pageUpdate(1)}>Login</button>
+              <>
+                {!isLogin && (
+                  <button onClick={() => pageUpdate(1)}>Login</button>
+                )}
+              </>
             )}
           </div>
         ) : (

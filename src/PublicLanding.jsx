@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import { f } from "./config";
-
 import { ProfileCard } from "./ProfileCard";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
@@ -13,6 +11,7 @@ export const PublicLanding = ({
   data,
   handleMemberSelection,
   handleLogin,
+  handleLogOut,
   loggedInUser
 }) => {
   // handle local state
@@ -25,22 +24,6 @@ export const PublicLanding = ({
     setFilteredData(data);
   }, [data]);
 
-  // check login status
-  const handleLoginCheck = () => {
-    f.auth().onAuthStateChanged(user => {
-      if (user) {
-        // logged in
-        handleLogin(user);
-      } else {
-        // logged out
-        handleLogin(null);
-      }
-    });
-  };
-
-  const handleMount = data => {
-    handleLoginCheck();
-  };
   // handleFilters
   const filterAvailable = e => {
     const checked = e.target.checked;
@@ -89,7 +72,12 @@ export const PublicLanding = ({
 
   return (
     <div className="PublicLanding">
-      <Header pageUpdate={pageUpdate} isHome loggedInUser={loggedInUser} />
+      <Header
+        pageUpdate={pageUpdate}
+        isHome
+        loggedInUser={loggedInUser}
+        handleLogOut={handleLogOut}
+      />
 
       <div style={{ marginBottom: 20 }}>
         <img src={Logo} alt="logo" />

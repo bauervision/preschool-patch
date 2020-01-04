@@ -25,9 +25,9 @@ export const RegisterUser = (email, password) => {
 export const LoginUserEmailPassword = async (email, password) => {
   try {
     let user = await auth.signInWithEmailAndPassword(email, password);
-    console.log("logged in", user);
     return user;
   } catch (err) {
-    console.log(err);
+    const status = { error: err, successful: false };
+    return status;
   }
 };

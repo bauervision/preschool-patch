@@ -5,8 +5,8 @@ const BasicInput = ({ title, type, forLabel, onChange, value }) => (
     style={{
       display: "flex",
       flexDirection: "column",
-      padding: 2,
-      width: 300
+      padding: 2
+      //width: 300
     }}
   >
     <div style={{ textAlign: "left" }}>

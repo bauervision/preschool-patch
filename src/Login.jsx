@@ -97,122 +97,132 @@ export const Login = ({ pageUpdate, handleLogin }) => {
               {userType === 0 ? (
                 // New User
                 <form onSubmit={handleSubmitNew}>
-                  <h3>Thank you for Joining Preschool Patch!!</h3>
-                  <p>
-                    This will create your basic account so you can submit
-                    requests to local Patch Leaders.
-                  </p>
-                  <p>
-                    If you are interested in becoming a Patch Leader, you will
-                    need to complete a different form found above.
-                  </p>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      justifyContent: "center"
+                      justifyContent: "center",
+                      alignItems: "center"
                     }}
                   >
-                    <BasicInput
-                      title="Full Name"
-                      type="text"
-                      forLabel="name"
-                      onChange={setNameLogin}
-                      value={name}
-                    />
+                    <h3>Thank you for Joining Preschool Patch!!</h3>
+                    <p>
+                      This will create your basic account so you can submit
+                      requests to local Patch Leaders.
+                    </p>
+                    <p>
+                      If you are interested in becoming a Patch Leader, you will
+                      need to complete a different form found above.
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        backgroundColor: "green"
+                      }}
+                    >
+                      <BasicInput
+                        title="Full Name"
+                        type="text"
+                        forLabel="name"
+                        onChange={setNameLogin}
+                        value={name}
+                      />
 
-                    <BasicInput
-                      title="Email"
-                      type="email"
-                      forLabel="email"
-                      onChange={setEmail}
-                      value={email}
-                    />
+                      <BasicInput
+                        title="Email"
+                        type="email"
+                        forLabel="email"
+                        onChange={setEmail}
+                        value={email}
+                      />
 
-                    <BasicInput
-                      title="Phone"
-                      type="text"
-                      forLabel="phone"
-                      onChange={setPhoneLogin}
-                      value={phone}
-                    />
+                      <BasicInput
+                        title="Phone"
+                        type="text"
+                        forLabel="phone"
+                        onChange={setPhoneLogin}
+                        value={phone}
+                      />
 
-                    <BasicInput
-                      title="Zipcode"
-                      type="number"
-                      forLabel="postal-code"
-                      onChange={setZipcodeLogin}
-                      value={zipcode}
-                    />
+                      <BasicInput
+                        title="Zipcode"
+                        type="number"
+                        forLabel="postal-code"
+                        onChange={setZipcodeLogin}
+                        value={zipcode}
+                      />
 
-                    <PasswordInput
-                      handlePasswordVisibility={handlePasswordVisibility}
-                      setPassword={setPassword}
-                      password={password}
-                      passwordType={passwordType}
-                      passwordError={passwordError}
-                    />
+                      <PasswordInput
+                        handlePasswordVisibility={handlePasswordVisibility}
+                        setPassword={setPassword}
+                        password={password}
+                        passwordType={passwordType}
+                        passwordError={passwordError}
+                      />
+
+                      {emailError || passwordError ? (
+                        <div>Enter Valid Email and Password</div>
+                      ) : (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            padding: 2
+                          }}
+                        >
+                          <button type="submit" className="RegisterButton">
+                            Register
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  {emailError || passwordError ? (
-                    <div>Enter Valid Email and Password</div>
-                  ) : (
-                    <button type="submit">Login</button>
-                  )}
                 </form>
               ) : (
                 // Existing User
                 <form onSubmit={handleSubmitLogin}>
-                  <h3>Welcome Back!</h3>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      backgroundColor: "green"
+                      justifyContent: "center",
+                      alignItems: "center"
                     }}
                   >
-                    <div style={{ border: "solid" }}>
-                      <input
-                        className={`InputStyle ${emailError && "Red"}`}
-                        placeholder="Enter your Email"
+                    <h3>Welcome Back!</h3>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        backgroundColor: "white",
+                        borderRadius: 10
+                      }}
+                    >
+                      <BasicInput
+                        title="Email"
                         type="email"
+                        forLabel="email"
+                        onChange={setEmail}
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
                       />
+
+                      <PasswordInput
+                        handlePasswordVisibility={handlePasswordVisibility}
+                        setPassword={setPassword}
+                        password={password}
+                        passwordType={passwordType}
+                        passwordError={passwordError}
+                      />
+
+                      {loginError && <div>{loginError}</div>}
+                      {emailError || passwordError ? (
+                        <div>Enter Valid Email and Password</div>
+                      ) : (
+                        <button type="submit">Login</button>
+                      )}
                     </div>
-
-                    <PasswordInput
-                      handlePasswordVisibility={handlePasswordVisibility}
-                      setPassword={setPassword}
-                      password={password}
-                      passwordType={passwordType}
-                      passwordError={passwordError}
-                    />
-                    {/* <div style={{ display: "flex" }}>
-                      <div style={{ position: "relative" }}>
-                        <button
-                          type="button"
-                          onClick={handlePasswordVisibility}
-                          className="TogglePassword"
-                        >
-                          <img src={ShowPassword} alt="show password" />
-                        </button>
-
-                        <input
-                          className={`InputStyle ${passwordError && "Red"}`}
-                          placeholder="Enter your Password"
-                          type={passwordType}
-                          value={password}
-                          onChange={e => setPassword(e.target.value)}
-                        />
-                      </div>
-                    </div> */}
                   </div>
-                  {loginError && <div>{loginError}</div>}
-                  {emailError || passwordError ? (
-                    <div>Enter Valid Email and Password</div>
-                  ) : (
-                    <button type="submit">Login</button>
-                  )}
                 </form>
               )}
             </>

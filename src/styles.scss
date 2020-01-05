@@ -136,13 +136,19 @@
     border-radius: 5px;
     border-style: solid;
     border-color: greenyellow;
-    width: 200px;
   }
 
   .InputTextLabel {
     margin-left: 10px;
     font-size: 12px;
     color: grey;
+  }
+
+  .RegisterButton {
+    padding: 10px;
+    margin: 10px;
+    background-color: green;
+    color: white;
   }
 
   .Red {

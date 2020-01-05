@@ -14,8 +14,7 @@ const PasswordInput = ({
       style={{
         display: "flex",
         flexDirection: "column",
-        padding: 2,
-        width: 300
+        padding: 2
       }}
     >
       <div style={{ textAlign: "left" }}>

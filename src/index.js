@@ -64,6 +64,7 @@ const App = () => {
   };
 
   const handleLogin = user => {
+    console.log("User logged in: ", user);
     setLoggedInUser(user);
   };
 
@@ -86,7 +87,13 @@ const App = () => {
       case 3:
         return <ProfilePage pageUpdate={handlePageUpdate} data={selection} />;
       case 2:
-        return <CreateAccount pageUpdate={handlePageUpdate} data={data} />;
+        return (
+          <CreateAccount
+            pageUpdate={handlePageUpdate}
+            data={data}
+            handleLogin={handleLogin}
+          />
+        );
       case 1:
         return (
           <Login

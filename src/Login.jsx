@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+import { Header } from "./Components/Header";
+import { Footer } from "./Components/Footer";
 
 // Components
-import { BasicInput } from "./Components";
-import { PasswordInput } from "./Components";
+import { BasicInput, PasswordInput, Error, PageLogo } from "./Components";
+import { Kids } from "./images/photos";
+
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
 
@@ -29,8 +30,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     console.log("Log in status = ", status);
     // if status is false then we got an error
     if (!status.successful) {
-      const errorMessage =
-        status.error.message + " Try again with a different email?";
+      const errorMessage = status.error.message;
       setLoginError(errorMessage);
     } else {
       // otherwise we had a successful login
@@ -42,10 +42,24 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
 
-  const handleSubmitNew = e => {
+  const handleSubmitNew = async e => {
     e.preventDefault();
-    const newUser = RegisterUser(email, password);
-    handleLogin(newUser);
+    const newUserData = {
+      email,
+      password,
+      displayName: name
+    };
+
+    let status = await RegisterUser(newUserData);
+
+    console.log(status);
+    if (status && !status.successful) {
+      const errorMessage = status.error.message;
+      setLoginError(errorMessage);
+    } else if (status) {
+      // otherwise we had a successful login
+      handleLogin(status);
+    }
   };
 
   const setEmail = email => {
@@ -65,46 +79,38 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     setShowPassword(!showPassword);
   };
 
+  const handleUserTypeSwitch = userType => {
+    setUserType(userType);
+    setLoginError(null);
+  };
+
   return (
     <div className="Login">
       <div>
         <Header pageUpdate={pageUpdate} isLogin />
 
-        <h2>Login Page</h2>
-        <div className="LoginBox">
+        <PageLogo
+          isLogin
+          title="Login"
+          handleUserTypeSwitch={handleUserTypeSwitch}
+          userType={userType}
+        />
+
+        <div className="">
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center"
             }}
-          >
-            {userType === 1 ? (
-              <div>Existing User </div>
-            ) : (
-              <button onClick={() => setUserType(1)}>Existing User</button>
-            )}
-
-            {userType === 0 ? (
-              <div>New User </div>
-            ) : (
-              <button onClick={() => setUserType(0)}>New User</button>
-            )}
-          </div>
+          ></div>
 
           {userType !== null && (
             <>
               {userType === 0 ? (
                 // New User
                 <form onSubmit={handleSubmitNew}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
-                  >
+                  <div className="Flex Col JustifyCenter AlignItems">
                     <h3>Thank you for Joining Preschool Patch!!</h3>
                     <p>
                       This will create your basic account so you can submit
@@ -114,13 +120,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                       If you are interested in becoming a Patch Leader, you will
                       need to complete a different form found above.
                     </p>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        backgroundColor: "green"
-                      }}
-                    >
+                    <div className="Flex Col LoginForm BoxShadow">
                       <BasicInput
                         title="Full Name"
                         type="text"
@@ -162,43 +162,24 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                       />
 
                       {emailError || passwordError ? (
-                        <div>Enter Valid Email and Password</div>
-                      ) : (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            padding: 2
-                          }}
-                        >
-                          <button type="submit" className="RegisterButton">
-                            Register
-                          </button>
+                        <div className="FakeButton">
+                          Enter Valid Email and Password
                         </div>
+                      ) : (
+                        <button type="submit" className="RegisterButton">
+                          Register
+                        </button>
                       )}
                     </div>
+                    {loginError && <Error errorMessage={loginError} />}
                   </div>
                 </form>
               ) : (
                 // Existing User
                 <form onSubmit={handleSubmitLogin}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
-                  >
+                  <div className="Flex Col JustifyCenter AlignItems">
                     <h3>Welcome Back!</h3>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        backgroundColor: "white",
-                        borderRadius: 10
-                      }}
-                    >
+                    <div className="Flex Col LoginForm BoxShadow">
                       <BasicInput
                         title="Email"
                         type="email"
@@ -215,18 +196,24 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                         passwordError={passwordError}
                       />
 
-                      {loginError && <div>{loginError}</div>}
                       {emailError || passwordError ? (
-                        <div>Enter Valid Email and Password</div>
+                        <div className="FakeButton">
+                          Enter Valid Email and Password
+                        </div>
                       ) : (
                         <button type="submit">Login</button>
                       )}
                     </div>
+                    {loginError && (
+                      <div className="LoginError">{loginError}</div>
+                    )}
                   </div>
                 </form>
               )}
             </>
           )}
+
+          <img src={Kids} alt="Working" className="Login_Imagery BoxShadow" />
         </div>
       </div>
 

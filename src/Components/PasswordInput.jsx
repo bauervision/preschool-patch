@@ -10,20 +10,18 @@ const PasswordInput = ({
   passwordError
 }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 2
-      }}
-    >
+    <div className="Flex Col JustifyCenter ">
+      {/* Label */}
       <div style={{ textAlign: "left" }}>
         <label for="password" className="InputTextLabel">
           Password:
         </label>
       </div>
-      <div style={{ display: "flex" }}>
+
+      {/* Button */}
+      <div className="Flex">
         <div style={{ position: "relative" }}>
+          {/* Toggle Visibility Button */}
           <button
             type="button"
             onClick={handlePasswordVisibility}
@@ -34,6 +32,7 @@ const PasswordInput = ({
 
           <input
             className={`InputStyle ${passwordError && "Red"}`}
+            style={{ width: 350 }}
             placeholder="Enter your Password"
             type={passwordType}
             value={password}

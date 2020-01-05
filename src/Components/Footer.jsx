@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FacebookIcon, InstagramIcon } from "./images";
+import { FacebookIcon, InstagramIcon } from "../images";
 
 export const Footer = () => {
   return (

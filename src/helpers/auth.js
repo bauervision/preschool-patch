@@ -13,13 +13,22 @@ export const SignUserOut = () => {
     });
 };
 
-export const RegisterUser = (email, password) => {
-  auth
-    .createUserWithEmailAndPassword(email, password)
-    .then(newUser => {
-      return newUser;
-    })
-    .catch(error => console.log(error));
+export const RegisterUser = async data => {
+  const { email, password, displayName } = data;
+  try {
+    let user = await auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(newUser => {
+        return newUser.user.updateProfile({
+          displayName: displayName
+        });
+      });
+    return user;
+  } catch (error) {
+    console.log("Caught Error", error);
+    const status = { error: error, successful: false };
+    return status;
+  }
 };
 
 export const LoginUserEmailPassword = async (email, password) => {

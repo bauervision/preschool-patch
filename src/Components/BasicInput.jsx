@@ -2,11 +2,9 @@ import React from "react";
 
 const BasicInput = ({ title, type, forLabel, onChange, value }) => (
   <div
+    className="Flex Col "
     style={{
-      display: "flex",
-      flexDirection: "column",
       padding: 2
-      //width: 300
     }}
   >
     <div style={{ textAlign: "left" }}>

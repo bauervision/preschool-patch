@@ -47,7 +47,7 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
       >
         <img
           alt="profile pic"
-          style={{ borderRadius: 50 }}
+          className="Card_Pic"
           src={`https://i.pravatar.cc/100?img=${getPictureId(name)}`}
         />
         <span>{name}</span>
@@ -96,9 +96,8 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
       </div>
 
       <div
+        className=" Flex Col"
         style={{
-          display: "flex",
-          flexDirection: "column",
           justifyContent: "space-evenly",
           border: "solid",
           borderRadius: 10,
@@ -109,7 +108,7 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
       >
         <div>
           <div className="profileText">FT Rate:</div>
-          <strong style={{ fontSize: 30, color: "blue" }}>${ftRate}</strong>
+          <strong style={{ fontSize: 30, color: "#0b4f6c" }}>${ftRate}</strong>
         </div>
       </div>
     </div>

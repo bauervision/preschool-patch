@@ -1,15 +1,24 @@
+$MALACHITE: #20bf55;
+$PATCHGREEN: #0b8e51;
+$DARKIMPERIALBLUE: #0b4f6c;
+$CYAN: #01baef;
+$GHOSTWHITE: #fbfbff;
+$SONICSILVER: #757575;
+
 .App {
-  font-family: sans-serif;
+  font-family: "Raleway", sans-serif;
   text-align: center;
-  background-color: mediumaquamarine;
+  background-color: $GHOSTWHITE;
   margin: 0;
+  color: $PATCHGREEN;
+
+  // Pages
 
   .PublicLanding {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    background-color: greenyellow;
     padding-top: 20px;
 
     &_Content {
@@ -33,18 +42,25 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: yellowgreen;
   }
 
   .Login {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: lightblue;
+
+    &_Imagery {
+      width: 400px;
+      height: auto;
+      border-radius: 100px;
+      margin: 100px;
+    }
   }
 
+  // Components
+
   .Header {
-    background-color: mediumaquamarine;
+    background-color: $PATCHGREEN;
     position: fixed;
     top: 0;
     right: 0;
@@ -73,13 +89,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: lightgreen;
+    background-color: lightsteelblue;
     div {
       margin: 40px;
     }
   }
+
   .Footer {
-    background-color: mediumaquamarine;
+    background-color: $MALACHITE;
     color: darkslategray;
     font-size: 14px;
     padding: 30px;
@@ -88,33 +105,71 @@
     flex-direction: column;
   }
 
+  .LoginForm {
+    // background-color: white;
+    border: solid 1px mediumaquamarine;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 20px;
+  }
+
+  // General Styling
+
+  .Logo {
+    margin-left: 250px;
+    margin-top: 50px;
+  }
+
   .Social {
     border-radius: 60px;
+    border-color: $MALACHITE;
   }
+
   .Card {
     display: flex;
     max-width: 600px;
     padding: 10px;
     margin: 5px;
-    border: solid blue 2px;
+    border: solid $DARKIMPERIALBLUE 2px;
     border-radius: 10px;
-    background-color: wheat;
+    transition: all 1s;
+
     &:hover {
-      border: solid pink 2px;
+      border: solid $MALACHITE 2px;
       background-color: white;
+    }
+
+    &:hover > &_Pic {
+      width: 150px;
+    }
+    &_Pic {
+      border-radius: 50px;
+      width: 100px;
+      height: auto;
+      transition: width 1s;
     }
   }
 
   .profileText {
-    color: grey;
+    color: $PATCHGREEN;
   }
 
   .textMargin {
     margin: 5px;
   }
 
-  .AlignItems {
+  .BoxShadow {
+    box-shadow: 10px 10px 20px lightslategray;
+  }
+
+  .Flex {
     display: flex;
+  }
+
+  .JustifyCenter {
+    justify-content: center;
+  }
+  .AlignItems {
     align-items: center;
   }
 
@@ -126,8 +181,21 @@
     flex-direction: column;
   }
 
-  .AlignLeft {
+  .JustifyEnd {
     justify-content: flex-end;
+  }
+
+  .Buffer {
+    padding: 10px;
+    margin: 10px;
+  }
+
+  .FakeButton {
+    border: solid 1px $DARKIMPERIALBLUE;
+    background-color: lightsteelblue;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
   }
 
   .InputStyle {
@@ -135,19 +203,19 @@
     margin: 10px;
     border-radius: 5px;
     border-style: solid;
-    border-color: greenyellow;
+    border-color: $MALACHITE;
   }
 
   .InputTextLabel {
     margin-left: 10px;
     font-size: 12px;
-    color: grey;
+    color: $SONICSILVER;
   }
 
   .RegisterButton {
     padding: 10px;
     margin: 10px;
-    background-color: green;
+    background-color: $MALACHITE;
     color: white;
   }
 
@@ -155,8 +223,16 @@
     border-color: darkred;
   }
 
+  .LoginError {
+    margin: 10px;
+    border: solid 1px red;
+    color: darkred;
+    font-style: italic;
+    border-radius: 20px;
+    padding: 20px;
+  }
   .LoginBox {
-    border: solid green 2px;
+    border: solid $MALACHITE 2px;
     border-radius: 10px;
     margin: 20px;
     padding: 20px;
@@ -176,21 +252,22 @@
   }
 
   button {
-    color: green;
+    color: $MALACHITE;
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
     border: solid;
+    transition: color 1s;
 
     &:hover {
-      background-color: lightgreen;
+      background-color: $MALACHITE;
       color: white;
     }
   }
 
   footer {
     margin-top: 20px;
-    background-color: gray;
+    background-color: $SONICSILVER;
     padding: 10px;
     display: flex;
     justify-content: center;

@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 import { ProfileCard } from "./ProfileCard";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+import { Header } from "./Components/Header";
+import { Footer } from "./Components/Footer";
 
 import { Logo } from "./images";
+
+//import { Coloring, Kids, Table, Working } from "./images/photos";
+// const images = [
+//   { src: { Coloring }, info: "First Image" },
+//   { src: { Kids }, info: "Second Image" },
+//   { src: { Table }, info: "Third Image" },
+//   { src: { Working }, info: "Fourth Image" }
+// ];
 
 export const PublicLanding = ({
   pageUpdate,
@@ -80,9 +88,16 @@ export const PublicLanding = ({
       />
 
       <div style={{ marginBottom: 20 }}>
-        <img src={Logo} alt="logo" />
-        <div style={{ margin: 20 }}>
-          Find a local preschool teacher for your child!
+        <div className="Flex AlignItems Buffer">
+          <img
+            src={Logo}
+            alt="logo"
+            className="Logo"
+            style={{ width: 600, height: "auto" }}
+          />
+          <div style={{ margin: 20 }}>
+            Find a local preschool teacher for your child!
+          </div>
         </div>
 
         {/* Filter Criteria */}
@@ -115,7 +130,7 @@ export const PublicLanding = ({
       </div>
 
       {/* Content */}
-      <div className="PublicLanding_Content">
+      <div className="PublicLanding_Content BoxShadow ">
         {filteredData.map((elem, index) => (
           <ProfileCard
             key={elem.public.name}

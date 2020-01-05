@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Home, Profile } from "./images";
+import { Home, Profile } from "../images";
 
-import { SignUserOut } from "./helpers/auth";
+import { SignUserOut } from "../helpers/auth";
 
 export const Header = ({
   pageUpdate,

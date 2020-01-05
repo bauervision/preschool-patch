@@ -2,6 +2,10 @@ import React, { useState } from "react";
 
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+
+// Components
+import { BasicInput } from "./Components";
+import { PasswordInput } from "./Components";
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
 
@@ -16,8 +20,8 @@ export const Login = ({ pageUpdate, handleLogin }) => {
   const [phone, setPhoneLogin] = useState("");
   const [zipcode, setZipcodeLogin] = useState("");
   const [userType, setUserType] = useState(null);
-
-  // const returnHome = () => pageUpdate(0);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordType, setPasswordType] = useState("password");
 
   const handleSubmitLogin = async e => {
     e.preventDefault();
@@ -54,6 +58,11 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     const error = password.length < 6;
     setPasswordError(error);
     setPasswordLogin(password);
+  };
+
+  const handlePasswordVisibility = () => {
+    setPasswordType(!showPassword ? "text" : "password");
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -97,61 +106,53 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                     If you are interested in becoming a Patch Leader, you will
                     need to complete a different form found above.
                   </p>
-
-                  <div>
-                    <label for="name">Full Name:</label>
-                    <input
-                      className="InputStyle"
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center"
+                    }}
+                  >
+                    <BasicInput
+                      title="Full Name"
                       type="text"
-                      name="name"
+                      forLabel="name"
+                      onChange={setNameLogin}
                       value={name}
-                      onChange={e => setNameLogin(e.target.value)}
                     />
-                  </div>
 
-                  <div>
-                    <label for="email">Email:</label>
-                    <input
-                      className={`InputStyle ${emailError && "Red"}`}
+                    <BasicInput
+                      title="Email"
                       type="email"
+                      forLabel="email"
+                      onChange={setEmail}
                       value={email}
-                      onChange={e => setEmail(e.target.value)}
                     />
-                  </div>
 
-                  <div>
-                    <label for="phone">Phone:</label>
-                    <input
-                      className="InputStyle"
+                    <BasicInput
+                      title="Phone"
                       type="text"
-                      name="phone"
+                      forLabel="phone"
+                      onChange={setPhoneLogin}
                       value={phone}
-                      onChange={e => setPhoneLogin(e.target.value)}
                     />
-                  </div>
 
-                  <div>
-                    <label for="postal-code">Zipcode:</label>
-                    <input
-                      className="InputStyle"
+                    <BasicInput
+                      title="Zipcode"
                       type="number"
-                      name="postal-code"
+                      forLabel="postal-code"
+                      onChange={setZipcodeLogin}
                       value={zipcode}
-                      onChange={e => setZipcodeLogin(e.target.value)}
+                    />
+
+                    <PasswordInput
+                      handlePasswordVisibility={handlePasswordVisibility}
+                      setPassword={setPassword}
+                      password={password}
+                      passwordType={passwordType}
+                      passwordError={passwordError}
                     />
                   </div>
-
-                  <div>
-                    <label for="password">Set a password:</label>
-                    <input
-                      className={`InputStyle ${passwordError && "Red"}`}
-                      placeholder="Minimum of 6 characters"
-                      type="password"
-                      //value={password}
-                      onChange={e => setPassword(e.target.value)}
-                    />
-                  </div>
-
                   {emailError || passwordError ? (
                     <div>Enter Valid Email and Password</div>
                   ) : (
@@ -162,26 +163,50 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                 // Existing User
                 <form onSubmit={handleSubmitLogin}>
                   <h3>Welcome Back!</h3>
-                  <div>
-                    <input
-                      className={`InputStyle ${emailError && "Red"}`}
-                      placeholder="Enter your Email"
-                      type="email"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                    />
-                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      backgroundColor: "green"
+                    }}
+                  >
+                    <div style={{ border: "solid" }}>
+                      <input
+                        className={`InputStyle ${emailError && "Red"}`}
+                        placeholder="Enter your Email"
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                      />
+                    </div>
 
-                  <div>
-                    <input
-                      className={`InputStyle ${passwordError && "Red"}`}
-                      placeholder="Enter your Password"
-                      type="password"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
+                    <PasswordInput
+                      handlePasswordVisibility={handlePasswordVisibility}
+                      setPassword={setPassword}
+                      password={password}
+                      passwordType={passwordType}
+                      passwordError={passwordError}
                     />
-                  </div>
+                    {/* <div style={{ display: "flex" }}>
+                      <div style={{ position: "relative" }}>
+                        <button
+                          type="button"
+                          onClick={handlePasswordVisibility}
+                          className="TogglePassword"
+                        >
+                          <img src={ShowPassword} alt="show password" />
+                        </button>
 
+                        <input
+                          className={`InputStyle ${passwordError && "Red"}`}
+                          placeholder="Enter your Password"
+                          type={passwordType}
+                          value={password}
+                          onChange={e => setPassword(e.target.value)}
+                        />
+                      </div>
+                    </div> */}
+                  </div>
                   {loginError && <div>{loginError}</div>}
                   {emailError || passwordError ? (
                     <div>Enter Valid Email and Password</div>

@@ -3,3 +3,4 @@ export { default as InstagramIcon } from "./instagram.png";
 export { default as Logo } from "./Minor Logo.png";
 export { default as Home } from "./home.png";
 export { default as Profile } from "./profile.png";
+export { default as ShowPassword } from "./showPassword.png";

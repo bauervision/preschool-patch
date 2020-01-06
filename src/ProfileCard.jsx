@@ -2,8 +2,7 @@ import React from "react";
 // import { storage } from "./config";
 
 export const ProfileCard = ({ data, img, handleSelection }) => {
-  console.log(data);
-  // pull out public data
+  // pull out data
   const {
     public: {
       age,
@@ -15,27 +14,16 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
       kidTotal,
       name,
       rating,
-      zipcode
+      zipcode,
+      photoUrl
     }
   } = data;
-
-  const getPictureId = name => {
-    switch (name) {
-      case "Mike":
-        return 50;
-      case "Beth":
-        return 29;
-      case "Brianna":
-        return 45;
-      default:
-        return 10;
-    }
-  };
 
   const getSelection = () => {
     handleSelection(data);
   };
 
+  console.log(photoUrl);
   return (
     <div className="Card" onClick={getSelection}>
       <div
@@ -46,11 +34,7 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
           marginRight: 40
         }}
       >
-        <img
-          alt="profile pic"
-          className="Card_Pic"
-          src={`https://i.pravatar.cc/100?img=${getPictureId(name)}`}
-        />
+        <img alt="profile pic" className="Card_Pic" src={photoUrl} />
         <span>{name}</span>
       </div>
 

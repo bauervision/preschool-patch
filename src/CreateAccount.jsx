@@ -6,6 +6,7 @@ import { Footer } from "./Components/Footer";
 import { BasicInput, PasswordInput, Error, PageLogo } from "./Components";
 
 import { RegisterUser } from "./helpers/auth";
+//import { f, storage } from "./config";
 
 export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
   // handle local state
@@ -42,7 +43,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
       experience,
       backgroundCheck: background,
       infants,
-      photoUrl: ""
+      photoUrl: "gs://preschoolpatch-f04be.appspot.com/public/avatar.png"
     };
 
     let status = await RegisterUser(email, password);
@@ -67,6 +68,42 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
     setPasswordError(error);
     setPasswordLogin(password);
   };
+
+  // const setProfilePic = (file, value) => {
+  //   console.log(file);
+  //   setFile(value);
+  //   const userId = f.auth().currentUser.uid;
+
+  //   const uploadTask = storage
+  //     .ref(`public/${userId}/images/${file.name}`)
+  //     .put(file);
+
+  //   uploadTask.on(
+  //     "state_changed",
+  //     snapshot => {
+  //       //progress
+  //       const progress = Math.round(
+  //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+  //       );
+  //       console.log(progress);
+  //       // setUploadProgress(progress);
+  //     },
+  //     error => {
+  //       //error
+  //       console.log(error);
+  //     },
+  //     () => {
+  //       //complete
+  //       storage
+  //         .ref(`public/${userId}/images/`)
+  //         .child(file.name)
+  //         .getDownloadURL()
+  //         .then(url => {
+  //           setPicUrl(url);
+  //         });
+  //     }
+  //   );
+  // };
 
   const handlePasswordVisibility = () => {
     setPasswordType(!showPassword ? "text" : "password");

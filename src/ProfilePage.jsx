@@ -16,22 +16,10 @@ export const ProfilePage = ({ pageUpdate, data }) => {
       infants,
       kidTotal,
       name,
-      rating
+      rating,
+      photoUrl
     }
   } = data;
-
-  const getPictureId = name => {
-    switch (name) {
-      case "Mike":
-        return 50;
-      case "Beth":
-        return 29;
-      case "Brianna":
-        return 45;
-      default:
-        return 10;
-    }
-  };
 
   const handleContact = () => pageUpdate(1);
   // const returnHome = () => pageUpdate(0);
@@ -62,7 +50,7 @@ export const ProfilePage = ({ pageUpdate, data }) => {
           <img
             alt="profile pic"
             style={{ borderRadius: 25, width: 200, height: 200 }}
-            src={`https://i.pravatar.cc/200?img=${getPictureId(name)}`}
+            src={photoUrl}
           />
 
           <div>

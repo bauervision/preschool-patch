@@ -13,7 +13,7 @@ const PasswordInput = ({
     <div className="Flex Col JustifyCenter ">
       {/* Label */}
       <div style={{ textAlign: "left" }}>
-        <label for="password" className="InputTextLabel">
+        <label htmlFor="password" className="InputTextLabel">
           Password:
         </label>
       </div>

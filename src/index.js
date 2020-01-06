@@ -17,8 +17,10 @@ const App = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
 
   /* On Mount, fetch data, check login */
+
   useEffect(() => {
     handleLoginCheck();
+    // eslint-disable-next-line
   }, [data]);
 
   // check login status
@@ -26,17 +28,16 @@ const App = () => {
     f.auth().onAuthStateChanged(user => {
       if (user) {
         // logged in
-        console.log("Logged in!", user.uid, data);
-
         if (data) {
           const curUser = Object.keys(data && data).find(
             item => item === user.uid
           );
-          setLoggedInUser(data[curUser].public);
+          if (curUser) {
+            setLoggedInUser(data[curUser].public);
+          }
         }
       } else {
         // logged out
-        console.log("Logged OUT!");
         setLoggedInUser(null);
       }
     });
@@ -121,8 +122,7 @@ const App = () => {
       // this was an existing user login so pull the user from our data and set them as the loggedInUser
 
       const curUser = Object.keys(data).find(item => item === user.uid);
-      console.log(curUser);
-      setLoggedInUser(user.uid);
+      setLoggedInUser(curUser);
       // if we successfully logged in, jump to Public Landing Page
       handlePageUpdate(0);
     }
@@ -198,7 +198,6 @@ const App = () => {
     // now get the data stored there
     userData.once("value").then(snapshot => {
       if (snapshot.val()) {
-        console.log(snapshot.val());
         setData(snapshot.val());
       }
     });

@@ -6,3 +6,4 @@ export { default as Profile } from "./profile.png";
 export { default as ShowPassword } from "./showPassword.png";
 export { default as ErrorIcon } from "./error.png";
 export { default as Flower } from "./Leaves.png";
+export { default as Edit } from "./edit.png";

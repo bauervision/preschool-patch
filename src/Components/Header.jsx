@@ -18,7 +18,6 @@ export const Header = ({
     pageUpdate(0);
   };
 
-  console.log(loggedInUser);
   return (
     <header className="Header">
       <div className="Header_Align">

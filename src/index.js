@@ -10,44 +10,30 @@ import { MyProfilePage } from "./MyProfilePage";
 
 import { f, database } from "./config";
 
-const defaultUser = {
-  private: {
-    email: "mike@bauer.com",
-    joined: "04272019"
-  },
-  public: {
-    aboutMe:
-      "I am the web designer for this site.  I will not be teaching any classes as I am not female, feel free to hire my wife!",
-    age: 43,
-    assisted: "no",
-    available: "no",
-    experience: 10,
-    ftRate: 50,
-    infants: "no",
-    kidTotal: 3,
-    name: "Mike",
-    rating: 3,
-    zipcode: 23322
-  }
-};
-
 const App = () => {
   const [currentPage, setPage] = useState(0);
-  const [data, setData] = useState([]);
-  const [selection, setSelection] = useState(defaultUser);
+  const [data, setData] = useState({});
+  const [selection, setSelection] = useState({});
   const [loggedInUser, setLoggedInUser] = useState({});
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
-    handleLoginCheck(selection);
-  }, [selection]);
+    handleLoginCheck();
+  }, [data]);
 
   // check login status
-  const handleLoginCheck = selection => {
+  const handleLoginCheck = () => {
     f.auth().onAuthStateChanged(user => {
-      if (user === selection) {
+      if (user) {
         // logged in
-        console.log("Logged in!");
+        console.log("Logged in!", user.uid, data);
+
+        if (data) {
+          const curUser = Object.keys(data && data).find(
+            item => item === user.uid
+          );
+          setLoggedInUser(data[curUser].public);
+        }
       } else {
         // logged out
         console.log("Logged OUT!");
@@ -63,9 +49,83 @@ const App = () => {
     handlePageUpdate(3);
   };
 
-  const handleLogin = user => {
-    console.log("User logged in: ", user);
-    setLoggedInUser(user);
+  // this method handles existing logins and new basic users
+  const handleLogin = (user, newUserData, isLeader) => {
+    console.log("User logged in: UID = ", user.uid);
+
+    // if we logged in a new user
+    if (newUserData) {
+      console.log("New user to create!", newUserData);
+
+      // create new user data with what we do know about the user, as well as some defaults
+      let newUser = {};
+      if (isLeader) {
+        newUser = {
+          private: {
+            email: newUserData.email,
+            joined: user.metadata.creationTime,
+            lastLogin: user.metadata.lastSignInTime
+          },
+          public: {
+            aboutMe:
+              "I am brand new to Preschool Patch!  I will update my profile ASAP.",
+            age: newUserData.age,
+            assisted: "no",
+            available: "yes",
+            bgCheckWilling: newUserData.backgroundCheck,
+            bgCheckComplete: "no",
+            enrolling: "yes",
+            experience: newUserData.experience,
+            ftRate: 30,
+            infants: newUserData.infants,
+            kidTotal: 0,
+            name: newUserData.displayName,
+            phone: newUserData.phoneNumber,
+            photoUrl: newUserData.photoUrl,
+            rating: 0,
+            zipcode: newUserData.zipcode
+          }
+        };
+      } else {
+        newUser = {
+          private: {
+            email: newUserData.email,
+            joined: user.metadata.creationTime,
+            lastLogin: user.metadata.lastSignInTime
+          },
+          public: {
+            aboutMe:
+              "I am brand new to Preschool Patch!  I will update my profile ASAP.",
+            looking: "yes",
+            kidTotal: 1,
+            name: newUserData.displayName,
+            zipcode: newUserData.zipcode
+          }
+        };
+      }
+
+      // now that we have some essential data in place, store this user into the database
+      // make sure we check to see if we are storing a leader, or simply a user in doing so
+      database
+        .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
+        .set(newUser);
+
+      setLoggedInUser(newUser);
+      setSelection(newUser);
+      // finally pull in data update
+      getData();
+
+      // if we successfully logged in, jump to MyProfile Page, which is the home page for Patch Leaders
+      handlePageUpdate(isLeader ? 4 : 0);
+    } else {
+      // this was an existing user login so pull the user from our data and set them as the loggedInUser
+
+      const curUser = Object.keys(data).find(item => item === user.uid);
+      console.log(curUser);
+      setLoggedInUser(user.uid);
+      // if we successfully logged in, jump to Public Landing Page
+      handlePageUpdate(0);
+    }
   };
 
   const handleLogOut = () => {
@@ -74,24 +134,33 @@ const App = () => {
 
   /* Page Router */
   const onPage = page => {
+    // reset window scroll position with each page change
+    window.scrollTo(0, 0);
+
     switch (page) {
       case 4:
         return (
           <MyProfilePage
             pageUpdate={handlePageUpdate}
-            data={selection}
-            loggedInUser={loggedInUser}
+            data={loggedInUser}
             handleLogOut={handleLogOut}
           />
         );
       case 3:
-        return <ProfilePage pageUpdate={handlePageUpdate} data={selection} />;
+        return (
+          <ProfilePage
+            pageUpdate={handlePageUpdate}
+            data={selection}
+            loggedInUser={loggedInUser}
+          />
+        );
       case 2:
         return (
           <CreateAccount
             pageUpdate={handlePageUpdate}
             data={data}
             handleLogin={handleLogin}
+            loggedInUser={loggedInUser}
           />
         );
       case 1:
@@ -101,6 +170,7 @@ const App = () => {
             data={data}
             handleLogin={handleLogin}
             handleLogOut={handleLogOut}
+            loggedInUser={loggedInUser}
           />
         );
       default:
@@ -124,10 +194,11 @@ const App = () => {
 
   const getData = () => {
     // grab ref to the data
-    const userData = database.ref("users");
+    const userData = database.ref("leaders");
     // now get the data stored there
     userData.once("value").then(snapshot => {
       if (snapshot.val()) {
+        console.log(snapshot.val());
         setData(snapshot.val());
       }
     });

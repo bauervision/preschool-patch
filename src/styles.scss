@@ -1,7 +1,8 @@
 $MALACHITE: #20bf55;
 $PATCHGREEN: #0b8e51;
 $DARKIMPERIALBLUE: #0b4f6c;
-$CYAN: #01baef;
+$LIGHTGOLD: #f2f6d0;
+$LIGHTGREY: #d0e1d4;
 $GHOSTWHITE: #fbfbff;
 $SONICSILVER: #757575;
 
@@ -11,6 +12,7 @@ $SONICSILVER: #757575;
   background-color: $GHOSTWHITE;
   margin: 0;
   color: $PATCHGREEN;
+  font-size: 14pt;
 
   // Pages
 
@@ -26,7 +28,7 @@ $SONICSILVER: #757575;
       flex-wrap: wrap;
       overflow: auto;
       max-height: 400px;
-      background-color: mediumaquamarine;
+      background-color: $LIGHTGOLD;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -82,6 +84,22 @@ $SONICSILVER: #757575;
     &_Align {
       display: flex;
       align-items: center;
+    }
+
+    &_MessageBtn {
+      background-color: $MALACHITE;
+      padding: 5px;
+      margin: 2px;
+      color: $GHOSTWHITE;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $GHOSTWHITE;
+        padding: 5px;
+        margin: 2px;
+        color: $PATCHGREEN;
+      }
     }
   }
 
@@ -217,6 +235,14 @@ $SONICSILVER: #757575;
     margin: 10px;
     background-color: $MALACHITE;
     color: white;
+    font-size: 14pt;
+
+    &:hover {
+      background-color: $LIGHTGOLD;
+      color: $MALACHITE;
+      cursor: pointer;
+      font-size: 14pt;
+    }
   }
 
   .Red {
@@ -271,5 +297,9 @@ $SONICSILVER: #757575;
     padding: 10px;
     display: flex;
     justify-content: center;
+  }
+
+  li {
+    font-size: 16pt;
   }
 }

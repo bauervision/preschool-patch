@@ -10,13 +10,15 @@ export const Header = ({
   isLogin,
   myProfile,
   isCreate,
-  loggedInUser
+  loggedInUser,
+  messages
 }) => {
   const LogOut = () => {
     SignUserOut();
     pageUpdate(0);
   };
 
+  console.log(loggedInUser);
   return (
     <header className="Header">
       <div className="Header_Align">
@@ -65,6 +67,16 @@ export const Header = ({
           </div>
         )}
       </div>
+
+      {loggedInUser && (
+        <div style={{ color: "white", textAlign: "right" }}>
+          <button className="Header_MessageBtn">
+            <div>{messages}</div>
+            <div />
+          </button>
+          {`| Patch Leader: ${loggedInUser.name}`}
+        </div>
+      )}
     </header>
   );
 };

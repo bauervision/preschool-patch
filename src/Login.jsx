@@ -27,13 +27,14 @@ export const Login = ({ pageUpdate, handleLogin }) => {
   const handleSubmitLogin = async e => {
     e.preventDefault();
     let status = await LoginUserEmailPassword(email, password);
-    console.log("Log in status = ", status);
-    // if status is false then we got an error
-    if (!status.successful) {
+
+    // if we didn't get a user back, then there was an error
+    if (!status.user) {
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
     } else {
       // otherwise we had a successful login
+      handleLogin(status.user);
     }
   };
 
@@ -44,21 +45,23 @@ export const Login = ({ pageUpdate, handleLogin }) => {
 
   const handleSubmitNew = async e => {
     e.preventDefault();
+
     const newUserData = {
       email,
       password,
-      displayName: name
+      displayName: name,
+      phoneNumber: phone,
+      zipcode: zipcode
     };
 
-    let status = await RegisterUser(newUserData);
-
+    let status = await RegisterUser(email, password);
     console.log(status);
-    if (status && !status.successful) {
+    if (!status.user) {
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
     } else if (status) {
       // otherwise we had a successful login
-      handleLogin(status);
+      handleLogin(status.user, newUserData);
     }
   };
 

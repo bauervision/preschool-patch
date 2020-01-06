@@ -2,6 +2,7 @@ import React from "react";
 // import { storage } from "./config";
 
 export const ProfileCard = ({ data, img, handleSelection }) => {
+  console.log(data);
   // pull out public data
   const {
     public: {

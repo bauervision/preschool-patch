@@ -6,32 +6,17 @@ import { Footer } from "./Components/Footer";
 export const MyProfilePage = ({ pageUpdate, data }) => {
   // pull out public data
   const {
-    public: {
-      aboutMe,
-      age,
-      assisted,
-      available,
-      experience,
-      // ftRate,
-      infants,
-      kidTotal,
-      name,
-      rating
-    }
-  } = data;
-
-  const getPictureId = name => {
-    switch (name) {
-      case "Mike":
-        return 50;
-      case "Beth":
-        return 29;
-      case "Brianna":
-        return 45;
-      default:
-        return 10;
-    }
-  };
+    aboutMe,
+    age,
+    assisted,
+    available,
+    experience,
+    // ftRate,
+    infants,
+    kidTotal,
+    name,
+    rating
+  } = data && data;
 
   return (
     <div className="CreateAccount">
@@ -59,7 +44,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
           <img
             alt="profile pic"
             style={{ borderRadius: 25, width: 200, height: 200 }}
-            src={`https://i.pravatar.cc/200?img=${getPictureId(name)}`}
+            src={`https://i.pravatar.cc/200`}
           />
 
           <div>

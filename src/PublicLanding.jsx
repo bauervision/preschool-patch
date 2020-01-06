@@ -85,6 +85,7 @@ export const PublicLanding = ({
         isHome
         loggedInUser={loggedInUser}
         handleLogOut={handleLogOut}
+        messages={3}
       />
 
       <div style={{ marginBottom: 20 }}>
@@ -131,13 +132,27 @@ export const PublicLanding = ({
 
       {/* Content */}
       <div className="PublicLanding_Content BoxShadow ">
-        {filteredData.map((elem, index) => (
-          <ProfileCard
-            key={elem.public.name}
-            data={elem}
-            handleSelection={handleSelection}
-          />
-        ))}
+        {Object.keys(filteredData).length !== 0 ? (
+          Object.keys(filteredData).map(key => {
+            return (
+              <ProfileCard
+                key={filteredData[key].public.name}
+                data={filteredData[key]}
+                handleSelection={handleSelection}
+              />
+            );
+          })
+        ) : (
+          <div style={{ padding: 40 }}>
+            <h3>{"No Patch Leaders yet. :("}</h3>
+            <div>Maybe you can be the first.....?</div>
+            <div>
+              <button onClick={() => pageUpdate(2)}>
+                Become a Patch Leader!
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />

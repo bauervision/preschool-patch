@@ -96,11 +96,22 @@ export const PublicLanding = ({
             className="Logo"
             style={{ width: 600, height: "auto" }}
           />
-          <div style={{ margin: 20 }}>
+          <h3 style={{ margin: 20 }} className="CursiveFont">
             Find a local preschool teacher for your child!
-          </div>
+          </h3>
         </div>
 
+        <div className="Flex JustifyCenter AlignItems Buffer GreenFill">
+          <p style={{ marginTop: 50, marginBottom: 50 }}>
+            Preschool Patch offers a small group setting designed to elevate
+            your child's education and social interactions in a warm, inviting,
+            and safe space. ​
+            <br />
+            <br />
+            Max class size of 5 means that your child will not be just a number,
+            but a nurtured student.
+          </p>
+        </div>
         {/* Filter Criteria */}
         <div
           style={{

@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 
-import { Edit } from "../images";
+import { Checked, Unchecked } from "../images";
 
-const EditField = ({ title, placeholder, type, forLabel, onChange, value }) => {
+const EditField = ({
+  title,
+  placeholder,
+  type,
+  forLabel,
+  onChange,
+  value,
+  isTextArea,
+  isCheck
+}) => {
   const [newValue, setNewValue] = useState(value);
 
   const handleUpdate = () => {
@@ -13,7 +22,9 @@ const EditField = ({ title, placeholder, type, forLabel, onChange, value }) => {
     <div
       className="Flex Col JustifyCenter"
       style={{
-        padding: 2
+        padding: 2,
+        marginLeft: isCheck ? 40 : 0,
+        marginRight: isCheck ? 40 : 0
       }}
     >
       <div style={{ textAlign: "left" }}>
@@ -22,20 +33,29 @@ const EditField = ({ title, placeholder, type, forLabel, onChange, value }) => {
         </label>
       </div>
 
-      <div className="Flex Row AlignItems">
-        <div>
-          <button onClick={handleUpdate}>
-            <img src={Edit} alt="edit" />
-          </button>
-        </div>
-        <input
-          className="InputStyle"
-          placeholder={placeholder}
-          type={type}
-          name={forLabel}
-          value={value}
-          onChange={e => setNewValue(e.target.value)}
-        />
+      <div className="Flex Row AlignItems JustifyCenter">
+        {isTextArea ? (
+          <textarea name={forLabel} rows="8" cols="70">
+            {value}
+          </textarea>
+        ) : (
+          <>
+            {isCheck ? (
+              <button className="CheckBox " type="button" onClick={onChange}>
+                <img src={value ? Checked : Unchecked} alt="checkbox" />
+              </button>
+            ) : (
+              <input
+                className="InputStyle Buffer"
+                placeholder={placeholder}
+                type={type}
+                name={forLabel}
+                value={value}
+                onChange={e => setNewValue(e.target.value)}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ $SONICSILVER: #757575;
   text-align: center;
   background-color: $GHOSTWHITE;
   margin: 0;
+  padding: 0;
   color: $PATCHGREEN;
   font-size: 14pt;
 
@@ -40,10 +41,25 @@ $SONICSILVER: #757575;
     }
   }
 
+  .SimpleBorder {
+    border: solid 1px rgba(0, 220, 0, 0.4);
+    border-radius: 20px;
+    padding: 30px;
+  }
+
+  .CheckBox {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 20px;
+    margin: 5px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   .CreateAccount {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    background-color: $PATCHGREEN;
   }
 
   .Login {
@@ -107,7 +123,7 @@ $SONICSILVER: #757575;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: lightsteelblue;
+    background-color: rgb(233, 233, 233);
     div {
       margin: 40px;
     }
@@ -143,6 +159,11 @@ $SONICSILVER: #757575;
     border-color: $MALACHITE;
   }
 
+  .GreenFill {
+    background-color: $PATCHGREEN;
+    color: $GHOSTWHITE;
+  }
+
   .Card {
     display: flex;
     max-width: 600px;
@@ -166,6 +187,10 @@ $SONICSILVER: #757575;
       height: auto;
       transition: width 1s;
     }
+  }
+
+  .CursiveFont {
+    font-family: "Dancing Script", cursive;
   }
 
   .profileText {
@@ -219,6 +244,7 @@ $SONICSILVER: #757575;
   .InputStyle {
     padding: 10px;
     margin: 10px;
+    border: solid 1px rgba(0, 220, 0, 0.4);
     border-radius: 5px;
     border-style: solid;
     border-color: $MALACHITE;
@@ -275,6 +301,12 @@ $SONICSILVER: #757575;
 
     &:hover {
     }
+  }
+  textarea {
+    font-family: "Raleway", sans-serif;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 12pt;
   }
 
   button {

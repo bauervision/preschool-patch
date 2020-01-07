@@ -3,9 +3,13 @@ import React from "react";
 import { Flower } from "../images";
 
 const PageHeader = ({ isLogin, title, handleUserTypeSwitch, userType }) => (
-  <div className="Flex JustifyCenter AlignItems Buffer">
-    <img src={Flower} alt="logo" style={{ height: 200, width: "auto" }} />
-    <h2 style={{ margin: 20 }}>{title}</h2>
+  <div className="Flex JustifyCenter AlignItems ">
+    <div>
+      <img src={Flower} alt="logo" style={{ height: 200, width: "auto" }} />
+      <h2 style={{ margin: 20, fontSize: 32 }} className="CursiveFont">
+        {title}
+      </h2>
+    </div>
 
     {/* Handle Buttons if this is the Login Page */}
     {isLogin && (

@@ -88,25 +88,33 @@ export const Login = ({ pageUpdate, handleLogin }) => {
   };
 
   return (
-    <div className="Login">
+    <div className="CreateAccount Col Flex JustifyCenter">
       <div>
         <Header pageUpdate={pageUpdate} isLogin />
 
-        <PageLogo
-          isLogin
-          title="Login"
-          handleUserTypeSwitch={handleUserTypeSwitch}
-          userType={userType}
-        />
-
-        <div className="">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          ></div>
+        <h1 className="CursiveFont" style={{ color: "white" }}>
+          Login
+        </h1>
+        <div
+          className="Flex Col"
+          style={{
+            backgroundColor: "white",
+            justifyContent: "space-evenly",
+            margin: 20,
+            marginRight: 40,
+            border: "solid",
+            borderWidth: 1,
+            borderColor: "green",
+            borderRadius: 50,
+            padding: 30
+          }}
+        >
+          <PageLogo
+            isLogin
+            title=""
+            handleUserTypeSwitch={handleUserTypeSwitch}
+            userType={userType}
+          />
 
           {userType !== null && (
             <>
@@ -215,8 +223,9 @@ export const Login = ({ pageUpdate, handleLogin }) => {
               )}
             </>
           )}
-
-          <img src={Kids} alt="Working" className="Login_Imagery BoxShadow" />
+          <div>
+            <img src={Kids} alt="Working" className="Login_Imagery BoxShadow" />
+          </div>
         </div>
       </div>
 

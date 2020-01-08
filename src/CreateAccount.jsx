@@ -32,6 +32,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
   );
 
   const handleSubmitNew = async e => {
+
     e.preventDefault();
     const newUserData = {
       age,
@@ -289,10 +290,10 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
                       Enter Valid Email and Password
                     </div>
                   ) : (
-                    <button type="submit" className="RegisterButton">
-                      Register
+                      <button type="submit" className="RegisterButton">
+                        Register
                     </button>
-                  )}
+                    )}
                 </div>
                 {loginError && <Error errorMessage={loginError} />}
               </div>

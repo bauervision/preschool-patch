@@ -43,9 +43,9 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
     console.log("Mounted", data);
     const userId = f.auth().currentUser.uid;
     setUserId(userId);
-  }, []);
+  }, [data]);
 
-  const handleDataUpdate = e => {
+  const handleDataUpdate = (e) => {
     e.preventDefault();
 
     // set update to current data before sending up
@@ -73,13 +73,13 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       .ref(`leaders/${userId}/public`)
       .set(updatedData)
       .then(() => {
-        //do something now that the data has been set
+        // do something now that the data has been set
         setUpdating(true);
       });
   };
 
   // let's push up the new profile pic into storage, and then save the download url
-  const handlePhotoUpdate = file => {
+  const handlePhotoUpdate = (file) => {
     // userId will be a part of the file path so grab it first
     const userId = f.auth().currentUser.uid;
 
@@ -89,25 +89,25 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
 
     uploadTask.on(
       "state_changed",
-      snapshot => {
-        //progress
+      (snapshot) => {
+        // progress
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
         console.log(progress);
         // setUploadProgress(progress);
       },
-      error => {
-        //error
+      (error) => {
+        // error
         console.log(error);
       },
       () => {
-        //complete
+        // complete
         storage
           .ref(`public/${userId}/profilePic/`)
           .child(file.name)
           .getDownloadURL()
-          .then(url => {
+          .then((url) => {
             console.log("Download url: ", url);
             setPhotoUrl(url);
           });
@@ -139,7 +139,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
           }}
         >
           <div>
-            <form onSubmit={e => handleDataUpdate(e)}>
+            <form onSubmit={(e) => handleDataUpdate(e)}>
               <div className="Flex Row AlignItems JustifyCenter">
                 <img
                   className="BoxShadow"
@@ -152,14 +152,16 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   }}
                   src={updatedPhotoUrl}
                 />
-                <EditField
-                  isFile
-                  title="Update Profile Pic"
-                  type="file"
-                  forLabel="profilePic"
-                  onChange={handlePhotoUpdate}
-                  // value={updatedPhotoUrl}
-                />
+                <div>
+                  <div className="CursiveFont LargeFont">{updatedName}</div>
+                  <EditField
+                    isFile
+                    title="Update Profile Pic"
+                    type="file"
+                    forLabel="profilePic"
+                    onChange={handlePhotoUpdate}
+                  />
+                </div>
               </div>
 
               <h3 className="CursiveFont">My Data</h3>

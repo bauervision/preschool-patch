@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from "react";
 
 import { ProfileCard } from "./ProfileCard";
@@ -6,7 +7,7 @@ import { Footer } from "./Components/Footer";
 
 import { Logo } from "./images";
 
-//import { Coloring, Kids, Table, Working } from "./images/photos";
+// import { Coloring, Kids, Table, Working } from "./images/photos";
 // const images = [
 //   { src: { Coloring }, info: "First Image" },
 //   { src: { Kids }, info: "Second Image" },
@@ -34,20 +35,20 @@ export const PublicLanding = ({
   }, [data]);
 
   // handleFilters
-  const filterAvailable = e => {
+  const filterAvailable = (e) => {
     const checked = e.target.checked;
     setFilterAvail(checked);
 
     if (checked) {
       const update = filteredData.filter(
-        elem => elem.public.available === "yes"
+        (elem) => elem.public.available === "yes"
       );
       setFilteredData(update);
     } else {
       // not filtering available, but might be filtering infants
       if (filterAcceptingInfants) {
         const update = filteredData.filter(
-          elem => elem.public.infants === "yes"
+          (elem) => elem.public.infants === "yes"
         );
         setFilteredData(update);
       } else {
@@ -56,17 +57,17 @@ export const PublicLanding = ({
     }
   };
 
-  const filterInfants = e => {
+  const filterInfants = (e) => {
     const checked = e.target.checked;
     setFilterInfants(checked);
 
     if (checked) {
-      const update = filteredData.filter(elem => elem.public.infants === "yes");
+      const update = filteredData.filter((elem) => elem.public.infants === "yes");
       setFilteredData(update);
     } else {
       // we're not filtering infants, but we still might be filtering avail
       if (filterAvail) {
-        const update = data.filter(elem => elem.public.available === "yes");
+        const update = data.filter((elem) => elem.public.available === "yes");
         setFilteredData(update);
       } else {
         setFilteredData(data);
@@ -74,7 +75,7 @@ export const PublicLanding = ({
     }
   };
 
-  const handleSelection = memberData => {
+  const handleSelection = (memberData) => {
     // Pass current selection up to parent in order to render profile page
     handleMemberSelection(memberData);
   };
@@ -112,13 +113,13 @@ export const PublicLanding = ({
                 </button>
               </>
             ) : (
-              <>
-                <button type="button" onClick={() => setShowTeacher(true)}>
-                  As a Teacher
+                <>
+                  <button type="button" onClick={() => setShowTeacher(true)}>
+                    As a Teacher
                 </button>
-                <div>As a Parent</div>
-              </>
-            )}
+                  <div>As a Parent</div>
+                </>
+              )}
           </div>
         </div>
       </div>
@@ -142,22 +143,22 @@ export const PublicLanding = ({
               </div>
             </div>
           ) : (
-            <div className="Flex JustifyCenter">
-              <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder WhiteFill">
-                <div className="Buffer ">Search Local Patches</div>
-              </div>
+              <div className="Flex JustifyCenter">
+                <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder WhiteFill">
+                  <div className="Buffer ">Search Local Patches</div>
+                </div>
 
-              <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder WhiteFill">
-                <div className="Buffer ">Enroll your child</div>
-              </div>
+                <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder WhiteFill">
+                  <div className="Buffer ">Enroll your child</div>
+                </div>
 
-              <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder WhiteFill">
-                <div className="Buffer ">
-                  Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
+                <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder WhiteFill">
+                  <div className="Buffer ">
+                    Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
+                </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* How it Works: Details */}
           <div className="Flex JustifyCenter AlignItems Buffer GreenFill">
@@ -165,7 +166,7 @@ export const PublicLanding = ({
               <div className="Flex Col JustifyCenter AlignItems Buffer">
                 <p>
                   After you signup, your profile will be added to our database
-                  and will show up in local searches. ​
+                  and will show up in local searches.
                   <br />
                   <br />
                 </p>
@@ -194,16 +195,16 @@ export const PublicLanding = ({
                 </div>
               </div>
             ) : (
-              <p style={{ marginTop: 50, marginBottom: 50 }}>
-                Preschool Patch offers a small group setting designed to elevate
-                your child's education and social interactions in a warm,
-                inviting, and safe space. ​
+                <p style={{ marginTop: 50, marginBottom: 50 }}>
+                  Preschool Patch offers a small group setting designed to elevate
+                  your child's education and social interactions in a warm,
+                  inviting, and safe space.
                 <br />
-                <br />
-                Max class size of 5 means that your child will not be just a
-                number, but a nurtured student.
+                  <br />
+                  Max class size of 5 means that your child will not be just a
+                  number, but a nurtured student.
               </p>
-            )}
+              )}
           </div>
         </div>
 
@@ -226,23 +227,23 @@ export const PublicLanding = ({
 
               <label>
                 Show Only Available
-                <input type="checkbox" onChange={e => filterAvailable(e)} />
+                <input type="checkbox" onChange={(e) => filterAvailable(e)} />
               </label>
 
               <label>
                 Accepting Infants
-                <input type="checkbox" onChange={e => filterInfants(e)} />
+                <input type="checkbox" onChange={(e) => filterInfants(e)} />
               </label>
             </>
           ) : (
-            <div className="CursiveFont SuperFont Buffer">
-              Explore some example profiles of our most successful Patches!
+              <div className="CursiveFont SuperFont Buffer">
+                Explore some example profiles of our most successful Patches!
             </div>
-          )}
+            )}
           {/* Content */}
           <div className="PublicLanding_Content BoxShadow ">
             {Object.keys(filteredData).length !== 0 ? (
-              Object.keys(filteredData).map(key => {
+              Object.keys(filteredData).map((key) => {
                 return (
                   <ProfileCard
                     key={filteredData[key].public.name}
@@ -252,16 +253,16 @@ export const PublicLanding = ({
                 );
               })
             ) : (
-              <div style={{ padding: 40 }}>
-                <h3>{"No Patch Leaders yet. :("}</h3>
-                <div>Maybe you can be the first.....?</div>
-                <div>
-                  <button onClick={() => pageUpdate(2)}>
-                    Become a Patch Leader!
+                <div style={{ padding: 40 }}>
+                  <h3>{"No Patch Leaders yet. :("}</h3>
+                  <div>Maybe you can be the first.....?</div>
+                  <div>
+                    <button onClick={() => pageUpdate(2)}>
+                      Become a Patch Leader!
                   </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>

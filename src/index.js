@@ -11,6 +11,7 @@ import { MyProfilePage } from "./MyProfilePage";
 import { f, database } from "./config";
 
 const App = () => {
+
   const [currentPage, setPage] = useState(0);
   const [data, setData] = useState({});
   const [selection, setSelection] = useState({});
@@ -25,12 +26,12 @@ const App = () => {
 
   // check login status
   const handleLoginCheck = () => {
-    f.auth().onAuthStateChanged(user => {
+    f.auth().onAuthStateChanged((user) => {
       if (user) {
         // logged in
         if (data) {
           const curUser = Object.keys(data && data).find(
-            item => item === user.uid
+            (item) => item === user.uid
           );
           if (curUser) {
             setLoggedInUser(data[curUser].public);
@@ -43,9 +44,9 @@ const App = () => {
     });
   };
 
-  const handlePageUpdate = page => setPage(page);
+  const handlePageUpdate = (page) => setPage(page);
 
-  const handleMemberSelection = member => {
+  const handleMemberSelection = (member) => {
     setSelection(member);
     handlePageUpdate(3);
   };
@@ -130,7 +131,7 @@ const App = () => {
     } else {
       // this was an existing user login so pull the user from our data and set them as the loggedInUser
 
-      const curUser = Object.keys(data).find(item => item === user.uid);
+      const curUser = Object.keys(data).find((item) => item === user.uid);
       setLoggedInUser(curUser);
       // if we successfully logged in, jump to Public Landing Page
       handlePageUpdate(0);
@@ -142,7 +143,7 @@ const App = () => {
   };
 
   /* Page Router */
-  const onPage = page => {
+  const onPage = (page) => {
     // reset window scroll position with each page change
     window.scrollTo(0, 0);
 
@@ -205,7 +206,7 @@ const App = () => {
     // grab ref to the data
     const userData = database.ref("leaders");
     // now get the data stored there
-    userData.once("value").then(snapshot => {
+    userData.once("value").then((snapshot) => {
       if (snapshot.val()) {
         setData(snapshot.val());
       }

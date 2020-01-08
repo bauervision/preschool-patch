@@ -24,6 +24,8 @@ export const Header = ({
         <div>
           <input placeholder="Search" className="InputStyle" />
         </div>
+
+        {/* TODO: add additonal check for when logged in user is already a leader */}
         {!isCreate && (
           <div>
             <button onClick={() => pageUpdate(2)}>
@@ -31,6 +33,8 @@ export const Header = ({
             </button>
           </div>
         )}
+
+        {/* We're not yet logged in */}
         {!loggedInUser ? (
           <div>
             {myProfile || isCreate ? (
@@ -38,12 +42,13 @@ export const Header = ({
             ) : (
               <>
                 {!isLogin && (
-                  <button onClick={() => pageUpdate(1)}>Login</button>
+                  <button onClick={() => pageUpdate(1)}>Login / Signup</button>
                 )}
               </>
             )}
           </div>
         ) : (
+          // we are now logged in
           <div>
             <img
               src={Profile}

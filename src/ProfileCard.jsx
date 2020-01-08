@@ -23,7 +23,6 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
     handleSelection(data);
   };
 
-  console.log(photoUrl);
   return (
     <div className="Card" onClick={getSelection}>
       <div

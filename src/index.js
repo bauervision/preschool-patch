@@ -52,12 +52,8 @@ const App = () => {
 
   // this method handles existing logins and new basic users
   const handleLogin = (user, newUserData, isLeader) => {
-    console.log("User logged in: UID = ", user.uid);
-
     // if we logged in a new user
     if (newUserData) {
-      console.log("New user to create!", newUserData);
-
       // create new user data with what we do know about the user, as well as some defaults
       let newUser = {};
       if (isLeader) {
@@ -77,16 +73,24 @@ const App = () => {
             bgCheckComplete: "no",
             enrolling: "yes",
             experience: newUserData.experience,
-            ftRate: 30,
             infants: newUserData.infants,
+            isLeader: true,
             kidTotal: 0,
             name: newUserData.displayName,
             phone: newUserData.phoneNumber,
             photoUrl: newUserData.photoUrl,
             rating: 0,
+            rates: {
+              ft: 35,
+              pt: 45,
+              di: 60
+            },
             zipcode: newUserData.zipcode
           }
         };
+        console.log("New leader to create!", newUser);
+        // since we are a leader and now logged in, go ahead and set myself as the selection
+        setSelection(newUser);
       } else {
         newUser = {
           private: {
@@ -109,15 +113,20 @@ const App = () => {
       // make sure we check to see if we are storing a leader, or simply a user in doing so
       database
         .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
-        .set(newUser);
+        .set(newUser)
+        .then(() => {
+          setLoggedInUser(newUser);
+        });
 
-      setLoggedInUser(newUser);
-      setSelection(newUser);
-      // finally pull in data update
-      getData();
-
-      // if we successfully logged in, jump to MyProfile Page, which is the home page for Patch Leaders
-      handlePageUpdate(isLeader ? 4 : 0);
+      // repull data before jumping to a new page
+      database
+        .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
+        .once("value")
+        .then(() => {
+          // if we successfully logged in, jump to MyProfile Page, which is the home page for Patch Leaders
+          // othwise head to landing page
+          handlePageUpdate(isLeader ? 4 : 0);
+        });
     } else {
       // this was an existing user login so pull the user from our data and set them as the loggedInUser
 
@@ -204,7 +213,7 @@ const App = () => {
   };
 
   return (
-    <div className="App">
+    <div className="App FixedBG">
       {/* Handle which page to load based on state page value */}
       {onPage(currentPage)}
     </div>

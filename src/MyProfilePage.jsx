@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { EditField } from "./Components";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
+
+import { Success } from "./images";
+
+import { f, storage, database } from "./config";
 
 export const MyProfilePage = ({ pageUpdate, data }) => {
   // pull out public data
@@ -12,23 +16,104 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
     assisted,
     available,
     experience,
-    ftRate,
+    rates,
     infants,
     kidTotal,
     name,
     photoUrl
-  } = data && data;
+  } = data;
 
+  const [userId, setUserId] = useState(0);
+  const [updatedAboutMe, setAboutMe] = useState(aboutMe);
   const [updatedAge, setAge] = useState(age);
-  const [enrolling, setEnrolling] = useState(available);
+  const [updatedAssisted, setAssisted] = useState(assisted);
+  const [updatedAvailable, setAvailable] = useState(available);
+  const [updatedExperience, setExperience] = useState(experience);
+  const [updatedFTRates, setFTRates] = useState(rates && rates.ft);
+  const [updatedPTRates, setPTRates] = useState(rates && rates.pt);
+  const [updatedDIRates, setDIRates] = useState(rates && rates.di);
+  const [updatedInfants, setInfants] = useState(infants);
+  const [updatedKidTotal, setKidTotal] = useState(kidTotal);
+  const [updatedName, setName] = useState(name);
+  const [updatedPhotoUrl, setPhotoUrl] = useState(photoUrl);
+  const [updating, setUpdating] = useState(false);
 
-  const handleEnrollingToggle = () => {
-    console.log(!enrolling);
-    setEnrolling(!enrolling);
+  /* On Mount, fetch uid */
+  useEffect(() => {
+    console.log("Mounted", data);
+    const userId = f.auth().currentUser.uid;
+    setUserId(userId);
+  }, []);
+
+  const handleDataUpdate = e => {
+    e.preventDefault();
+
+    // set update to current data before sending up
+    const updatedData = {
+      aboutMe: updatedAboutMe,
+      age: updatedAge,
+      assisted: updatedAssisted,
+      available: updatedAvailable,
+      experience: updatedExperience,
+      rates: {
+        ft: updatedFTRates,
+        pt: updatedPTRates,
+        di: updatedDIRates
+      },
+      infants: updatedInfants,
+      kidTotal: updatedKidTotal,
+      name: updatedName,
+      photoUrl: updatedPhotoUrl
+    };
+
+    console.log(updatedData);
+
+    // now that we have updated data, push it up to our database
+    database
+      .ref(`leaders/${userId}/public`)
+      .set(updatedData)
+      .then(() => {
+        //do something now that the data has been set
+        setUpdating(true);
+      });
   };
-  const handleDataUpdate = () => {};
 
-  const rates = { ft: 40, pt: 50, di: 60 };
+  // let's push up the new profile pic into storage, and then save the download url
+  const handlePhotoUpdate = file => {
+    // userId will be a part of the file path so grab it first
+    const userId = f.auth().currentUser.uid;
+
+    const uploadTask = storage
+      .ref(`public/${userId}/profilePic/${file.name}`)
+      .put(file);
+
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        //progress
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        console.log(progress);
+        // setUploadProgress(progress);
+      },
+      error => {
+        //error
+        console.log(error);
+      },
+      () => {
+        //complete
+        storage
+          .ref(`public/${userId}/profilePic/`)
+          .child(file.name)
+          .getDownloadURL()
+          .then(url => {
+            console.log("Download url: ", url);
+            setPhotoUrl(url);
+          });
+      }
+    );
+  };
 
   return (
     <div className="CreateAccount Col Flex JustifyCenter">
@@ -39,11 +124,10 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
           My Profile Page
         </h1>
 
-        {/* Profile Pic */}
+        {/* Profile Page Data */}
         <div
-          className="Flex Row"
+          className="Flex Row WhiteFill"
           style={{
-            backgroundColor: "white",
             justifyContent: "space-evenly",
             margin: 20,
             marginRight: 40,
@@ -55,7 +139,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
           }}
         >
           <div>
-            <form>
+            <form onSubmit={e => handleDataUpdate(e)}>
               <div className="Flex Row AlignItems JustifyCenter">
                 <img
                   className="BoxShadow"
@@ -64,27 +148,29 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                     margin: 30,
                     borderRadius: 25,
                     width: 200,
-                    height: 200
+                    height: "auto"
                   }}
-                  src={photoUrl}
+                  src={updatedPhotoUrl}
                 />
                 <EditField
+                  isFile
                   title="Update Profile Pic"
                   type="file"
                   forLabel="profilePic"
-                  // onChange={setAge}
-                  //value={photoUrl}
+                  onChange={handlePhotoUpdate}
+                  // value={updatedPhotoUrl}
                 />
               </div>
 
+              <h3 className="CursiveFont">My Data</h3>
               <div className="Flex Row AlignItems SimpleBorder">
                 <EditField
                   title="Full Name"
                   placeholder={name}
                   type="text"
                   forLabel="Name"
-                  //onChange={setAge}
-                  value={name}
+                  onChange={setName}
+                  value={updatedName}
                 />
 
                 <EditField
@@ -100,8 +186,8 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   placeholder={experience}
                   type="number"
                   forLabel="experience"
-                  //onChange={setAge}
-                  value={experience}
+                  onChange={setExperience}
+                  value={updatedExperience}
                 />
 
                 <EditField
@@ -109,55 +195,51 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   placeholder={kidTotal}
                   type="number"
                   forLabel="kidTotal"
-                  //onChange={setAge}
-                  value={kidTotal}
+                  onChange={setKidTotal}
+                  value={updatedKidTotal}
                 />
               </div>
 
               <div>
-                <h3 style={{ textAlign: "left" }} className="CursiveFont">
-                  My Rates
-                </h3>
+                <h3 className="CursiveFont">My Rates</h3>
                 <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                   <EditField
                     title="Full Time Rate"
                     placeholder={age}
                     type="number"
                     forLabel="Age"
-                    onChange={setAge}
-                    value={rates.ft}
+                    onChange={setFTRates}
+                    value={updatedFTRates}
                   />
                   <EditField
                     title="Part Time Rate"
                     placeholder={age}
                     type="number"
                     forLabel="Age"
-                    onChange={setAge}
-                    value={rates.pt}
+                    onChange={setPTRates}
+                    value={updatedPTRates}
                   />
                   <EditField
                     title="Drop-In Rate"
-                    placeholder={age}
+                    placeholder="Enter you preferred Drop-in rate"
                     type="number"
                     forLabel="Age"
-                    onChange={setAge}
-                    value={rates.di}
+                    onChange={setDIRates}
+                    value={updatedDIRates}
                   />
                 </div>
               </div>
 
               <div>
-                <h3 style={{ textAlign: "left" }} className="CursiveFont">
-                  My Status
-                </h3>
+                <h3 className="CursiveFont">My Status</h3>
                 <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                   <EditField
                     isCheck
                     title="Currently Enrolling"
                     type="checkbox"
                     forLabel="Enrolling"
-                    onChange={handleEnrollingToggle}
-                    value={enrolling}
+                    onChange={() => setAvailable(!updatedAvailable)}
+                    value={updatedAvailable}
                   />
 
                   <EditField
@@ -165,8 +247,8 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                     title="Currently Assisted?"
                     type="checkbox"
                     forLabel="assisted"
-                    // onChange={setAge}
-                    value={assisted}
+                    onChange={() => setAssisted(!updatedAssisted)}
+                    value={updatedAssisted}
                   />
 
                   <EditField
@@ -174,8 +256,8 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                     title="Accepting Infants?"
                     type="checkbox"
                     forLabel="assisted"
-                    // onChange={setAge}
-                    value={infants}
+                    onChange={() => setInfants(!updatedInfants)}
+                    value={updatedInfants}
                   />
                 </div>
               </div>
@@ -188,13 +270,20 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   placeholder={aboutMe}
                   type="text"
                   forLabel="aboutMe"
-                  //onChange={setAge}
-                  value={aboutMe}
+                  onChange={setAboutMe}
+                  value={updatedAboutMe}
                 />
               </div>
-              <button type="submit" className="RegisterButton">
-                Submit Changes
-              </button>
+              <div>
+                <button type="submit" className="RegisterButton">
+                  Submit Changes
+                </button>
+                {updating && (
+                  <div>
+                    <img src={Success} alt="Success" />
+                  </div>
+                )}
+              </div>
             </form>
           </div>
         </div>

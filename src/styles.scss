@@ -9,13 +9,21 @@ $SONICSILVER: #757575;
 .App {
   font-family: "Raleway", sans-serif;
   text-align: center;
-  background-color: $GHOSTWHITE;
+  //background-color: $GHOSTWHITE;
   margin: 0;
   padding: 0;
   color: $PATCHGREEN;
   font-size: 14pt;
-
+  background-image: url("https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2FwhiteWoodBG.jpg?alt=media&token=51c0538f-945d-4cf1-9c8f-4a5c54e8e557");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   // Pages
+
+  .FixedBG {
+    background-image: url("https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2FwhiteWoodBG.jpg?alt=media&token=51c0538f-945d-4cf1-9c8f-4a5c54e8e557");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
 
   .PublicLanding {
     display: flex;
@@ -38,6 +46,22 @@ $SONICSILVER: #757575;
       margin-left: 80px;
       margin-right: 80px;
       border-radius: 10px;
+    }
+
+    &_HowItWorks {
+      font-size: 18pt;
+    }
+
+    &_Step {
+      text-align: center;
+      max-width: 10px;
+      max-height: 10px;
+      display: block !important;
+      border-radius: 30px;
+      padding: 20px;
+      background-color: $PATCHGREEN;
+      color: $GHOSTWHITE;
+      font-size: 18pt;
     }
   }
 
@@ -149,9 +173,17 @@ $SONICSILVER: #757575;
 
   // General Styling
 
+  .LargeFont {
+    font-size: 28pt;
+  }
+
+  .SuperFont {
+    font-size: 34pt;
+  }
+
   .Logo {
-    margin-left: 250px;
-    margin-top: 50px;
+    margin-left: 200px;
+    margin-top: 20px;
   }
 
   .Social {
@@ -162,6 +194,14 @@ $SONICSILVER: #757575;
   .GreenFill {
     background-color: $PATCHGREEN;
     color: $GHOSTWHITE;
+    padding: 50px;
+    border-radius: 20px;
+  }
+
+  .WhiteFill {
+    background-color: $GHOSTWHITE;
+    border-radius: 20px;
+    margin: 50px;
   }
 
   .Card {

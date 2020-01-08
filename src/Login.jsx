@@ -5,7 +5,6 @@ import { Footer } from "./Components/Footer";
 
 // Components
 import { BasicInput, PasswordInput, Error, PageLogo } from "./Components";
-import { Kids } from "./images/photos";
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
@@ -223,9 +222,6 @@ export const Login = ({ pageUpdate, handleLogin }) => {
               )}
             </>
           )}
-          <div>
-            <img src={Kids} alt="Working" className="Login_Imagery BoxShadow" />
-          </div>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Checked, Unchecked } from "../images";
 
@@ -10,14 +10,9 @@ const EditField = ({
   onChange,
   value,
   isTextArea,
-  isCheck
+  isCheck,
+  isFile
 }) => {
-  const [newValue, setNewValue] = useState(value);
-
-  const handleUpdate = () => {
-    onChange(newValue);
-  };
-
   return (
     <div
       className="Flex Col JustifyCenter"
@@ -35,9 +30,13 @@ const EditField = ({
 
       <div className="Flex Row AlignItems JustifyCenter">
         {isTextArea ? (
-          <textarea name={forLabel} rows="8" cols="70">
-            {value}
-          </textarea>
+          <textarea
+            name={forLabel}
+            rows="8"
+            cols="70"
+            onChange={e => onChange(e.target.value)}
+            value={value}
+          />
         ) : (
           <>
             {isCheck ? (
@@ -45,14 +44,27 @@ const EditField = ({
                 <img src={value ? Checked : Unchecked} alt="checkbox" />
               </button>
             ) : (
-              <input
-                className="InputStyle Buffer"
-                placeholder={placeholder}
-                type={type}
-                name={forLabel}
-                value={value}
-                onChange={e => setNewValue(e.target.value)}
-              />
+              <>
+                {isFile ? (
+                  <input
+                    className="InputStyle Buffer"
+                    placeholder={placeholder}
+                    type={type}
+                    name={forLabel}
+                    value={value}
+                    onChange={e => onChange(e.target.files[0])}
+                  />
+                ) : (
+                  <input
+                    className="InputStyle Buffer"
+                    placeholder={placeholder}
+                    type={type}
+                    name={forLabel}
+                    value={value}
+                    onChange={e => onChange(e.target.value)}
+                  />
+                )}
+              </>
             )}
           </>
         )}

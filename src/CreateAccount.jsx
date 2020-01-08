@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 
-import { BasicInput, PasswordInput, Error, PageLogo } from "./Components";
+import { BasicInput, PasswordInput, Error } from "./Components";
 
 import { RegisterUser } from "./helpers/auth";
 //import { f, storage } from "./config";
@@ -43,15 +43,16 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
       experience,
       backgroundCheck: background,
       infants,
-      photoUrl: "gs://preschoolpatch-f04be.appspot.com/public/avatar.png"
+      photoUrl:
+        "https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490"
     };
 
     let status = await RegisterUser(email, password);
-    console.log(status);
+
     if (!status.user) {
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
-    } else if (status) {
+    } else {
       // otherwise we had a successful login
       handleLogin(status.user, newUserData, true);
     }
@@ -120,9 +121,8 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
         </h1>
 
         <div
-          className="Flex Col"
+          className="Flex Col FixedBG"
           style={{
-            backgroundColor: "white",
             justifyContent: "space-evenly",
             margin: 20,
             marginRight: 40,
@@ -155,7 +155,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
           </div>
           <br />
 
-          <div className="Flex JustifyCenter AlignItems Buffer">
+          <div className="Flex JustifyCenter AlignItems Buffer BoxShadow WhiteFill">
             <h2>Typical Earning Potential</h2>
 
             <ul style={{ textAlign: "left", marginTop: 50 }}>
@@ -192,122 +192,128 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
 
           <br />
 
-          <h1>Are you ready to earn an extra $2000+ a month?!!</h1>
-          <p>Realize that the above rates are just examples!</p>
-          <p>
-            Depending on your location, experience, and how marketable you are
-            to prospective families, those rates can be as high as you are
-            willing to push them!
-          </p>
-          <form onSubmit={handleSubmitNew}>
-            <div className="Flex Col JustifyCenter AlignItems">
-              <h3>Preschool Patch Leader Registration Form</h3>
-              <p>
-                Upon completion, you will be able to customize your profile and
-                appear in local searches.
-              </p>
+          <div className="Flex Col JustifyCenter AlignItems Buffer BoxShadow WhiteFill">
+            <h1>Are you ready to earn an extra $2000+ a month?!!</h1>
+            <p>
+              Realize that the above rates are just examples! <br />
+              Depending on your location, experience, and how marketable you are
+              to prospective families, <br />
+              those rates can be as high as you are willing to push them!
+            </p>
+          </div>
+          <div className="Flex Col JustifyCenter AlignItems Buffer BoxShadow WhiteFill">
+            <form onSubmit={handleSubmitNew}>
+              <div className="Flex Col JustifyCenter AlignItems">
+                <h3>Preschool Patch Leader Registration Form</h3>
+                <p>
+                  Upon completion, you will be able to customize your profile
+                  and appear in local searches.
+                </p>
 
-              <div className="Flex Col LoginForm BoxShadow">
-                <BasicInput
-                  title="Full Name"
-                  type="text"
-                  forLabel="name"
-                  onChange={setNameLogin}
-                  value={name}
-                />
+                <div className="Flex Col LoginForm BoxShadow">
+                  <BasicInput
+                    title="Full Name"
+                    type="text"
+                    forLabel="name"
+                    onChange={setNameLogin}
+                    value={name}
+                  />
 
-                <BasicInput
-                  title="Age"
-                  type="tenumberxt"
-                  forLabel="age"
-                  onChange={setAge}
-                  value={age}
-                />
+                  <BasicInput
+                    title="Age"
+                    type="tenumberxt"
+                    forLabel="age"
+                    onChange={setAge}
+                    value={age}
+                  />
 
-                <BasicInput
-                  title="Email"
-                  type="email"
-                  forLabel="email"
-                  onChange={setEmail}
-                  value={email}
-                />
+                  <BasicInput
+                    title="Email"
+                    type="email"
+                    forLabel="email"
+                    onChange={setEmail}
+                    value={email}
+                  />
 
-                <BasicInput
-                  title="Phone"
-                  type="text"
-                  forLabel="phone"
-                  onChange={setPhoneLogin}
-                  value={phone}
-                />
+                  <BasicInput
+                    title="Phone"
+                    type="text"
+                    forLabel="phone"
+                    onChange={setPhoneLogin}
+                    value={phone}
+                  />
 
-                <BasicInput
-                  title="Zipcode"
-                  type="number"
-                  forLabel="postal-code"
-                  onChange={setZipcodeLogin}
-                  value={zipcode}
-                />
+                  <BasicInput
+                    title="Zipcode"
+                    type="number"
+                    forLabel="postal-code"
+                    onChange={setZipcodeLogin}
+                    value={zipcode}
+                  />
 
-                {/* Leader specific data */}
-                <BasicInput
-                  title="Years of Children Experience"
-                  type="number"
-                  forLabel="experience"
-                  onChange={setExperience}
-                  value={experience}
-                />
+                  {/* Leader specific data */}
+                  <BasicInput
+                    title="Years of Children Experience"
+                    type="number"
+                    forLabel="experience"
+                    onChange={setExperience}
+                    value={experience}
+                  />
 
-                <BasicInput
-                  title="Willing to get a Background Check?"
-                  type="checkbox"
-                  forLabel="background"
-                  onChange={setBackground}
-                  value={background}
-                />
+                  <BasicInput
+                    title="Willing to get a Background Check?"
+                    type="checkbox"
+                    forLabel="background"
+                    onChange={setBackground}
+                    value={background}
+                  />
 
-                <BasicInput
-                  title="Accepting Infants?"
-                  type="checkbox"
-                  forLabel="infants"
-                  onChange={setInfants}
-                  value={infants}
-                />
+                  <BasicInput
+                    title="Accepting Infants?"
+                    type="checkbox"
+                    forLabel="infants"
+                    onChange={setInfants}
+                    value={infants}
+                  />
 
-                <PasswordInput
-                  handlePasswordVisibility={handlePasswordVisibility}
-                  setPassword={setPassword}
-                  password={password}
-                  passwordType={passwordType}
-                  passwordError={passwordError}
-                />
+                  <PasswordInput
+                    handlePasswordVisibility={handlePasswordVisibility}
+                    setPassword={setPassword}
+                    password={password}
+                    passwordType={passwordType}
+                    passwordError={passwordError}
+                  />
 
-                {emailError || passwordError ? (
-                  <div className="FakeButton">
-                    Enter Valid Email and Password
-                  </div>
-                ) : (
-                  <button type="submit" className="RegisterButton">
-                    Register
-                  </button>
-                )}
+                  {emailError || passwordError ? (
+                    <div className="FakeButton">
+                      Enter Valid Email and Password
+                    </div>
+                  ) : (
+                    <button type="submit" className="RegisterButton">
+                      Register
+                    </button>
+                  )}
+                </div>
+                {loginError && <Error errorMessage={loginError} />}
               </div>
-              {loginError && <Error errorMessage={loginError} />}
-            </div>
-          </form>
+            </form>
 
-          <p>
-            * <strong>Please Note!</strong> While a background check is{" "}
-            <strong>not required</strong> to become a Preschool Patch leader, it
-            will help potential families feel at ease leaving their children
-            with you and is <strong>highly recommended</strong>
-          </p>
-          <br />
+            <p className="GreenFill Buffer BoxShadow">
+              * <strong>Please Note!</strong> While a background check is{" "}
+              <strong>not required</strong> to become a Preschool Patch leader,
+              <br />
+              it does help potential families feel at ease leaving their
+              children with you and is <strong>highly recommended</strong>
+            </p>
+            <br />
 
-          <p>
-            * While we limit no more than 5 children per Patch Leader, if you
-            have, or can acquire an assistant, you may double that limit and
-            still run a successful home business.
-          </p>
+            <p>
+              * While we limit <strong>5 children</strong> per Patch Leader,{" "}
+              <br /> if you have, or can acquire an assistant, <br />
+              you may double that limit and still run a successful home
+              business.
+            </p>
+          </div>
         </div>
       </div>
       <Footer />

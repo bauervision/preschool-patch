@@ -2,9 +2,11 @@ import React from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
-import { Ratings } from "./Components";
+import { Ratings, SimpleImage } from "./Components";
 
 import { Coloring, Kids, Table, Working } from "./images/photos";
+import { DecorFlat, DecorShort, Logo } from "./images";
+
 const galleryImages = [Coloring, Kids, Table, Working];
 export const ProfilePage = ({ pageUpdate, data }) => {
   // pull out public data
@@ -13,6 +15,7 @@ export const ProfilePage = ({ pageUpdate, data }) => {
     age,
     available,
     experience,
+    gallery,
     rates,
     infants,
     kidTotal,
@@ -29,11 +32,11 @@ export const ProfilePage = ({ pageUpdate, data }) => {
       <div>
         <Header pageUpdate={pageUpdate} />
 
-        <div className="CursiveFont SuperFont">Profile Page</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Profile Page</div>
 
         {/* Profile Pic and Data Section*/}
         <div
-          className="Flex AlignItems SeeThru"
+          className="Flex AlignItems SeeThru RoundBorder"
           style={{
             justifyContent: "space-evenly",
             flexDirection: "row",
@@ -42,10 +45,6 @@ export const ProfilePage = ({ pageUpdate, data }) => {
             border: "solid",
             borderWidth: 1,
             borderColor: "pink",
-            borderTopLeftRadius: 50,
-            borderTopRightRadius: 50,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
             padding: 30
           }}
         >
@@ -106,18 +105,18 @@ export const ProfilePage = ({ pageUpdate, data }) => {
               <div style={{ textAlign: 'left' }}>
                 <div className="textMargin">
                   <span className="profileText">Full Time: {' '}</span>
-                  <strong className="Price LargeFont">${rates.ft}</strong>
+                  <strong className="Price LargeFont PinkFont">${rates.ft}</strong>
                 </div>
 
 
                 <div className="textMargin">
                   <span className="profileText">Part Time:{' '} </span>
-                  <strong className="Price LargeFont">${rates.pt}</strong>
+                  <strong className="Price LargeFont PinkFont">${rates.pt}</strong>
                 </div>
 
                 <div className="textMargin">
                   <span className="profileText">Drop-In: {' '}</span>
-                  <strong className="Price LargeFont">${rates.di}</strong>
+                  <strong className="Price LargeFont PinkFont">${rates.di}</strong>
                 </div>
 
 
@@ -134,11 +133,14 @@ export const ProfilePage = ({ pageUpdate, data }) => {
             {/* Contact Button */}
             <button onClick={handleContact}>{`Contact ${name}`}</button>
           </div>
+
+
         </div>
 
+        <img src={DecorShort} alt="decorative" className='filter-green' style={{ width: 200, height: 'auto' }} />
         {/* Photo Gallery Section */}
         <div
-          className="Flex Col AlignItems GreenFill"
+          className="Flex Col AlignItems PinkFill"
           style={{
             margin: 5,
             marginTop: 0,
@@ -153,32 +155,39 @@ export const ProfilePage = ({ pageUpdate, data }) => {
           }}>
           <div className="CursiveFont LargeFont Buffer">Gallery</div>
 
+          <p>
+            {`" ${gallery.description} "`}
+          </p>
           {/* Photo Gallery */}
           <div className="SimpleBorder Buffer WhiteFill">
+
             {galleryImages.map((elem, index) => (
-              <img key={'gallery' + index} src={elem} alt={'gallery' + index} style={{ width: 300, height: 'auto' }} />
+              <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />
             ))}
 
           </div>
 
           <div>
-            <p>
-              I worked hard setting up a warm environment for my preschoolers.
-            </p>
 
-            <div className="CursiveFont LargeFont Buffer SimpleBorder">Special Features</div>
+
+            <div className="CursiveFont LargeFont Buffer ">Special Features</div>
             <ul style={{ textAlign: 'left' }}>
-              <li>Fenced in backyard</li>
-              <li>Large Backyard Playset for recess</li>
-              <li>Separate room for rest time</li>
-              <li>Separate Playroom</li>
+              {gallery.features.map((feature) => (
+                <li key={feature}>{feature}</li>
+              ))}
+
+
 
             </ul>
+
+            <img src={DecorFlat} alt="decorative" className='filter-white' style={{ width: 300, height: 'auto' }} />
           </div>
         </div>
       </div>
 
-
+      <div className="Buffer">
+        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
+      </div>
 
       <Footer />
     </div>

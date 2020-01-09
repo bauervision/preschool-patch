@@ -12,3 +12,5 @@ export { default as Unchecked } from "./unchecked.png";
 export { default as Success } from "./success.png";
 export { default as Star } from "./star.png";
 export { default as StarEmpty } from "./emptystar.png";
+export { default as DecorFlat } from "./decorflat.png";
+export { default as DecorShort } from "./decorshort.png";

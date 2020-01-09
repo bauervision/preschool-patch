@@ -5,7 +5,8 @@ $LIGHTROSE: #FFEDE1;
 $LIGHTGREY: #d0e1d4;
 $GHOSTWHITE: #fbfbff;
 $SONICSILVER: #757575;
-
+$PANSYPURPLE: #82204A;
+$PARADISEPINK: #FF4C76;
 .App {
   font-family: "Raleway", sans-serif;
   text-align: center;
@@ -169,6 +170,20 @@ $SONICSILVER: #757575;
 
   // General Styling
 
+  .PurpleFill{
+    background-color: $PANSYPURPLE;
+    color:$GHOSTWHITE;
+  }
+
+  .PinkFill{
+    background-color: $PARADISEPINK;
+    color:$GHOSTWHITE;
+  }
+
+  .PinkFont{
+    color:$PARADISEPINK;
+  }
+
   .Image{
     width: 256px;
     height: 256px;
@@ -202,8 +217,10 @@ $SONICSILVER: #757575;
 
   .GreenFill {
     background-color: $PATCHGREEN;
-    color: $GHOSTWHITE;
-    padding: 50px;
+    color: $GHOSTWHITE;    
+  }
+
+  .RoundBorder{
     border-radius: 20px;
   }
 
@@ -222,13 +239,14 @@ $SONICSILVER: #757575;
     max-width: 590px;
     padding: 10px;
     margin: 5px;
-    border: solid $PATCHGREEN 2px;
+    border: solid $PANSYPURPLE 1px;
     border-radius: 10px;
     transition: all 1s;
 
     &:hover {
-      border: solid $MALACHITE 2px;
-      background-color: white;
+      border: solid $PARADISEPINK 4px;
+      background-color: $GHOSTWHITE;
+      transform: scale(1.03);
     }
 
     &:hover > &_Pic {
@@ -254,8 +272,31 @@ $SONICSILVER: #757575;
     margin: 5px;
   }
 
+  .TextLeft{
+    text-align: left;
+  }
+
   .BoxShadow {
     box-shadow: 10px 10px 20px lightslategray;
+  }
+
+  .LightShadow {
+    box-shadow: 10px 10px 40px $GHOSTWHITE;
+  }
+
+  .InnerShadow {
+    box-shadow: inset 7px 7px 30px rgba(0, 220, 0, 0.2);
+  }
+
+  .InnerShadowWhite {
+    box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1);
+  }
+  .Padding{
+    padding: 20px;
+  }
+
+  .PaddingTop{
+    padding-top: 20px;
   }
 
   .Flex {
@@ -293,9 +334,21 @@ $SONICSILVER: #757575;
     justify-content: flex-end;
   }
 
+  .Tab{
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   .Buffer {
     padding: 10px;
     margin: 10px;
+  }
+
+  .LargeBuffer {
+    padding: 40px;
+    margin: 40px;
   }
 
   .FakeButton {
@@ -327,12 +380,14 @@ $SONICSILVER: #757575;
     background-color: $MALACHITE;
     color: white;
     font-size: 14pt;
+    transition: all 0.5s ease-in-out;
 
     &:hover {
-      background-color: $LIGHTROSE;
-      color: $MALACHITE;
+      background-color: $PARADISEPINK;
       cursor: pointer;
-      font-size: 14pt;
+      font-size: 18pt;
+      padding-left: 40px;
+      padding-right: 40px;
     }
   }
 
@@ -370,6 +425,22 @@ $SONICSILVER: #757575;
     border-radius: 10px;
     font-size: 12pt;
   }
+
+
+  // Color Filters for tweaking image colors
+  // best if original image is black
+  .filter-pink{
+    filter: invert(45%) sepia(25%) saturate(5592%) hue-rotate(319deg) brightness(102%) contrast(101%);
+  }
+
+  .filter-white{
+    filter: invert(100%) ; //invert black to white
+  }
+
+  .filter-green{
+    filter: invert(50%) sepia(93%) saturate(6585%) hue-rotate(145deg) brightness(95%) contrast(91%);
+  }
+
 
   button {
     color: $MALACHITE;

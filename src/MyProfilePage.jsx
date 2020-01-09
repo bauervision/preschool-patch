@@ -18,6 +18,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
     age,
     available,
     experience,
+    gallery,
     rates,
     infants,
     kidTotal,
@@ -30,6 +31,8 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
   const [updatedAge, setAge] = useState(age);
   const [updatedAvailable, setAvailable] = useState(available);
   const [updatedExperience, setExperience] = useState(experience);
+  const [updatedGalleryDesription, setGalleryDescription] = useState(gallery.description);
+  const [updatedGalleryFeatures, setGalleryFeatures] = useState(gallery.features);
   const [updatedFTRates, setFTRates] = useState(rates && rates.ft);
   const [updatedPTRates, setPTRates] = useState(rates && rates.pt);
   const [updatedDIRates, setDIRates] = useState(rates && rates.di);
@@ -55,6 +58,11 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       age: updatedAge,
       available: updatedAvailable,
       experience: updatedExperience,
+      gallery: {
+        description: updatedGalleryDesription,
+        features: updatedGalleryFeatures,
+        // files
+      },
       rates: {
         ft: updatedFTRates,
         pt: updatedPTRates,
@@ -74,11 +82,17 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       .then(() => {
         // do something now that the data has been set
         setUpdating(true);
+        setTimeout(function () { pageUpdate(3) }, 3000)
       });
   };
 
   const handleGalleryUpdate = (files) => {
     console.log(files)
+  }
+
+  const handleGalleryFeatureUpdate = (string) => {
+    const featureArray = string.split(',');
+    setGalleryFeatures(featureArray)
   }
 
   // let's push up the new profile pic into storage, and then save the download url
@@ -118,13 +132,11 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
   };
 
   return (
-    <div className="CreateAccount Col Flex JustifyCenter">
+    <div>
       <div>
-        <Header pageUpdate={pageUpdate} myProfile />
+        <Header pageUpdate={pageUpdate} />
 
-        <h1 className="CursiveFont" style={{ color: "white" }}>
-          My Profile Page
-        </h1>
+        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
 
         {/* Profile Page Data */}
         <div
@@ -155,7 +167,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   src={updatedPhotoUrl}
                 />
                 <div>
-                  <div className="CursiveFont LargeFont">{updatedName}</div>
+                  <div className="CursiveFont LargeFont PinkFont">{updatedName}</div>
                   <EditField
                     isFile
                     title="Update Profile Pic"
@@ -164,9 +176,36 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                     onChange={handleProfilePicUpdate}
                   />
                 </div>
+
+
+                <div>
+
+                  <div className="Flex Row AlignItems JustifyCenter ">
+                    <EditField
+                      isCheck
+                      title="Currently Enrolling"
+                      type="checkbox"
+                      forLabel="Enrolling"
+                      onChange={() => setAvailable(!updatedAvailable)}
+                      value={updatedAvailable}
+                    />
+
+
+
+                    <EditField
+                      isCheck
+                      title="Accepting Infants?"
+                      type="checkbox"
+                      forLabel="assisted"
+                      onChange={() => setInfants(!updatedInfants)}
+                      value={updatedInfants}
+                    />
+                  </div>
+                </div>
+
               </div>
 
-              <div className="CursiveFont LargeFont Buffer">My Data</div>
+              <div className="CursiveFont LargeFont Buffer PinkFont">My Data</div>
               <div className="Flex Row AlignItems SimpleBorder">
                 <EditField
                   title="Full Name"
@@ -205,7 +244,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
               </div>
 
               <div>
-                <div className="CursiveFont LargeFont Buffer">My Rates</div>
+                <div className="CursiveFont LargeFont Buffer PinkFont">My Rates</div>
                 <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                   <EditField
                     title="Full Time Rate"
@@ -234,33 +273,10 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                 </div>
               </div>
 
-              <div>
-                <div className="CursiveFont LargeFont Buffer">My Status</div>
-                <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
-                  <EditField
-                    isCheck
-                    title="Currently Enrolling"
-                    type="checkbox"
-                    forLabel="Enrolling"
-                    onChange={() => setAvailable(!updatedAvailable)}
-                    value={updatedAvailable}
-                  />
 
-
-
-                  <EditField
-                    isCheck
-                    title="Accepting Infants?"
-                    type="checkbox"
-                    forLabel="assisted"
-                    onChange={() => setInfants(!updatedInfants)}
-                    value={updatedInfants}
-                  />
-                </div>
-              </div>
 
               <div>
-                <div className="CursiveFont LargeFont Buffer">About Me</div>
+                <div className="CursiveFont LargeFont Buffer PinkFont">About Me</div>
                 <EditField
                   isTextArea
                   title=""
@@ -273,7 +289,17 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
               </div>
 
               <div>
-                <div className="CursiveFont LargeFont Buffer">Home Gallery</div>
+                <div className="CursiveFont LargeFont Buffer PinkFont">Home Gallery</div>
+                <EditField
+                  isTextArea
+                  small
+                  title="Description"
+                  placeholder="Enter a simple description for your home preschool"
+                  type="text"
+                  forLabel="aboutMe"
+                  onChange={setGalleryDescription}
+                  value={updatedGalleryDesription}
+                />
                 <EditField
                   isFile
                   multiple
@@ -287,8 +313,26 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
               {/* Photo Gallery */}
               <div className="SimpleBorder Buffer WhiteFill">
                 {galleryImages.map((elem, index) => (
-                  <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index}  />
+                  <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />
                 ))}
+
+              </div>
+
+              <div>
+                <div className="CursiveFont LargeFont Buffer PinkFont">Home Features</div>
+
+                <EditField
+                  isTextArea
+                  small
+                  title=""
+                  placeholder="Enter a simple description for a feature in your home preschool"
+                  type="text"
+                  forLabel="Features"
+                  onChange={handleGalleryFeatureUpdate}
+                  value={updatedGalleryFeatures}
+                />
+
+
 
               </div>
 

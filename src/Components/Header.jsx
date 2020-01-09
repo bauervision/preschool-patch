@@ -19,7 +19,7 @@ export const Header = ({
   };
 
   return (
-    <header className="Header">
+    <header className="Header LightShadow">
       <div className="Header_Align">
         <div>
           <input placeholder="Search" className="InputStyle" />
@@ -40,25 +40,25 @@ export const Header = ({
             {myProfile || isCreate ? (
               <button onClick={LogOut}>Logout</button>
             ) : (
-              <>
-                {!isLogin && (
-                  <button onClick={() => pageUpdate(1)}>Login / Signup</button>
-                )}
-              </>
-            )}
+                <>
+                  {!isLogin && (
+                    <button onClick={() => pageUpdate(1)}>Login / Signup</button>
+                  )}
+                </>
+              )}
           </div>
         ) : (
-          // we are now logged in
-          <div>
-            <img
-              src={Profile}
-              alt="Profile icon"
-              className="Header_Logo"
-              onClick={() => pageUpdate(4)}
-              style={{ border: "solid" }}
-            />
-          </div>
-        )}
+            // we are now logged in
+            <div>
+              <img
+                src={Profile}
+                alt="Profile icon"
+                className="Header_Logo"
+                onClick={() => pageUpdate(4)}
+                style={{ border: "solid" }}
+              />
+            </div>
+          )}
         {/* Show Home Icon, if we're not on home page' */}
         {!isHome && (
           <div>

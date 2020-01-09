@@ -113,13 +113,11 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
   };
 
   return (
-    <div className="CreateAccount Col Flex JustifyCenter">
+    <div>
       <div>
-        <Header pageUpdate={pageUpdate} isCreate loggedInUser={loggedInUser} />
+        <Header pageUpdate={pageUpdate} />
 
-        <h1 className="CursiveFont" style={{ color: "white" }}>
-          Create a Patch Leader Account
-        </h1>
+        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Create Leader Account</div>
 
         <div
           className="Flex Col FixedBG"

@@ -75,6 +75,11 @@ const App = () => {
             bgCheckWilling: newUserData.backgroundCheck,
             bgCheckComplete: false,
             experience: newUserData.experience,
+            gallery: {
+              description: "My home is ready for preschool learning!",
+              features: ["Warm and Inviting", "Fenced in backyard"],
+              files: []
+            },
             infants: newUserData.infants,
             isLeader: true,
             kidTotal: 0,
@@ -214,7 +219,7 @@ const App = () => {
   };
 
   return (
-    <div className="App FixedBG">
+    <div className="App FixedBG ">
       {/* Handle which page to load based on state page value */}
       {onPage(currentPage)}
     </div>

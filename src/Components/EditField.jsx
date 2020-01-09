@@ -12,7 +12,7 @@ const EditField = ({
   isTextArea,
   isCheck,
   isFile,
-  multiple
+  multiple, small
 }) => {
   return (
     <div
@@ -23,7 +23,7 @@ const EditField = ({
         marginRight: isCheck ? 40 : 0
       }}
     >
-      <div style={{ textAlign: "left" }}>
+      <div style={{ textAlign: (isTextArea || isFile) ? "center" : "left" }}>
         <label htmlFor={forLabel} className="InputTextLabel">
           {title}:
         </label>
@@ -33,10 +33,11 @@ const EditField = ({
         {isTextArea ? (
           <textarea
             name={forLabel}
-            rows="8"
+            rows={small ? "2" : "8"}
             cols="70"
             onChange={(e) => onChange(e.target.value)}
             value={value}
+
           />
         ) : (
             <>

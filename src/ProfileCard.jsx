@@ -1,22 +1,20 @@
 import React from "react";
-// import { storage } from "./config";
+import { Ratings } from "./Components";
 
-export const ProfileCard = ({ data, img, handleSelection }) => {
+export const ProfileCard = ({ data, handleSelection }) => {
   // pull out data
   const {
-    public: {
-      age,
-      assisted,
-      available,
-      experience,
-      ftRate,
-      infants,
-      kidTotal,
-      name,
-      rating,
-      zipcode,
-      photoUrl
-    }
+    age,
+    available,
+    experience,
+    rates,
+    infants,
+    kidTotal,
+    name,
+    rating,
+    zipcode,
+    photoUrl
+
   } = data;
 
   const getSelection = () => {
@@ -25,28 +23,27 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
 
   return (
     <div className="Card" onClick={getSelection}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: 5,
-          marginRight: 40
-        }}
-      >
+      {/* Profile Pic */}
+      <div className="Flex Col JustifyCenter AlignItems Buffer  " style={{ width: '30%' }}>
         <img alt="profile pic" className="Card_Pic" src={photoUrl} />
         <span>{name}</span>
       </div>
 
-      <div style={{ textAlign: "left", margin: 5 }}>
-        <div className="textMargin">
-          <span className="profileText">Age:</span>
-          <strong>{age}</strong>
-        </div>
+      {/* Data row 1*/}
+      <div className="Flex Col Buffer " style={{ textAlign: "left", width: '30%' }}>
 
         <div className="textMargin">
-          <span className="profileText">Currently Enrolling:</span>
-          <strong>{available}</strong>
+          <Ratings rating={rating} />
         </div>
+
+        {available && (
+          <div className="textMargin">
+            <span className="profileText"><strong>Currently Enrolling!</strong></span>
+
+          </div>
+        )}
+
+
 
         <div className="textMargin">
           <span className="profileText">Years of Experience:</span>
@@ -54,23 +51,22 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
         </div>
 
         <div className="textMargin">
-          <span className="profileText">Preschool Rating:</span>
-          <strong>{rating}</strong>
+          <span className="profileText">Age:</span>
+          <strong>{age}</strong>
         </div>
+
       </div>
 
-      <div style={{ textAlign: "left", margin: 5 }}>
+      {/* Data row 2*/}
+      <div className="Flex Col Buffer " style={{ textAlign: "left", width: '30%' }}>
         <div className="textMargin">
           <span className="profileText">Total Kids:</span>{" "}
           <strong>{kidTotal}</strong>
         </div>
-        <div className="textMargin">
-          <span className="profileText">Assisted?</span>{" "}
-          <strong>{assisted}</strong>
-        </div>
+
         <div className="textMargin">
           <span className="profileText">Infants?:</span>{" "}
-          <strong>{infants}</strong>
+          <strong>{infants ? 'Yes!' : 'Not at this time'}</strong>
         </div>
 
         <div>
@@ -79,20 +75,13 @@ export const ProfileCard = ({ data, img, handleSelection }) => {
         </div>
       </div>
 
-      <div
-        className=" Flex Col"
-        style={{
-          justifyContent: "space-evenly",
-          border: "solid",
-          borderRadius: 10,
-          borderWidth: 2,
-          padding: 5,
-          width: 100
-        }}
-      >
+      {/* Rates*/}
+      <div className="Flex Col Buffer SimpleBorder" style={{ textAlign: "left", width: '10%' }}>
         <div>
-          <div className="profileText">FT Rate:</div>
-          <strong style={{ fontSize: 30, color: "#0b4f6c" }}>${ftRate}</strong>
+          <div className="Price LargeFont">${rates.ft}</div>
+          <div className="Price LargeFont">${rates.pt}</div>
+          <div className="Price LargeFont">${rates.di}</div>
+
         </div>
       </div>
     </div>

@@ -10,3 +10,5 @@ export { default as Edit } from "./edit.png";
 export { default as Checked } from "./checked.png";
 export { default as Unchecked } from "./unchecked.png";
 export { default as Success } from "./success.png";
+export { default as Star } from "./star.png";
+export { default as StarEmpty } from "./emptystar.png";

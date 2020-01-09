@@ -15,6 +15,7 @@ import { Logo } from "./images";
 //   { src: { Working }, info: "Fourth Image" }
 // ];
 
+
 export const PublicLanding = ({
   pageUpdate,
   data,
@@ -24,15 +25,23 @@ export const PublicLanding = ({
   loggedInUser
 }) => {
   // handle local state
-  const [filteredData, setFilteredData] = useState(data);
+  const [leaderData, setLeaderData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
   const [showTeacher, setShowTeacher] = useState(true);
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
-    setFilteredData(data);
+    // incoming data is an obj, so lets convert it to a useable array
+    const leadersArray = Object.entries(data);
+    let newData = [];
+    leadersArray.forEach((elem) => { newData.push(elem[1].public) })
+    setLeaderData(newData);
+    setFilteredData(newData);
+
   }, [data]);
+
 
   // handleFilters
   const filterAvailable = (e) => {
@@ -41,18 +50,19 @@ export const PublicLanding = ({
 
     if (checked) {
       const update = filteredData.filter(
-        (elem) => elem.public.available === "yes"
+        (elem) => elem.available === true
       );
       setFilteredData(update);
     } else {
       // not filtering available, but might be filtering infants
       if (filterAcceptingInfants) {
-        const update = filteredData.filter(
-          (elem) => elem.public.infants === "yes"
+        const update = leaderData.filter(
+          (elem) => elem.infants === true
         );
         setFilteredData(update);
       } else {
-        setFilteredData(data);
+        // not filtering anything so revert to original leader data
+        setFilteredData(leaderData);
       }
     }
   };
@@ -62,15 +72,16 @@ export const PublicLanding = ({
     setFilterInfants(checked);
 
     if (checked) {
-      const update = filteredData.filter((elem) => elem.public.infants === "yes");
+      const update = filteredData.filter((elem) => elem.infants === true);
       setFilteredData(update);
     } else {
       // we're not filtering infants, but we still might be filtering avail
       if (filterAvail) {
-        const update = data.filter((elem) => elem.public.available === "yes");
+        const update = leaderData.filter((elem) => elem.available === true);
         setFilteredData(update);
       } else {
-        setFilteredData(data);
+        // no filters so
+        setFilteredData(leaderData);
       }
     }
   };
@@ -79,6 +90,7 @@ export const PublicLanding = ({
     // Pass current selection up to parent in order to render profile page
     handleMemberSelection(memberData);
   };
+
 
   return (
     <div className="PublicLanding">
@@ -99,7 +111,7 @@ export const PublicLanding = ({
         />
         <div
           className="Flex Col AlignItems  GreenFill"
-          style={{ marginLeft: 100, borderRadius: 100 }}
+          style={{ marginLeft: 100, borderRadius: 70 }}
         >
           <div>
             <h3>How It Works</h3>
@@ -123,6 +135,7 @@ export const PublicLanding = ({
           </div>
         </div>
       </div>
+
 
       <div style={{ marginBottom: 20 }}>
         <div className="Flex Col JustifyCenter Buffer ">
@@ -209,7 +222,7 @@ export const PublicLanding = ({
         </div>
 
         {/* Filter Criteria */}
-        <div className="Flex Col JustifyCenter Buffer WhiteFill">
+        <div className="Flex Col JustifyCenter  SeeThru">
           {!showTeacher ? (
             <>
               <div className="CursiveFont SuperFont Buffer">
@@ -241,13 +254,13 @@ export const PublicLanding = ({
             </div>
             )}
           {/* Content */}
-          <div className="PublicLanding_Content BoxShadow ">
-            {Object.keys(filteredData).length !== 0 ? (
-              Object.keys(filteredData).map((key) => {
+          <div className="PublicLanding_Container JustifyCenter BoxShadow ">
+            {filteredData.length !== 0 ? (
+              filteredData.map((elem) => {
                 return (
                   <ProfileCard
-                    key={filteredData[key].public.name}
-                    data={filteredData[key]}
+                    key={elem.name}
+                    data={elem}
                     handleSelection={handleSelection}
                   />
                 );

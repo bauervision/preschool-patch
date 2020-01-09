@@ -13,9 +13,9 @@ import { f, database } from "./config";
 const App = () => {
 
   const [currentPage, setPage] = useState(0);
-  const [data, setData] = useState({});
-  const [selection, setSelection] = useState({});
-  const [loggedInUser, setLoggedInUser] = useState({});
+  const [data, setData] = useState({});// raw data from DB
+  const [selection, setSelection] = useState({}); // whose profile are we viewing?
+  const [loggedInUser, setLoggedInUser] = useState({}); // logged in user data
 
   /* On Mount, fetch data, check login */
 
@@ -28,21 +28,23 @@ const App = () => {
   const handleLoginCheck = () => {
     f.auth().onAuthStateChanged((user) => {
       if (user) {
-        // logged in
-        if (data) {
-          const curUser = Object.keys(data && data).find(
-            (item) => item === user.uid
-          );
-          if (curUser) {
-            setLoggedInUser(data[curUser].public);
-          }
-        }
+        getUserData(user);
       } else {
         // logged out
         setLoggedInUser(null);
       }
     });
   };
+
+  const getUserData = (user) => {
+    database.ref(`leaders/${user.uid}`).on("value", (snapshot) => {
+      if (snapshot.val()) {
+        const curUser = snapshot.val();
+        setLoggedInUser(curUser.public);
+        handlePageUpdate(0);
+      }
+    });
+  }
 
   const handlePageUpdate = (page) => setPage(page);
 
@@ -68,11 +70,10 @@ const App = () => {
             aboutMe:
               "I am brand new to Preschool Patch!  I will update my profile ASAP.",
             age: newUserData.age,
-            assisted: "no",
-            available: "yes",
+            assisted: false,
+            available: true,
             bgCheckWilling: newUserData.backgroundCheck,
-            bgCheckComplete: "no",
-            enrolling: "yes",
+            bgCheckComplete: false,
             experience: newUserData.experience,
             infants: newUserData.infants,
             isLeader: true,
@@ -102,12 +103,15 @@ const App = () => {
           public: {
             aboutMe:
               "I am brand new to Preschool Patch!  I will update my profile ASAP.",
-            looking: "yes",
+            isLeader: false,
+            looking: true,
             kidTotal: 1,
             name: newUserData.displayName,
             zipcode: newUserData.zipcode
           }
         };
+
+        console.log("New User to create!", newUser);
       }
 
       // now that we have some essential data in place, store this user into the database
@@ -130,11 +134,7 @@ const App = () => {
         });
     } else {
       // this was an existing user login so pull the user from our data and set them as the loggedInUser
-
-      const curUser = Object.keys(data).find((item) => item === user.uid);
-      setLoggedInUser(curUser);
-      // if we successfully logged in, jump to Public Landing Page
-      handlePageUpdate(0);
+      handleLoginCheck();
     }
   };
 
@@ -204,9 +204,9 @@ const App = () => {
 
   const getData = () => {
     // grab ref to the data
-    const userData = database.ref("leaders");
+    const leaderData = database.ref("leaders");
     // now get the data stored there
-    userData.once("value").then((snapshot) => {
+    leaderData.on("value", (snapshot) => {
       if (snapshot.val()) {
         setData(snapshot.val());
       }

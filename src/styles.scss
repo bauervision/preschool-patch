@@ -1,7 +1,7 @@
 $MALACHITE: #20bf55;
 $PATCHGREEN: #0b8e51;
 $DARKIMPERIALBLUE: #0b4f6c;
-$LIGHTGOLD: #f2f6d0;
+$LIGHTROSE: #FFEDE1;
 $LIGHTGREY: #d0e1d4;
 $GHOSTWHITE: #fbfbff;
 $SONICSILVER: #757575;
@@ -29,18 +29,14 @@ $SONICSILVER: #757575;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: stretch;
+    
     padding-top: 20px;
 
-    &_Content {
+    &_Container {
       display: flex;
+      flex-direction: row;
       flex-wrap: wrap;
-      overflow: auto;
-      max-height: 400px;
-      background-color: $LIGHTGOLD;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background-color: $LIGHTROSE;
       padding: 10px;
       margin: 40px;
       margin-left: 80px;
@@ -173,6 +169,19 @@ $SONICSILVER: #757575;
 
   // General Styling
 
+  .Image{
+    width: 256px;
+    height: 256px;
+    object-fit: cover;
+    transition: all .2s ease-in-out;
+    &:hover{
+      transform: scale(1.1);
+    }
+  }
+
+  .SeeThru{
+    background-color: rgba(255,255,255,0.8);
+  }
   .LargeFont {
     font-size: 28pt;
   }
@@ -204,12 +213,16 @@ $SONICSILVER: #757575;
     margin: 50px;
   }
 
+  .Price{
+    font-family: 'Niconne', cursive;
+  }
+
   .Card {
     display: flex;
-    max-width: 600px;
+    max-width: 590px;
     padding: 10px;
     margin: 5px;
-    border: solid $DARKIMPERIALBLUE 2px;
+    border: solid $PATCHGREEN 2px;
     border-radius: 10px;
     transition: all 1s;
 
@@ -249,6 +262,14 @@ $SONICSILVER: #757575;
     display: flex;
   }
 
+  .Evenly{
+    justify-content: space-evenly;
+  }
+
+  .Between{
+    justify-content: space-between;
+  }
+
   .JustifyCenter {
     justify-content: center;
   }
@@ -262,6 +283,10 @@ $SONICSILVER: #757575;
 
   .Col {
     flex-direction: column;
+  }
+
+  .JustifyStart {
+    justify-content: flex-start;
   }
 
   .JustifyEnd {
@@ -304,7 +329,7 @@ $SONICSILVER: #757575;
     font-size: 14pt;
 
     &:hover {
-      background-color: $LIGHTGOLD;
+      background-color: $LIGHTROSE;
       color: $MALACHITE;
       cursor: pointer;
       font-size: 14pt;

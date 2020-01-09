@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { EditField } from "./Components";
+import { EditField, SimpleImage } from "./Components";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 
@@ -8,12 +8,14 @@ import { Success } from "./images";
 
 import { f, storage, database } from "./config";
 
+import { Coloring, Kids, Table, Working } from "./images/photos";
+const galleryImages = [Coloring, Kids, Table, Working];
+
 export const MyProfilePage = ({ pageUpdate, data }) => {
   // pull out public data
   const {
     aboutMe,
     age,
-    assisted,
     available,
     experience,
     rates,
@@ -26,7 +28,6 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
   const [userId, setUserId] = useState(0);
   const [updatedAboutMe, setAboutMe] = useState(aboutMe);
   const [updatedAge, setAge] = useState(age);
-  const [updatedAssisted, setAssisted] = useState(assisted);
   const [updatedAvailable, setAvailable] = useState(available);
   const [updatedExperience, setExperience] = useState(experience);
   const [updatedFTRates, setFTRates] = useState(rates && rates.ft);
@@ -40,7 +41,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
 
   /* On Mount, fetch uid */
   useEffect(() => {
-    console.log("Mounted", data);
+
     const userId = f.auth().currentUser.uid;
     setUserId(userId);
   }, [data]);
@@ -52,7 +53,6 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
     const updatedData = {
       aboutMe: updatedAboutMe,
       age: updatedAge,
-      assisted: updatedAssisted,
       available: updatedAvailable,
       experience: updatedExperience,
       rates: {
@@ -66,7 +66,6 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       photoUrl: updatedPhotoUrl
     };
 
-    console.log(updatedData);
 
     // now that we have updated data, push it up to our database
     database
@@ -78,8 +77,12 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       });
   };
 
+  const handleGalleryUpdate = (files) => {
+    console.log(files)
+  }
+
   // let's push up the new profile pic into storage, and then save the download url
-  const handlePhotoUpdate = (file) => {
+  const handleProfilePicUpdate = (file) => {
     // userId will be a part of the file path so grab it first
     const userId = f.auth().currentUser.uid;
 
@@ -108,7 +111,6 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
           .child(file.name)
           .getDownloadURL()
           .then((url) => {
-            console.log("Download url: ", url);
             setPhotoUrl(url);
           });
       }
@@ -159,12 +161,12 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                     title="Update Profile Pic"
                     type="file"
                     forLabel="profilePic"
-                    onChange={handlePhotoUpdate}
+                    onChange={handleProfilePicUpdate}
                   />
                 </div>
               </div>
 
-              <h3 className="CursiveFont">My Data</h3>
+              <div className="CursiveFont LargeFont Buffer">My Data</div>
               <div className="Flex Row AlignItems SimpleBorder">
                 <EditField
                   title="Full Name"
@@ -203,7 +205,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
               </div>
 
               <div>
-                <h3 className="CursiveFont">My Rates</h3>
+                <div className="CursiveFont LargeFont Buffer">My Rates</div>
                 <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                   <EditField
                     title="Full Time Rate"
@@ -233,7 +235,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
               </div>
 
               <div>
-                <h3 className="CursiveFont">My Status</h3>
+                <div className="CursiveFont LargeFont Buffer">My Status</div>
                 <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                   <EditField
                     isCheck
@@ -244,14 +246,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                     value={updatedAvailable}
                   />
 
-                  <EditField
-                    isCheck
-                    title="Currently Assisted?"
-                    type="checkbox"
-                    forLabel="assisted"
-                    onChange={() => setAssisted(!updatedAssisted)}
-                    value={updatedAssisted}
-                  />
+
 
                   <EditField
                     isCheck
@@ -265,7 +260,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
               </div>
 
               <div>
-                <h3 className="CursiveFont">About Me</h3>
+                <div className="CursiveFont LargeFont Buffer">About Me</div>
                 <EditField
                   isTextArea
                   title=""
@@ -276,6 +271,27 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   value={updatedAboutMe}
                 />
               </div>
+
+              <div>
+                <div className="CursiveFont LargeFont Buffer">Home Gallery</div>
+                <EditField
+                  isFile
+                  multiple
+                  title="Upload Pictures"
+                  type="file"
+                  forLabel="homeGallery"
+                  onChange={handleGalleryUpdate}
+                />
+              </div>
+
+              {/* Photo Gallery */}
+              <div className="SimpleBorder Buffer WhiteFill">
+                {galleryImages.map((elem, index) => (
+                  <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index}  />
+                ))}
+
+              </div>
+
               <div>
                 <button type="submit" className="RegisterButton">
                   Submit Changes

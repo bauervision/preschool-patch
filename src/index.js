@@ -7,6 +7,7 @@ import { CreateAccount } from "./CreateAccount";
 import { Login } from "./Login";
 import { ProfilePage } from "./ProfilePage";
 import { MyProfilePage } from "./MyProfilePage";
+import { ClientAdmin } from "./ClientAdmin";
 
 import { f, database } from "./config";
 
@@ -158,11 +159,20 @@ const App = () => {
     window.scrollTo(0, 0);
 
     switch (page) {
+      case 5:
+        return (
+          <ClientAdmin
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+          />
+        );
       case 4:
         return (
           <MyProfilePage
             pageUpdate={handlePageUpdate}
-            data={loggedInUser}
+            loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
           />

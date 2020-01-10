@@ -11,7 +11,7 @@ import { f, storage, database } from "./config";
 import { Coloring, Kids, Table, Working } from "./images/photos";
 const galleryImages = [Coloring, Kids, Table, Working];
 
-export const MyProfilePage = ({ pageUpdate, data, updateSuccess }) => {
+export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
   // pull out public data
   const {
     aboutMe,
@@ -24,7 +24,7 @@ export const MyProfilePage = ({ pageUpdate, data, updateSuccess }) => {
     kidTotal,
     name,
     photoUrl
-  } = data;
+  } = loggedInUser;
 
   const [userId, setUserId] = useState(0);
   const [updatedAboutMe, setAboutMe] = useState(aboutMe);
@@ -47,7 +47,7 @@ export const MyProfilePage = ({ pageUpdate, data, updateSuccess }) => {
 
     const userId = f.auth().currentUser.uid;
     setUserId(userId);
-  }, [data]);
+  }, []);
 
   const handleDataUpdate = (e) => {
     e.preventDefault();
@@ -135,7 +135,7 @@ export const MyProfilePage = ({ pageUpdate, data, updateSuccess }) => {
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} />
+        <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
 

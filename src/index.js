@@ -16,7 +16,7 @@ const App = () => {
   const [data, setData] = useState({});// raw data from DB
   const [selection, setSelection] = useState({}); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState({}); // logged in user data
-
+  const [launchToast, setLaunchToast] = useState(false); // launch on successful save
   /* On Mount, fetch data, check login */
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const App = () => {
             zipcode: newUserData.zipcode
           }
         };
-        console.log("New leader to create!", newUser);
+
         // since we are a leader and now logged in, go ahead and set myself as the selection
         setSelection(newUser);
       } else {
@@ -147,6 +147,11 @@ const App = () => {
     setLoggedInUser(null);
   };
 
+  const updateSuccess = (status) => {
+    setLaunchToast(true);
+    setTimeout(() => setLaunchToast(false), 3000);
+  }
+
   /* Page Router */
   const onPage = (page) => {
     // reset window scroll position with each page change
@@ -159,6 +164,7 @@ const App = () => {
             pageUpdate={handlePageUpdate}
             data={loggedInUser}
             handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
           />
         );
       case 3:
@@ -197,6 +203,7 @@ const App = () => {
             handleLogin={handleLogin}
             handleLogOut={handleLogOut}
             loggedInUser={loggedInUser}
+            launchToast={launchToast}
           />
         );
     }
@@ -210,7 +217,7 @@ const App = () => {
   const getData = () => {
     // grab ref to the data
     const leaderData = database.ref("leaders");
-    // now get the data stored there
+    // now get the data stored there, and use "on value" to make the data live
     leaderData.on("value", (snapshot) => {
       if (snapshot.val()) {
         setData(snapshot.val());

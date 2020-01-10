@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import { ProfileCard } from "./ProfileCard";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
+import { Toast } from "./Components";
 
-import { Logo } from "./images";
+import { Logo, Elegant, Corner } from "./images";
 
 // import { Coloring, Kids, Table, Working } from "./images/photos";
 // const images = [
@@ -22,7 +23,8 @@ export const PublicLanding = ({
   handleMemberSelection,
   handleLogin,
   handleLogOut,
-  loggedInUser
+  loggedInUser,
+  launchToast
 }) => {
   // handle local state
   const [leaderData, setLeaderData] = useState([]);
@@ -30,6 +32,7 @@ export const PublicLanding = ({
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
   const [showTeacher, setShowTeacher] = useState(true);
+
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
@@ -112,6 +115,7 @@ export const PublicLanding = ({
         <div
           className="Flex Col AlignItems PinkFill RoundBorder LargeBuffer"
           style={{ marginLeft: 100 }}>
+
           <div>
             <h3>How It Works</h3>
           </div>
@@ -119,7 +123,12 @@ export const PublicLanding = ({
             {showTeacher ? (
               <>
                 <div>As a Teacher</div>
-                <button type="button" onClick={() => setShowTeacher(false)}>
+                <button
+                  type="button" onClick={() => {
+                    setShowTeacher(false);
+
+
+                  }}>
                   As a Parent
                 </button>
               </>
@@ -131,6 +140,8 @@ export const PublicLanding = ({
                   <div>As a Parent</div>
                 </>
               )}
+
+            <img src={Corner} alt='corner' className='filter-white' style={{ width: 100, height: 'auto' }} />
           </div>
         </div>
       </div>
@@ -139,7 +150,7 @@ export const PublicLanding = ({
       <div >
         <div className="Flex Col JustifyCenter Buffer ">
 
-          <div className="Tab SeeThru InnerShadow PaddingTop">
+          <div className="Tab SeeThru  PaddingTop">
             <div className="CursiveFont SuperFont ">Simple Steps </div>
             {/* How it Works: Steps */}
             {showTeacher ? (
@@ -175,7 +186,7 @@ export const PublicLanding = ({
               )}
 
             {/* How it Works: Details */}
-            <div className="Flex JustifyCenter AlignItems GreenFill">
+            <div className="Flex JustifyCenter AlignItems GreenFill TabBottom">
               {showTeacher ? (
                 <div className="Flex Col JustifyCenter AlignItems Buffer">
                   <p>
@@ -223,6 +234,9 @@ export const PublicLanding = ({
           </div>
 
         </div>
+
+        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+
         {/* Filter Criteria */}
         <div className="Flex Col JustifyCenter  SeeThru">
           {!showTeacher ? (
@@ -279,9 +293,19 @@ export const PublicLanding = ({
                 </div>
               )}
           </div>
+
+
         </div>
+
+        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+
+        <div className="CursiveFont RedicFont Margins">Love Learning Early!</div>
+
       </div>
       <Footer />
+
+      <Toast showToast={launchToast} message='Save Successful!' />
+
     </div>
   );
 };

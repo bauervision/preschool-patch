@@ -31,6 +31,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
 
+  // eslint-disable-next-line
   const handleSubmitNew = async e => {
 
     e.preventDefault();
@@ -71,42 +72,6 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
     setPasswordLogin(password);
   };
 
-  // const setProfilePic = (file, value) => {
-  //   console.log(file);
-  //   setFile(value);
-  //   const userId = f.auth().currentUser.uid;
-
-  //   const uploadTask = storage
-  //     .ref(`public/${userId}/images/${file.name}`)
-  //     .put(file);
-
-  //   uploadTask.on(
-  //     "state_changed",
-  //     snapshot => {
-  //       //progress
-  //       const progress = Math.round(
-  //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-  //       );
-  //       console.log(progress);
-  //       // setUploadProgress(progress);
-  //     },
-  //     error => {
-  //       //error
-  //       console.log(error);
-  //     },
-  //     () => {
-  //       //complete
-  //       storage
-  //         .ref(`public/${userId}/images/`)
-  //         .child(file.name)
-  //         .getDownloadURL()
-  //         .then(url => {
-  //           setPicUrl(url);
-  //         });
-  //     }
-  //   );
-  // };
-
   const handlePasswordVisibility = () => {
     setPasswordType(!showPassword ? "text" : "password");
     setShowPassword(!showPassword);
@@ -132,7 +97,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
             padding: 30
           }}
         >
-          <div className="Flex JustifyCenter AlignItems Buffer GreenFill">
+          <div className="Flex JustifyCenter AlignItems Tab PinkFill" style={{ marginBottom: 0 }}>
             <h2>What you get as a Patch Leader</h2>
 
             <ul style={{ textAlign: "left", marginTop: 50 }}>
@@ -152,9 +117,9 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
               </li>
             </ul>
           </div>
-          <br />
 
-          <div className="Flex JustifyCenter AlignItems Buffer BoxShadow WhiteFill">
+
+          <div className="Flex JustifyCenter AlignItems RoundBorder BoxShadow WhiteFill PinkFont">
             <h2>Typical Earning Potential</h2>
 
             <ul style={{ textAlign: "left", marginTop: 50 }}>
@@ -172,7 +137,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
             </ul>
           </div>
 
-          <div className="Flex JustifyCenter AlignItems Buffer GreenFill">
+          <div className="Flex JustifyCenter AlignItems Buffer GreenFill RoundBorder Margins" style={{ margin: 70 }}>
             <h2>Additional Revenue Options</h2>
 
             <ul style={{ textAlign: "left", marginTop: 50 }}>
@@ -191,7 +156,7 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
 
           <br />
 
-          <div className="Flex Col JustifyCenter AlignItems Buffer BoxShadow WhiteFill">
+          <div className="Flex Col JustifyCenter AlignItems Tab PinkFill " >
             <h1>Are you ready to earn an extra $2000+ a month?!!</h1>
             <p>
               Realize that the above rates are just examples! <br />
@@ -200,10 +165,12 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
               those rates can be as high as you are willing to push them!
             </p>
           </div>
-          <div className="Flex Col JustifyCenter AlignItems Buffer BoxShadow WhiteFill">
+
+
+          <div className="Flex Col JustifyCenter AlignItems RoundBorder BoxShadow WhiteFill">
             <form onSubmit={handleSubmitNew}>
               <div className="Flex Col JustifyCenter AlignItems">
-                <h3>Preschool Patch Leader Registration Form</h3>
+                <div className="CursiveFont PinkFont SuperFont PaddingTop">Preschool Patch Leader Registration Form</div>
                 <p>
                   Upon completion, you will be able to customize your profile
                   and appear in local searches.
@@ -297,13 +264,13 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
               </div>
             </form>
 
-            <p className="GreenFill Buffer BoxShadow">
+            <div className="PinkFill Margins BoxShadow RoundBorder PaddingBoost">
               * <strong>Please Note!</strong> While a background check is{" "}
               <strong>not required</strong> to become a Preschool Patch leader,
               <br />
               it does help potential families feel at ease leaving their
               children with you and is <strong>highly recommended</strong>
-            </p>
+            </div>
             <br />
 
             <p>

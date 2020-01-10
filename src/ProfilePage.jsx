@@ -5,7 +5,7 @@ import { Footer } from "./Components/Footer";
 import { Ratings, SimpleImage } from "./Components";
 
 import { Coloring, Kids, Table, Working } from "./images/photos";
-import { DecorFlat, DecorShort, Logo } from "./images";
+import { DecorFlat, Logo, Elegant } from "./images";
 
 const galleryImages = [Coloring, Kids, Table, Working];
 export const ProfilePage = ({ pageUpdate, data }) => {
@@ -36,16 +36,10 @@ export const ProfilePage = ({ pageUpdate, data }) => {
 
         {/* Profile Pic and Data Section*/}
         <div
-          className="Flex AlignItems SeeThru RoundBorder"
+          className="Flex AlignItems SeeThru RoundBorder SimpleBorder "
           style={{
             justifyContent: "space-evenly",
-            flexDirection: "row",
-            margin: 5,
-            marginBottom: 0,
-            border: "solid",
-            borderWidth: 1,
-            borderColor: "pink",
-            padding: 30
+
           }}
         >
           <img
@@ -58,7 +52,7 @@ export const ProfilePage = ({ pageUpdate, data }) => {
           <div className="Buffer" style={{ width: '40%' }}>
             <div>
               <div
-                className="CursiveFont SuperFont"
+                className="CursiveFont SuperFont PinkFont"
               >{name}</div>
               <Ratings rating={rating} />
             </div>
@@ -70,7 +64,6 @@ export const ProfilePage = ({ pageUpdate, data }) => {
 
                 <div className="textMargin">
                   <span className="profileText">{available && 'Currently Enrolling!'}</span>
-
                 </div>
 
 
@@ -96,29 +89,25 @@ export const ProfilePage = ({ pageUpdate, data }) => {
                 </div>
 
 
-
-
-
               </div>
 
               {/* Rates */}
               <div style={{ textAlign: 'left' }}>
                 <div className="textMargin">
                   <span className="profileText">Full Time: {' '}</span>
-                  <strong className="Price LargeFont PinkFont">${rates.ft}</strong>
+                  <strong className="Price LargeFont PinkFont">${rates && rates.ft}</strong>
                 </div>
 
 
                 <div className="textMargin">
                   <span className="profileText">Part Time:{' '} </span>
-                  <strong className="Price LargeFont PinkFont">${rates.pt}</strong>
+                  <strong className="Price LargeFont PinkFont">${rates && rates.pt}</strong>
                 </div>
 
                 <div className="textMargin">
                   <span className="profileText">Drop-In: {' '}</span>
-                  <strong className="Price LargeFont PinkFont">${rates.di}</strong>
+                  <strong className="Price LargeFont PinkFont">${rates && rates.di}</strong>
                 </div>
-
 
               </div>
 
@@ -137,7 +126,7 @@ export const ProfilePage = ({ pageUpdate, data }) => {
 
         </div>
 
-        <img src={DecorShort} alt="decorative" className='filter-green' style={{ width: 200, height: 'auto' }} />
+        <img src={Elegant} alt="decorative" className="filter-green Margins" />
         {/* Photo Gallery Section */}
         <div
           className="Flex Col AlignItems PinkFill"
@@ -156,7 +145,7 @@ export const ProfilePage = ({ pageUpdate, data }) => {
           <div className="CursiveFont LargeFont Buffer">Gallery</div>
 
           <p>
-            {`" ${gallery.description} "`}
+            {`" ${gallery && gallery.description} "`}
           </p>
           {/* Photo Gallery */}
           <div className="SimpleBorder Buffer WhiteFill">
@@ -170,14 +159,11 @@ export const ProfilePage = ({ pageUpdate, data }) => {
           <div>
 
 
-            <div className="CursiveFont LargeFont Buffer ">Special Features</div>
+            <div className="CursiveFont LargeFont Buffer ">Special Features of my Preschool</div>
             <ul style={{ textAlign: 'left' }}>
-              {gallery.features.map((feature) => (
+              {gallery && gallery.features.map((feature) => (
                 <li key={feature}>{feature}</li>
               ))}
-
-
-
             </ul>
 
             <img src={DecorFlat} alt="decorative" className='filter-white' style={{ width: 300, height: 'auto' }} />

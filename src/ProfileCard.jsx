@@ -76,11 +76,13 @@ export const ProfileCard = ({ data, handleSelection }) => {
       </div>
 
       {/* Rates*/}
-      <div className="Flex Col Buffer SimpleBorder" style={{ textAlign: "left", width: '10%' }}>
-        <div>
-          <div className="Price LargeFont">${rates.ft}</div>
-          <div className="Price LargeFont">${rates.pt}</div>
-          <div className="Price LargeFont">${rates.di}</div>
+      <div className="Flex Col Buffer SimpleBorder " style={{ textAlign: "left", width: '10%' }}>
+
+        <div className="Tooltip">
+          <span className="TT_Text">Rates are here...</span>
+          <div className="Price LargeFont PinkFont">${rates.ft}</div>
+          <div className="Price LargeFont PinkFont">${rates.pt}</div>
+          <div className="Price LargeFont PinkFont">${rates.di}</div>
 
         </div>
       </div>

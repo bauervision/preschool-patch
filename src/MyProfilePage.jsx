@@ -11,7 +11,7 @@ import { f, storage, database } from "./config";
 import { Coloring, Kids, Table, Working } from "./images/photos";
 const galleryImages = [Coloring, Kids, Table, Working];
 
-export const MyProfilePage = ({ pageUpdate, data }) => {
+export const MyProfilePage = ({ pageUpdate, data, updateSuccess }) => {
   // pull out public data
   const {
     aboutMe,
@@ -61,7 +61,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       gallery: {
         description: updatedGalleryDesription,
         features: updatedGalleryFeatures,
-        // files
+        // TODO: files
       },
       rates: {
         ft: updatedFTRates,
@@ -80,9 +80,10 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
       .ref(`leaders/${userId}/public`)
       .set(updatedData)
       .then(() => {
+        updateSuccess(true)
         // do something now that the data has been set
         setUpdating(true);
-        setTimeout(function () { pageUpdate(3) }, 3000)
+        // setTimeout(function () { setUpdating(false); }, 3000)
       });
   };
 
@@ -320,6 +321,7 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
 
               <div>
                 <div className="CursiveFont LargeFont Buffer PinkFont">Home Features</div>
+                <p>NOTE: To add multiple bullet points to your features list, simply add a comma! This will signify a new item in your list.</p>
 
                 <EditField
                   isTextArea
@@ -332,6 +334,12 @@ export const MyProfilePage = ({ pageUpdate, data }) => {
                   value={updatedGalleryFeatures}
                 />
 
+                <div className="CursiveFont LargeFont Buffer ">Special Features of my Preschool</div>
+                <ul style={{ textAlign: 'left' }}>
+                  {updatedGalleryFeatures.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
 
 
               </div>

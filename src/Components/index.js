@@ -5,3 +5,4 @@ export { default as PageLogo } from "./PageLogo";
 export { default as EditField } from "./EditField";
 export { default as Ratings } from "./Ratings";
 export { default as SimpleImage } from "./SimpleImage";
+export { default as Toast } from "./Toast";

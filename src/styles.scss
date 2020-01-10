@@ -205,6 +205,10 @@ $PARADISEPINK: #FF4C76;
     font-size: 34pt;
   }
 
+  .RedicFont{
+    font-size: 60pt;
+  }
+
   .Logo {
     margin-left: 200px;
     margin-top: 20px;
@@ -226,8 +230,8 @@ $PARADISEPINK: #FF4C76;
 
   .WhiteFill {
     background-color: $GHOSTWHITE;
-    border-radius: 20px;
-    margin: 50px;
+    
+    
   }
 
   .Price{
@@ -291,8 +295,17 @@ $PARADISEPINK: #FF4C76;
   .InnerShadowWhite {
     box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1);
   }
+
+  .Margins{
+    margin: 50px;
+  }
+
   .Padding{
     padding: 20px;
+  }
+
+  .PaddingBoost{
+    padding: 60px;
   }
 
   .PaddingTop{
@@ -339,6 +352,16 @@ $PARADISEPINK: #FF4C76;
     border-top-right-radius: 30px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    margin-bottom: 0;
+    margin-left: 60px;
+    margin-right: 60px;
+  }
+
+  .TabBottom{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
   }
 
   .Buffer {
@@ -467,4 +490,86 @@ $PARADISEPINK: #FF4C76;
   li {
     font-size: 16pt;
   }
+
+
+
+  /// Toast
+.Toast {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+
+  
+}
+
+.ShowToast{
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+
+// Tooltip
+.Tooltip{
+  position: relative;
+  display: inline-block;
+  
+ 
+
+  &:hover .TT_Text{
+    visibility: visible;
+  opacity: 1;
+  
+  }
+}
+
+.TT_Text{
+  visibility: hidden;
+width: 120px;
+background-color: #555;
+color: $GHOSTWHITE;
+text-align: center;
+padding: 5px 0;
+border-radius: 6px;
+
+/* Position the tooltip text */
+position: absolute;
+z-index: 1;
+bottom: 125%;
+left: 50%;
+margin-left: -60px;
+
+/* Fade in tooltip */
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+
+
 }

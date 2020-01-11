@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 
-import { BasicInput, PasswordInput, Error } from "./Components";
+import { BasicInput, PasswordInput, Error, PatchLogo } from "./Components";
 
 import { RegisterUser } from "./helpers/auth";
-//import { f, storage } from "./config";
+import { Elegant } from "./images"
+// import { f, storage } from "./config";
 
 export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
   // handle local state
@@ -60,13 +61,13 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
     }
   };
 
-  const setEmail = email => {
+  const setEmail = (email) => {
     const error = validEmailRegex.test(email) ? "" : "Email is not valid!";
     setEmailError(error);
     setEmailLogin(email);
   };
 
-  const setPassword = password => {
+  const setPassword = (password) => {
     const error = password.length < 6;
     setPasswordError(error);
     setPasswordLogin(password);
@@ -85,10 +86,10 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Create Leader Account</div>
 
         <div
-          className="Flex Col FixedBG"
+          className="Flex Col FixedBG MarginTop"
           style={{
             justifyContent: "space-evenly",
-            margin: 20,
+            marginLeft: 40,
             marginRight: 40,
             border: "solid",
             borderWidth: 1,
@@ -282,6 +283,11 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
           </div>
         </div>
       </div>
+
+      <img src={Elegant} alt="decorative" className="filter-green Margins" />
+
+      <PatchLogo />
+
       <Footer />
     </div>
   );

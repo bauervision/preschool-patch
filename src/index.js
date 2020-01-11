@@ -17,7 +17,9 @@ const App = () => {
   const [data, setData] = useState({});// raw data from DB
   const [selection, setSelection] = useState({}); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState({}); // logged in user data
-  const [launchToast, setLaunchToast] = useState(false); // launch on successful save
+
+  const [isLeader, setIsLeader] = useState(false); // set based on who logs in
+  const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' }); // set based on who logs in
   /* On Mount, fetch data, check login */
 
   useEffect(() => {
@@ -30,15 +32,21 @@ const App = () => {
     f.auth().onAuthStateChanged((user) => {
       if (user) {
         getUserData(user);
+        updateSuccess(true, "Welcome Back!")
       } else {
         // logged out
         setLoggedInUser(null);
+        updateSuccess(true, "Logged Out")
       }
     });
   };
 
   const getUserData = (user) => {
-    database.ref(`leaders/${user.uid}`).on("value", (snapshot) => {
+    // which type of user is logged in?
+    const id = Object.keys(data).find((elem) => elem === user.uid);
+    console.log(id);
+
+    database.ref(`${id ? 'leaders' : 'users'}/${user.uid}`).on("value", (snapshot) => {
       if (snapshot.val()) {
         const curUser = snapshot.val();
         setLoggedInUser(curUser.public);
@@ -54,8 +62,9 @@ const App = () => {
     handlePageUpdate(3);
   };
 
-  // this method handles existing logins and new basic users
   const handleLogin = (user, newUserData, isLeader) => {
+
+    console.log(user, newUserData, isLeader)
     // if we logged in a new user
     if (newUserData) {
       // create new user data with what we do know about the user, as well as some defaults
@@ -97,8 +106,8 @@ const App = () => {
           }
         };
 
-        // since we are a leader and now logged in, go ahead and set myself as the selection
-        setSelection(newUser);
+        setIsLeader(true);
+
       } else {
         newUser = {
           private: {
@@ -118,6 +127,7 @@ const App = () => {
         };
 
         console.log("New User to create!", newUser);
+
       }
 
       // now that we have some essential data in place, store this user into the database
@@ -129,29 +139,33 @@ const App = () => {
           setLoggedInUser(newUser);
         });
 
-      // repull data before jumping to a new page
-      database
-        .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
-        .once("value")
-        .then(() => {
-          // if we successfully logged in, jump to MyProfile Page, which is the home page for Patch Leaders
-          // othwise head to landing page
-          handlePageUpdate(isLeader ? 4 : 0);
-        });
+
     } else {
-      // this was an existing user login so pull the user from our data and set them as the loggedInUser
-      handleLoginCheck();
+      // we logged in existing
     }
+
+    // repull data before jumping to a new page
+    database
+      .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
+      .once("value")
+      .then((snapshot) => {
+        setLoggedInUser(snapshot.val().public);
+
+      });
+
+    updateSuccess(true, "Welcome Back!")
   };
 
   const handleLogOut = () => {
     setLoggedInUser(null);
+
   };
 
-  const updateSuccess = (status) => {
-    setLaunchToast(true);
-    setTimeout(() => setLaunchToast(false), 3000);
+  const updateSuccess = (value, message) => {
+    setToast({ value, message });
+    setTimeout(() => setToast({ value: false, message: '' }), 3000);
   }
+
 
   /* Page Router */
   const onPage = (page) => {
@@ -175,6 +189,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
+            isLeader={isLeader}
           />
         );
       case 3:
@@ -192,6 +207,7 @@ const App = () => {
             data={data}
             handleLogin={handleLogin}
             loggedInUser={loggedInUser}
+            isLeader={isLeader}
           />
         );
       case 1:
@@ -213,7 +229,8 @@ const App = () => {
             handleLogin={handleLogin}
             handleLogOut={handleLogOut}
             loggedInUser={loggedInUser}
-            launchToast={launchToast}
+            launchToast={toast}
+            isLeader={isLeader}
           />
         );
     }
@@ -221,10 +238,10 @@ const App = () => {
 
   /* On Mount, fetch data */
   useEffect(() => {
-    getData();
+    getLeaderData();
   }, []);
 
-  const getData = () => {
+  const getLeaderData = (isLeader) => {
     // grab ref to the data
     const leaderData = database.ref("leaders");
     // now get the data stored there, and use "on value" to make the data live

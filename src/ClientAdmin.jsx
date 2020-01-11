@@ -2,26 +2,25 @@ import React from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
-import { Ratings, SimpleImage } from "./Components";
+import { Ratings } from "./Components";
 
-import { Coloring, Kids, Table, Working } from "./images/photos";
-import { DecorFlat, Logo, Elegant } from "./images";
+import { Logo, Elegant } from "./images";
 
-const galleryImages = [Coloring, Kids, Table, Working];
+
 export const ClientAdmin = ({ pageUpdate, loggedInUser }) => {
     // pull out public data
     const {
-        aboutMe,
-        age,
-        available,
-        experience,
-        gallery,
-        rates,
-        infants,
-        kidTotal,
-        name,
+        // aboutMe,
+        // age,
+        // available,
+        // experience,
+        // gallery,
+        // rates,
+        // infants,
+        // kidTotal,
+        // name,
         rating,
-        photoUrl
+        // photoUrl
 
     } = loggedInUser;
 
@@ -36,7 +35,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser }) => {
 
                 {/* Client Data*/}
                 <div
-                    className="Flex AlignItems SeeThru RoundBorder SimpleBorder "
+                    className="Flex AlignItems SeeThru "
                     style={{
                         justifyContent: "space-evenly",
 
@@ -48,8 +47,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser }) => {
                     <div className="Buffer" style={{ width: '40%' }}>
                         <div>
                             <div
-                                className="CursiveFont SuperFont PinkFont"
-                            >My Clients</div>
+                                className="CursiveFont SuperFont PinkFont">My Clients</div>
                             <Ratings rating={rating} />
                         </div>
 

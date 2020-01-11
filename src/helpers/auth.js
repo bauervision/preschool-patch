@@ -4,24 +4,20 @@ export const SignUserOut = () => {
   auth
     .signOut()
     .then(() => {
-      console.log("Logged Out");
       return true;
     })
-    .catch(error => {
-      console.log(error);
-      return false;
+    .catch((error) => {
+      return [false, error];
     });
 };
 
 export const RegisterUser = async (email, password) => {
   try {
     let user = await auth.createUserWithEmailAndPassword(email, password);
-
     if (user) {
       return user;
     }
   } catch (error) {
-    console.log("Caught Error", error);
     const status = { error: error, successful: false };
     return status;
   }

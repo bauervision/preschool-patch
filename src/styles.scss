@@ -101,6 +101,7 @@ $PARADISEPINK: #FF4C76;
   .Header {
     background-color: $PATCHGREEN;
     position: fixed;
+    z-index: 2;
     top: 0;
     right: 0;
     justify-content: space-between;
@@ -214,9 +215,18 @@ $PARADISEPINK: #FF4C76;
     margin-top: 20px;
   }
 
+  .Rotate{
+    z-index: -1;
+    animation: rotation 7s infinite linear;
+  }
+
+  
+
   .Social {
+    background-color: transparent;
     border-radius: 60px;
-    border-color: $MALACHITE;
+    border-width: 0;
+    border-color: none !important;
   }
 
   .GreenFill {
@@ -298,6 +308,10 @@ $PARADISEPINK: #FF4C76;
 
   .Margins{
     margin: 50px;
+  }
+
+  .MarginTop{
+    margin-top: 50px;
   }
 
   .Padding{
@@ -464,18 +478,36 @@ $PARADISEPINK: #FF4C76;
     filter: invert(50%) sepia(93%) saturate(6585%) hue-rotate(145deg) brightness(95%) contrast(91%);
   }
 
-
-  button {
-    color: $MALACHITE;
-    margin: 10px;
-    padding: 10px;
+  
+  .HeaderButton {
+    background-color: transparent;
+    color: $GHOSTWHITE;
+    margin: 5px;
+    padding: 5px;
     border-radius: 5px;
+    border-width: 1px;
+    border-color: green !important;
     border: solid;
-    transition: color 1s;
+    transition: all 0.5s;
 
     &:hover {
       background-color: $MALACHITE;
-      color: white;
+      transform: scale(1.05);
+    }
+  }
+
+  button {
+    background-color: $PARADISEPINK;
+    color: $GHOSTWHITE;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    border: solid;
+    transition: all 0.5s;
+
+    &:hover {
+      background-color: $MALACHITE;
+      transform: scale(1.05);
     }
   }
 
@@ -552,7 +584,7 @@ $PARADISEPINK: #FF4C76;
 .TT_Text{
   visibility: hidden;
 width: 120px;
-background-color: #555;
+background-color: $PARADISEPINK;
 color: $GHOSTWHITE;
 text-align: center;
 padding: 5px 0;
@@ -572,4 +604,14 @@ transition: opacity 0.3s;
 
 
 
+}
+
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-359deg);
+  }
 }

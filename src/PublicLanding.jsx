@@ -24,7 +24,8 @@ export const PublicLanding = ({
   handleLogin,
   handleLogOut,
   loggedInUser,
-  launchToast
+  launchToast,
+  isLeader
 }) => {
   // handle local state
   const [leaderData, setLeaderData] = useState([]);
@@ -102,7 +103,8 @@ export const PublicLanding = ({
         isHome
         loggedInUser={loggedInUser}
         handleLogOut={handleLogOut}
-        messages={3}
+        messages={0}
+        isLeader={isLeader}
       />
 
       <div className="Flex AlignItems  Buffer " style={{ marginTop: 80 }}>
@@ -141,7 +143,7 @@ export const PublicLanding = ({
                 </>
               )}
 
-            <img src={Corner} alt='corner' className='filter-white' style={{ width: 100, height: 'auto' }} />
+            <img src={Corner} alt='corner' className='filter-white Rotate' style={{ width: 100, height: 'auto', zIndex: 0 }} />
           </div>
         </div>
       </div>
@@ -299,12 +301,12 @@ export const PublicLanding = ({
 
         <img src={Elegant} alt="decorative" className="filter-green Margins" />
 
-        <div className="CursiveFont RedicFont Margins">Love Learning Early!</div>
+        <div className="CursiveFont RedicFont Margins PinkFont">Love Learning Early!</div>
 
       </div>
       <Footer />
 
-      <Toast showToast={launchToast} message='Save Successful!' />
+      <Toast showToast={launchToast.value} message={launchToast.message} />
 
     </div>
   );

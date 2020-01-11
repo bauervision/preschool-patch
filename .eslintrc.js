@@ -13,7 +13,7 @@ module.exports = {
   },
   plugins: ["react", "react-hooks"],
   parserOptions: {
-    ecmaVersion: 6,
+    ecmaVersion: 8,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true

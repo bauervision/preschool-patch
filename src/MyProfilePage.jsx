@@ -4,14 +4,12 @@ import { EditField, SimpleImage } from "./Components";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 
-import { Success } from "./images";
-
 import { f, storage, database } from "./config";
 
 import { Coloring, Kids, Table, Working } from "./images/photos";
 const galleryImages = [Coloring, Kids, Table, Working];
 
-export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
+export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader }) => {
   // pull out public data
   const {
     aboutMe,
@@ -23,7 +21,9 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
     infants,
     kidTotal,
     name,
-    photoUrl
+    photoUrl,
+    phone,
+    zipcode
   } = loggedInUser;
 
   const [userId, setUserId] = useState(0);
@@ -31,8 +31,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
   const [updatedAge, setAge] = useState(age);
   const [updatedAvailable, setAvailable] = useState(available);
   const [updatedExperience, setExperience] = useState(experience);
-  const [updatedGalleryDesription, setGalleryDescription] = useState(gallery.description);
-  const [updatedGalleryFeatures, setGalleryFeatures] = useState(gallery.features);
+  const [updatedGalleryDesription, setGalleryDescription] = useState(gallery && gallery.description);
+  const [updatedGalleryFeatures, setGalleryFeatures] = useState(gallery && gallery.features);
   const [updatedFTRates, setFTRates] = useState(rates && rates.ft);
   const [updatedPTRates, setPTRates] = useState(rates && rates.pt);
   const [updatedDIRates, setDIRates] = useState(rates && rates.di);
@@ -40,7 +40,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
   const [updatedKidTotal, setKidTotal] = useState(kidTotal);
   const [updatedName, setName] = useState(name);
   const [updatedPhotoUrl, setPhotoUrl] = useState(photoUrl);
-  const [updating, setUpdating] = useState(false);
+
 
   /* On Mount, fetch uid */
   useEffect(() => {
@@ -71,7 +71,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
       infants: updatedInfants,
       kidTotal: updatedKidTotal,
       name: updatedName,
-      photoUrl: updatedPhotoUrl
+      photoUrl: updatedPhotoUrl,
+
     };
 
 
@@ -80,10 +81,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
       .ref(`leaders/${userId}/public`)
       .set(updatedData)
       .then(() => {
-        updateSuccess(true)
-        // do something now that the data has been set
-        setUpdating(true);
-        // setTimeout(function () { setUpdating(false); }, 3000)
+        updateSuccess(true, "Save Successful!")
+
       });
   };
 
@@ -179,7 +178,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
                 </div>
 
 
-                <div>
+                {isLeader && (<div>
 
                   <div className="Flex Row AlignItems JustifyCenter ">
                     <EditField
@@ -202,7 +201,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
                       value={updatedInfants}
                     />
                   </div>
-                </div>
+                </div>)}
+
 
               </div>
 
@@ -217,25 +217,47 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
                   value={updatedName}
                 />
 
-                <EditField
-                  title="Age"
-                  placeholder={age}
-                  type="number"
-                  forLabel="Age"
-                  onChange={setAge}
-                  value={updatedAge}
-                />
-                <EditField
-                  title="Years of Experience"
-                  placeholder={experience}
-                  type="number"
-                  forLabel="experience"
-                  onChange={setExperience}
-                  value={updatedExperience}
-                />
+                {isLeader ? (
+                  <EditField
+                    title="Age"
+                    placeholder={age}
+                    type="number"
+                    forLabel="Age"
+                    onChange={setAge}
+                    value={updatedAge}
+                  />
+                ) : (
+                    <EditField
+                      title="Phone"
+                      placeholder={phone}
+                      type="text"
+                      forLabel="Phone"
+                      onChange={setAge}
+                      value={phone}
+                    />
+                  )}
 
+                {isLeader ? (
+                  <EditField
+                    title="Years of Experience"
+                    placeholder={experience}
+                    type="number"
+                    forLabel="experience"
+                    onChange={setExperience}
+                    value={updatedExperience}
+                  />
+                ) : (
+                    <EditField
+                      title="Zipcode"
+                      placeholder={zipcode}
+                      type="number"
+                      forLabel="zipcode"
+                      onChange={setExperience}
+                      value={zipcode}
+                    />
+                  )}
                 <EditField
-                  title="Current student count"
+                  title={isLeader ? "Current Student Count" : "Number of enrolling children"}
                   placeholder={kidTotal}
                   type="number"
                   forLabel="kidTotal"
@@ -244,35 +266,61 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
                 />
               </div>
 
-              <div>
-                <div className="CursiveFont LargeFont Buffer PinkFont">My Rates</div>
+              {!isLeader && (<div className="Margins">
+
+                <div className="CursiveFont LargeFont Buffer PinkFont">Looking For...</div>
                 <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                   <EditField
-                    title="Full Time Rate"
-                    placeholder={age}
-                    type="number"
-                    forLabel="Age"
-                    onChange={setFTRates}
-                    value={updatedFTRates}
+                    isCheck
+                    title="Full Time"
+                    type="checkbox"
+                    forLabel="Fulltime"
+                    // onChange={() => setAvailable(!updatedAvailable)}
+                    value={true}
                   />
+
                   <EditField
-                    title="Part Time Rate"
-                    placeholder={age}
-                    type="number"
-                    forLabel="Age"
-                    onChange={setPTRates}
-                    value={updatedPTRates}
-                  />
-                  <EditField
-                    title="Drop-In Rate"
-                    placeholder="Enter you preferred Drop-in rate"
-                    type="number"
-                    forLabel="Age"
-                    onChange={setDIRates}
-                    value={updatedDIRates}
+                    isCheck
+                    title="Part-Time or Drop-In"
+                    type="checkbox"
+                    forLabel="partTime"
+                    // onChange={() => setInfants(!updatedInfants)}
+                    value={false}
                   />
                 </div>
-              </div>
+              </div>)}
+
+
+              {isLeader && (
+                <div>
+                  <div className="CursiveFont LargeFont Buffer PinkFont">My Rates</div>
+                  <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
+                    <EditField
+                      title="Full Time Rate"
+                      placeholder={age}
+                      type="number"
+                      forLabel="Age"
+                      onChange={setFTRates}
+                      value={updatedFTRates}
+                    />
+                    <EditField
+                      title="Part Time Rate"
+                      placeholder={age}
+                      type="number"
+                      forLabel="Age"
+                      onChange={setPTRates}
+                      value={updatedPTRates}
+                    />
+                    <EditField
+                      title="Drop-In Rate"
+                      placeholder="Enter you preferred Drop-in rate"
+                      type="number"
+                      forLabel="Age"
+                      onChange={setDIRates}
+                      value={updatedDIRates}
+                    />
+                  </div>
+                </div>)}
 
 
 
@@ -289,70 +337,69 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess }) => {
                 />
               </div>
 
-              <div>
-                <div className="CursiveFont LargeFont Buffer PinkFont">Home Gallery</div>
-                <EditField
-                  isTextArea
-                  small
-                  title="Description"
-                  placeholder="Enter a simple description for your home preschool"
-                  type="text"
-                  forLabel="aboutMe"
-                  onChange={setGalleryDescription}
-                  value={updatedGalleryDesription}
-                />
-                <EditField
-                  isFile
-                  multiple
-                  title="Upload Pictures"
-                  type="file"
-                  forLabel="homeGallery"
-                  onChange={handleGalleryUpdate}
-                />
-              </div>
+              {isLeader && (
+                <div>
+                  <div className="CursiveFont LargeFont Buffer PinkFont">Home Gallery</div>
+                  <EditField
+                    isTextArea
+                    small
+                    title="Description"
+                    placeholder="Enter a simple description for your home preschool"
+                    type="text"
+                    forLabel="aboutMe"
+                    onChange={setGalleryDescription}
+                    value={updatedGalleryDesription}
+                  />
+                  <EditField
+                    isFile
+                    multiple
+                    title="Upload Pictures"
+                    type="file"
+                    forLabel="homeGallery"
+                    onChange={handleGalleryUpdate}
+                  />
+                </div>)}
 
-              {/* Photo Gallery */}
-              <div className="SimpleBorder Buffer WhiteFill">
-                {galleryImages.map((elem, index) => (
-                  <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />
-                ))}
-
-              </div>
-
-              <div>
-                <div className="CursiveFont LargeFont Buffer PinkFont">Home Features</div>
-                <p>NOTE: To add multiple bullet points to your features list, simply add a comma! This will signify a new item in your list.</p>
-
-                <EditField
-                  isTextArea
-                  small
-                  title=""
-                  placeholder="Enter a simple description for a feature in your home preschool"
-                  type="text"
-                  forLabel="Features"
-                  onChange={handleGalleryFeatureUpdate}
-                  value={updatedGalleryFeatures}
-                />
-
-                <div className="CursiveFont LargeFont Buffer ">Special Features of my Preschool</div>
-                <ul style={{ textAlign: 'left' }}>
-                  {updatedGalleryFeatures.map((feature) => (
-                    <li key={feature}>{feature}</li>
+              {isLeader && (<>
+                {/* Photo Gallery */}
+                <div className="SimpleBorder Buffer WhiteFill">
+                  {galleryImages.map((elem, index) => (
+                    <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />
                   ))}
-                </ul>
+
+                </div>
+
+                <div>
+                  <div className="CursiveFont LargeFont Buffer PinkFont">Home Features</div>
+                  <p>NOTE: To add multiple bullet points to your features list, simply add a comma! This will signify a new item in your list.</p>
+
+                  <EditField
+                    isTextArea
+                    small
+                    title=""
+                    placeholder="Enter a simple description for a feature in your home preschool"
+                    type="text"
+                    forLabel="Features"
+                    onChange={handleGalleryFeatureUpdate}
+                    value={updatedGalleryFeatures}
+                  />
+
+                  <div className="CursiveFont LargeFont Buffer ">Special Features of my Preschool</div>
+                  <ul style={{ textAlign: 'left' }}>
+                    {updatedGalleryFeatures && updatedGalleryFeatures.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
 
 
-              </div>
+                </div>
+              </>)}
 
               <div>
                 <button type="submit" className="RegisterButton">
                   Submit Changes
                 </button>
-                {updating && (
-                  <div>
-                    <img src={Success} alt="Success" />
-                  </div>
-                )}
+
               </div>
             </form>
           </div>

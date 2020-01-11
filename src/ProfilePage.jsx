@@ -8,7 +8,7 @@ import { Coloring, Kids, Table, Working } from "./images/photos";
 import { DecorFlat, Logo, Elegant } from "./images";
 
 const galleryImages = [Coloring, Kids, Table, Working];
-export const ProfilePage = ({ pageUpdate, data }) => {
+export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
   // pull out public data
   const {
     aboutMe,
@@ -25,7 +25,9 @@ export const ProfilePage = ({ pageUpdate, data }) => {
 
   } = data;
 
-  const handleContact = () => pageUpdate(1);
+  const handleContact = () => {
+    console.log(`Send message to ${name}`)
+  }
 
   return (
     <div>
@@ -35,97 +37,102 @@ export const ProfilePage = ({ pageUpdate, data }) => {
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Profile Page</div>
 
         {/* Profile Pic and Data Section*/}
-        <div
-          className="Flex AlignItems SeeThru RoundBorder SimpleBorder "
-          style={{
-            justifyContent: "space-evenly",
+        <div className="MarginTop">
+          <div
+            className="Flex AlignItems SeeThru RoundBorder SimpleBorder Margins"
+            style={{
+              justifyContent: "space-evenly",
 
-          }}
-        >
-          <img
-            alt="profile pic"
-            style={{ borderRadius: 25, width: 200, height: 200 }}
-            src={photoUrl}
-          />
+            }}
+          >
+            <img
+              alt="profile pic"
+              style={{ borderRadius: 25, width: 200, height: 200 }}
+              src={photoUrl}
+            />
 
-          {/* Data Row */}
-          <div className="Buffer" style={{ width: '40%' }}>
-            <div>
-              <div
-                className="CursiveFont SuperFont PinkFont"
-              >{name}</div>
-              <Ratings rating={rating} />
-            </div>
+            {/* Data Row */}
+            <div className="Buffer" style={{ width: '40%' }}>
+              <div>
+                <div
+                  className="CursiveFont SuperFont PinkFont"
+                >{name}</div>
+                <Ratings rating={rating} />
+              </div>
 
-            <div className="Flex Between">
-              {/* Data */}
+              <div className="Flex Between">
+                {/* Data */}
 
-              <div style={{ textAlign: 'left', marginTop: 20 }}>
+                <div style={{ textAlign: 'left', marginTop: 20 }}>
 
-                <div className="textMargin">
-                  <span className="profileText">{available && 'Currently Enrolling!'}</span>
+                  <div className="textMargin">
+                    <span className="profileText">{available && 'Currently Enrolling!'}</span>
+                  </div>
+
+
+                  <div className="textMargin">
+                    <span className="profileText">Years of Experience:</span>
+                    <strong>{experience}</strong>
+                  </div>
+
+                  <div className="textMargin">
+                    <span className="profileText">Total Kids Enrolled:</span>{" "}
+                    <strong>{kidTotal}</strong>
+                  </div>
+
+                  <div className="textMargin">
+                    <span className="profileText">Infants?:</span>{" "}
+                    <strong>{infants ? 'Yes!' : 'Not at this time'}</strong>
+                  </div>
+
+
+                  <div className="textMargin">
+                    <span className="profileText">Age:</span>
+                    <strong>{age}</strong>
+                  </div>
+
+
                 </div>
 
+                {/* Rates */}
+                <div style={{ textAlign: 'left' }}>
+                  <div className="textMargin">
+                    <span className="profileText">Full Time: {' '}</span>
+                    <strong className="Price LargeFont PinkFont">${rates && rates.ft}</strong>
+                  </div>
 
-                <div className="textMargin">
-                  <span className="profileText">Years of Experience:</span>
-                  <strong>{experience}</strong>
+
+                  <div className="textMargin">
+                    <span className="profileText">Part Time:{' '} </span>
+                    <strong className="Price LargeFont PinkFont">${rates && rates.pt}</strong>
+                  </div>
+
+                  <div className="textMargin">
+                    <span className="profileText">Drop-In: {' '}</span>
+                    <strong className="Price LargeFont PinkFont">${rates && rates.di}</strong>
+                  </div>
+
                 </div>
-
-                <div className="textMargin">
-                  <span className="profileText">Total Kids Enrolled:</span>{" "}
-                  <strong>{kidTotal}</strong>
-                </div>
-
-                <div className="textMargin">
-                  <span className="profileText">Infants?:</span>{" "}
-                  <strong>{infants ? 'Yes!' : 'Not at this time'}</strong>
-                </div>
-
-
-                <div className="textMargin">
-                  <span className="profileText">Age:</span>
-                  <strong>{age}</strong>
-                </div>
-
 
               </div>
 
-              {/* Rates */}
-              <div style={{ textAlign: 'left' }}>
-                <div className="textMargin">
-                  <span className="profileText">Full Time: {' '}</span>
-                  <strong className="Price LargeFont PinkFont">${rates && rates.ft}</strong>
-                </div>
-
-
-                <div className="textMargin">
-                  <span className="profileText">Part Time:{' '} </span>
-                  <strong className="Price LargeFont PinkFont">${rates && rates.pt}</strong>
-                </div>
-
-                <div className="textMargin">
-                  <span className="profileText">Drop-In: {' '}</span>
-                  <strong className="Price LargeFont PinkFont">${rates && rates.di}</strong>
-                </div>
-
-              </div>
-
             </div>
 
+            {/* About Me Row */}
+            <div className="Flex Col JustifyStart SimpleBorder WhiteFill" style={{ width: '60%' }}>
+              <div className="CursiveFont SuperFont">About Me</div>
+              <p>{aboutMe}</p>
+
+              {/* Contact Button: If loggedInUser, otherwise notify to login*/}
+              {loggedInUser ? (
+                <button onClick={handleContact} className="CursiveFont LargeFont">{`Contact ${name}`}</button>) : (
+                  <button onClick={() => pageUpdate(1)} className="CursiveFont LargeFont">{`Login to Contact ${name}`}</button>
+                )}
+            </div>
+
+
           </div>
-
-          {/* About Me Row */}
-          <div className="Flex Col JustifyStart SimpleBorder WhiteFill" style={{ width: '60%' }}>
-            <div className="CursiveFont SuperFont">About Me</div>
-            <p>{aboutMe}</p>
-            {/* Contact Button */}
-            <button onClick={handleContact}>{`Contact ${name}`}</button>
-          </div>
-
-
         </div>
-
         <img src={Elegant} alt="decorative" className="filter-green Margins" />
         {/* Photo Gallery Section */}
         <div

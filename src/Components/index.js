@@ -7,3 +7,4 @@ export { default as Ratings } from "./Ratings";
 export { default as SimpleImage } from "./SimpleImage";
 export { default as Toast } from "./Toast";
 export { default as PatchLogo } from "./PatchLogo";
+export { default as SimpleTable } from "./SimpleTable";

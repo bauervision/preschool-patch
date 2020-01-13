@@ -134,7 +134,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} />
+        <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} isLeader={isLeader} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
 
@@ -207,7 +207,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
               </div>
 
               <div className="CursiveFont LargeFont Buffer PinkFont">My Data</div>
-              <div className="Flex Row AlignItems SimpleBorder">
+              <div className="Flex Row AlignItems SimpleBorder JustifyCenter">
                 <EditField
                   title="Full Name"
                   placeholder={name}

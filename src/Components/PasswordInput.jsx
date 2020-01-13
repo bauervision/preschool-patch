@@ -36,7 +36,7 @@ const PasswordInput = ({
             placeholder="Enter your Password"
             type={passwordType}
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
       </div>

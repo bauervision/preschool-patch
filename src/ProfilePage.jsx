@@ -39,7 +39,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
         {/* Profile Pic and Data Section*/}
         <div className="MarginTop">
           <div
-            className="Flex AlignItems SeeThru RoundBorder SimpleBorder Margins"
+            className="Flex AlignItems SeeThru RoundBorder SimpleBorder Margins BoxShadow"
             style={{
               justifyContent: "space-evenly",
 
@@ -136,19 +136,8 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
         <img src={Elegant} alt="decorative" className="filter-green Margins" />
         {/* Photo Gallery Section */}
         <div
-          className="Flex Col AlignItems PinkFill"
-          style={{
-            margin: 5,
-            marginTop: 0,
-            border: "solid",
-            borderWidth: 1,
-            borderColor: "green",
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-            borderBottomLeftRadius: 50,
-            borderBottomRightRadius: 50,
-            padding: 30
-          }}>
+          className="Flex Col AlignItems PinkFill SimpleBorder Margins" >
+
           <div className="CursiveFont LargeFont Buffer">Gallery</div>
 
           <p>

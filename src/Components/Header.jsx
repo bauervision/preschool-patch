@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Home, Profile } from "../images";
+import { Home } from "../images";
 
 import { SignUserOut } from "../helpers/auth";
 
@@ -32,12 +32,12 @@ export const Header = ({
         {!loggedInUser ? (
           // If we are not logged in, the only option we should see on the header is to signup
           <div>
-            <button onClick={() => pageUpdate(1)}>Login / Signup</button>
+            <button className='HeaderButton' onClick={() => pageUpdate(1)}>Login / Signup</button>
           </div>
         ) : (
             // we are now logged in
             <>
-
+              {/* Only show this button if we arent a leader, and not on the create page */}
               {(!isCreate && !isLeader) && (
                 <div>
                   <button className='HeaderButton' onClick={() => pageUpdate(2)}>
@@ -46,54 +46,57 @@ export const Header = ({
                 </div>
               )}
 
-              {/* If we are on MyProfile page, we need to show button to go to client admin */}
-              {myProfile ? (
-                // but only if we are a leader
-                <>
-                  {isLeader && (
-                    <div>
-                      <button className='HeaderButton' onClick={() => pageUpdate(5)}>
-                        Client Admin
+
+
+              {messages > 0 && (
+                <button className="Header_MessageBtn">
+                  <div>{messages}  {" | "} </div>
+                  <div />
                 </button>
-                    </div>)}
+              )}
+
+              {/* If we are on MyProfile page, we need to show button to go to client admin */}
+              {!myProfile && (
+                <>
+                  <div style={{ color: 'white' }}>{isLeader && ("Patch Leader")}
+                  </div>
+
+
+
+                  <button className='HeaderButton' onClick={() => pageUpdate(4)}>
+                    {loggedInUser.name}
+                  </button>
                 </>
-              ) : (
-                  <>
-                    {/* on any page other than my profile... */}
-                    {messages > 0 && (
-                      <button className="Header_MessageBtn">
-                        <div>{messages}</div>
-                        <div />
-                      </button>
-                    )}
 
-                    {" | "} {isLeader && ("Patch Leader")}
+              )}
 
-                    <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-                      {loggedInUser.name}
-                    </button>
-
-                  </>
-                )}
+              {isLeader && (
+                <div>
+                  <button className='HeaderButton' onClick={() => pageUpdate(5)}>
+                    Client Admin
+                </button>
+                </div>)}
 
               {/* If we are logged in, always show logout */}
               <div>
                 <button className='HeaderButton' onClick={LogOut}>Logout</button>
               </div>
 
-              {/* Show Home Icon, if we're not on home page' */}
-              {!isHome && (
-                <div>
-                  <img
-                    src={Home}
-                    alt="Home icon"
-                    className="Header_Logo"
-                    onClick={() => pageUpdate(0)}
-                  />
-                </div>
-              )}
+
             </>
           )}
+
+        {/* Show Home Icon, if we're not on home page' */}
+        {!isHome && (
+          <div>
+            <img
+              src={Home}
+              alt="Home icon"
+              className="Header_Logo"
+              onClick={() => pageUpdate(0)}
+            />
+          </div>
+        )}
       </div >
 
 

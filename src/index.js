@@ -44,12 +44,23 @@ const App = () => {
   const getUserData = (user) => {
     // which type of user is logged in?
     const id = Object.keys(data).find((elem) => elem === user.uid);
-    console.log(id);
+
+    // if we found a valid id, then this is a leader
+    if (id) {
+      setIsLeader(true)
+    }
 
     database.ref(`${id ? 'leaders' : 'users'}/${user.uid}`).on("value", (snapshot) => {
       if (snapshot.val()) {
         const curUser = snapshot.val();
         setLoggedInUser(curUser.public);
+        // now that we know who is logged in, if we logged in a leader, we need to grab client data
+        if (id) {
+          const clientEntries = curUser.public.clients;
+          clientEntries.forEach((elem) => {
+            getClientData()
+          })
+        }
         handlePageUpdate(0);
       }
     });
@@ -64,7 +75,6 @@ const App = () => {
 
   const handleLogin = (user, newUserData, isLeader) => {
 
-    console.log(user, newUserData, isLeader)
     // if we logged in a new user
     if (newUserData) {
       // create new user data with what we do know about the user, as well as some defaults
@@ -126,8 +136,6 @@ const App = () => {
           }
         };
 
-        console.log("New User to create!", newUser);
-
       }
 
       // now that we have some essential data in place, store this user into the database
@@ -145,15 +153,15 @@ const App = () => {
     }
 
     // repull data before jumping to a new page
-    database
-      .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
-      .once("value")
-      .then((snapshot) => {
-        setLoggedInUser(snapshot.val().public);
+    // database
+    //   .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
+    //   .once("value")
+    //   .then((snapshot) => {
+    //     setLoggedInUser(snapshot.val().public);
 
-      });
+    //   });
 
-    updateSuccess(true, "Welcome Back!")
+    // updateSuccess(true, "Welcome Back!")
   };
 
   const handleLogOut = () => {
@@ -236,14 +244,25 @@ const App = () => {
     }
   };
 
-  /* On Mount, fetch data */
+  /* On Mount, fetch ALL leader data */
   useEffect(() => {
     getLeaderData();
   }, []);
 
-  const getLeaderData = (isLeader) => {
+  const getLeaderData = () => {
     // grab ref to the data
     const leaderData = database.ref("leaders");
+    // now get the data stored there, and use "on value" to make the data live
+    leaderData.on("value", (snapshot) => {
+      if (snapshot.val()) {
+        setData(snapshot.val());
+      }
+    });
+  };
+
+  const getClientData = (clientId) => {
+    // grab ref to the data
+    const leaderData = database.ref(`users/${clientId}`);
     // now get the data stored there, and use "on value" to make the data live
     leaderData.on("value", (snapshot) => {
       if (snapshot.val()) {

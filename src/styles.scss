@@ -451,9 +451,9 @@ $PARADISEPINK: #FF4C76;
     background-color: transparent;
     border: none;
     border-radius: 5px;
-    padding: 3px;
+    padding: 0px;
     position: absolute;
-    top: 5px;
+    top: -2px;
     right: 5px;
   }
   textarea {
@@ -461,6 +461,25 @@ $PARADISEPINK: #FF4C76;
     padding: 20px;
     border-radius: 10px;
     font-size: 12pt;
+  }
+
+
+  table{
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid $PATCHGREEN;
+  }
+  
+  
+
+  tr:nth-child(even){background-color: #f2f2f2;}
+
+  th{
+    padding: 15px;
+    text-align: left;
+    background-color: $PARADISEPINK;
+    color: white;
+  
   }
 
 
@@ -572,11 +591,9 @@ $PARADISEPINK: #FF4C76;
   position: relative;
   display: inline-block;
   
- 
-
   &:hover .TT_Text{
     visibility: visible;
-  opacity: 1;
+    opacity: 1;
   
   }
 }
@@ -584,7 +601,7 @@ $PARADISEPINK: #FF4C76;
 .TT_Text{
   visibility: hidden;
 width: 120px;
-background-color: $PARADISEPINK;
+background-color: $SONICSILVER;
 color: $GHOSTWHITE;
 text-align: center;
 padding: 5px 0;
@@ -593,13 +610,13 @@ border-radius: 6px;
 /* Position the tooltip text */
 position: absolute;
 z-index: 1;
-bottom: 125%;
-left: 50%;
+
+right: 0%;
 margin-left: -60px;
 
 /* Fade in tooltip */
 opacity: 0;
-transition: opacity 0.3s;
+transition: opacity  0s linear 1.5s;
 }
 
 

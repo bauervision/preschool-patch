@@ -4,14 +4,14 @@ module.exports = {
     "plugin:import/errors",
     "plugin:import/warnings",
   ],
-  //parser: "babel-eslint",
+  parser: "babel-eslint",
   env: {
     browser: true,
     node: true,
     jest: true,
     es6: true
   },
-  plugins: ["react", "react-hooks"],
+  plugins: ["babel", "react", "react-hooks"],
   parserOptions: {
     ecmaVersion: 8,
     sourceType: "module",

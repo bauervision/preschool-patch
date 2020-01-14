@@ -9,11 +9,15 @@ const EditField = ({
   forLabel,
   onChange,
   value,
+  isInput,
   isTextArea,
   isCheck,
   isFile,
+  isSelect,
   multiple, small
 }) => {
+
+
   return (
     <div
       className="Flex Col JustifyCenter"
@@ -30,7 +34,9 @@ const EditField = ({
       </div>
 
       <div className="Flex Row AlignItems JustifyCenter">
-        {isTextArea ? (
+
+        {/* We want a textarea input */}
+        {isTextArea && (
           <textarea
             name={forLabel}
             rows={small ? "2" : "8"}
@@ -39,38 +45,38 @@ const EditField = ({
             value={value}
 
           />
-        ) : (
-            <>
-              {isCheck ? (
-                <button className="CheckBox " type="button" onClick={onChange}>
-                  <img src={value ? Checked : Unchecked} alt="checkbox" />
-                </button>
-              ) : (
-                  <>
-                    {isFile ? (
-                      <input
-                        className="InputStyle Buffer"
-                        placeholder={placeholder}
-                        type={type}
-                        name={forLabel}
-                        value={value}
-                        multiple
-                        onChange={(e) => onChange(multiple ? e.target.files : e.target.files[0])}
-                      />
-                    ) : (
-                        <input
-                          className="InputStyle Buffer"
-                          placeholder={placeholder}
-                          type={type}
-                          name={forLabel}
-                          value={value}
-                          onChange={(e) => onChange(e.target.value)}
-                        />
-                      )}
-                  </>
-                )}
-            </>
-          )}
+        )}
+
+        {/* We want a checkbox */}
+        {isCheck && (
+          <button className="CheckBox " type="button" onClick={onChange}>
+            <img src={value ? Checked : Unchecked} alt="checkbox" />
+          </button>
+        )}
+
+        {/* Finally handle File input and the default case*/}
+        {isFile && (
+          <input
+            className="InputStyle Buffer"
+            placeholder={placeholder}
+            type={type}
+            name={forLabel}
+            value={value}
+            multiple
+            onChange={(e) => onChange(multiple ? e.target.files : e.target.files[0])}
+          />
+        )}
+        {(!isInput && !isTextArea && !isFile && !isCheck) &&
+          <input
+            className="InputStyle Buffer"
+            placeholder={placeholder}
+            type={type}
+            name={forLabel}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        }
+
       </div>
     </div>
   );

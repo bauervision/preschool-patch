@@ -15,11 +15,15 @@ const App = () => {
 
   const [currentPage, setPage] = useState(0);
   const [data, setData] = useState({});// raw data from DB
+  const [clientData, setClientData] = useState([]);// raw data from DB
   const [selection, setSelection] = useState({}); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState({}); // logged in user data
 
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' }); // set based on who logs in
+
+  const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
+
   /* On Mount, fetch data, check login */
 
   useEffect(() => {
@@ -32,7 +36,7 @@ const App = () => {
     f.auth().onAuthStateChanged((user) => {
       if (user) {
         getUserData(user);
-        updateSuccess(true, "Welcome Back!")
+        updateSuccess(true, "Welcome!")
       } else {
         // logged out
         setLoggedInUser(null);
@@ -57,8 +61,8 @@ const App = () => {
         // now that we know who is logged in, if we logged in a leader, we need to grab client data
         if (id) {
           const clientEntries = curUser.public.clients;
-          clientEntries.forEach((elem) => {
-            getClientData()
+          clientEntries.forEach((clientId) => {
+            getClientData(clientId);
           })
         }
         handlePageUpdate(0);
@@ -130,9 +134,10 @@ const App = () => {
               "I am brand new to Preschool Patch!  I will update my profile ASAP.",
             isLeader: false,
             looking: true,
-            kidTotal: 1,
+            children: newUserData.children,
             name: newUserData.displayName,
-            zipcode: newUserData.zipcode
+            zipcode: newUserData.zipcode,
+            photoUrl: newUserData.photoUrl
           }
         };
 
@@ -152,16 +157,6 @@ const App = () => {
       // we logged in existing
     }
 
-    // repull data before jumping to a new page
-    // database
-    //   .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
-    //   .once("value")
-    //   .then((snapshot) => {
-    //     setLoggedInUser(snapshot.val().public);
-
-    //   });
-
-    // updateSuccess(true, "Welcome Back!")
   };
 
   const handleLogOut = () => {
@@ -174,6 +169,15 @@ const App = () => {
     setTimeout(() => setToast({ value: false, message: '' }), 3000);
   }
 
+
+  const addNewChildInfo = () => {
+
+    const newKid = { name: "Child's name", age: 2 }
+    const updatedInfo = kidTotal;
+    updatedInfo.push(newKid)
+    console.log("Adding new kid", updatedInfo)
+    setKidTotal(updatedInfo)
+  }
 
   /* Page Router */
   const onPage = (page) => {
@@ -188,6 +192,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
+            data={clientData}
           />
         );
       case 4:
@@ -216,6 +221,7 @@ const App = () => {
             handleLogin={handleLogin}
             loggedInUser={loggedInUser}
             isLeader={isLeader}
+
           />
         );
       case 1:
@@ -226,6 +232,8 @@ const App = () => {
             handleLogin={handleLogin}
             handleLogOut={handleLogOut}
             loggedInUser={loggedInUser}
+            kidTotal={kidTotal}
+            addNewChildInfo={addNewChildInfo}
           />
         );
       default:
@@ -247,7 +255,7 @@ const App = () => {
   /* On Mount, fetch ALL leader data */
   useEffect(() => {
     getLeaderData();
-  }, []);
+  }, [isLeader]);
 
   const getLeaderData = () => {
     // grab ref to the data
@@ -262,11 +270,15 @@ const App = () => {
 
   const getClientData = (clientId) => {
     // grab ref to the data
-    const leaderData = database.ref(`users/${clientId}`);
+    const ref = database.ref(`users/${clientId}`);
     // now get the data stored there, and use "on value" to make the data live
-    leaderData.on("value", (snapshot) => {
+    ref.on("value", (snapshot) => {
       if (snapshot.val()) {
-        setData(snapshot.val());
+        const data = snapshot.val();
+        const tempClients = [...clientData];
+        tempClients.push(data.public)
+        setClientData(tempClients);
+
       }
     });
   };

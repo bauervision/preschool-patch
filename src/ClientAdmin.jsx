@@ -7,45 +7,14 @@ import { Ratings, SimpleTable } from "./Components";
 import { Logo, Elegant } from "./images";
 
 
-export const ClientAdmin = ({ pageUpdate, loggedInUser }) => {
+export const ClientAdmin = ({ pageUpdate, loggedInUser, data }) => {
     // pull out public data
-    const {
-        // aboutMe,
-        // age,
-        // available,
-        // experience,
-        // gallery,
-        // rates,
-        // infants,
-        // kidTotal,
-        // name,
-        rating,
-        clients
-        // photoUrl
-
-    } = loggedInUser;
-
-    const data = {
-        headerData: ["Student Name", "Parent Name", "Contact Number", "Enrollment", "Active"],
-        bodyData: [
-            { name: "Caleb", parent: "Dani Darling", phone: "456-0987", status: "Full-Time", active: true },
-            { name: "Kalee", parent: "Dani Darling", phone: "456-0987", status: "Full-Time", active: true },
-            { name: "Jaren", parent: "Suzy Smythe", phone: "234-0099", status: "Part-Time", active: true },
-            { name: "Jess", parent: "Chloe Curls", phone: "221-3245", status: "Full-Time", active: false },
-            { name: "Monika", parent: "Kim Kully", phone: "576-7869", status: "Drop-In", active: true },
-            // ["Caleb", "Dani Darling", "456-0987", "Full-Time", true],
-            // ["Calee", "Dani Darling", "456-0987", "Full-Time", true],
-            // ["Jaren", "Suzy Smythe", "234-0099", "Part-Time", true],
-            // ["Jess", "Chloe Curls", "221-3245", "Full-Time", false],
-            // ["Monika", "Kim Kully", "576-7869", "Drop-In", true],
-
-        ]
-    }
+    const { rating } = loggedInUser;
 
     return (
         <div>
             <div>
-                <Header pageUpdate={pageUpdate} />
+                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} />
 
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Client Admin</div>
 
@@ -66,7 +35,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser }) => {
                             <Ratings rating={rating} />
                         </div>
 
-                        <SimpleTable data={data} />
+                        <SimpleTable data={data && data} />
 
 
                     </div>

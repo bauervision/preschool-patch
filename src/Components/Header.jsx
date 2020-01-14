@@ -10,6 +10,7 @@ export const Header = ({
   isLeader,
   myProfile,
   isCreate,
+  isAdmin,
   loggedInUser,
   messages
 }) => {
@@ -70,12 +71,22 @@ export const Header = ({
 
               )}
 
-              {isLeader && (
+              {(isLeader && !isAdmin) && (
                 <div>
-                  <button className='HeaderButton' onClick={() => pageUpdate(5)}>
-                    Client Admin
-                </button>
-                </div>)}
+                  {isAdmin ? (
+                    <button className='HeaderButton' onClick={() => pageUpdate(4)}>
+                      {loggedInUser.name}
+                    </button>
+                  ) : (
+                      <button className='HeaderButton' onClick={() => pageUpdate(5)}>
+                        Client Admin
+                      </button>
+                    )
+                  }
+
+                </div>
+              )
+              }
 
               {/* If we are logged in, always show logout */}
               <div>

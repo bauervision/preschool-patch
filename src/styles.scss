@@ -229,6 +229,13 @@ $PARADISEPINK: #FF4C76;
     border-color: none !important;
   }
 
+  .Add {
+    background-color: transparent;
+    border-radius: 60px;
+    border-width: 0;
+    border-color: none !important;
+  }
+
   .GreenFill {
     background-color: $PATCHGREEN;
     color: $GHOSTWHITE;    
@@ -399,10 +406,10 @@ $PARADISEPINK: #FF4C76;
   .InputStyle {
     padding: 10px;
     margin: 10px;
-    border: solid 1px rgba(0, 220, 0, 0.4);
+    border: solid 1px $PATCHGREEN;
     border-radius: 5px;
     border-style: solid;
-    border-color: $MALACHITE;
+    
   }
 
   .InputTextLabel {
@@ -474,6 +481,9 @@ $PARADISEPINK: #FF4C76;
 
   tr:nth-child(even){background-color: #f2f2f2;}
 
+  thead{
+    border-collapse: collapse;
+  }
   th{
     padding: 15px;
     text-align: left;
@@ -542,7 +552,8 @@ $PARADISEPINK: #FF4C76;
     font-size: 16pt;
   }
 
-
+ 
+  
 
   /// Toast
 .Toast {

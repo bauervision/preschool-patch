@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
@@ -8,7 +8,7 @@ import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo } from "./Compone
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
-import { Elegant } from "./images";
+import { Add, Elegant } from "./images";
 
 export const Login = ({ pageUpdate, handleLogin }) => {
   // handle local state
@@ -24,6 +24,9 @@ export const Login = ({ pageUpdate, handleLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
+  const [interest, setInterest] = useState(0);
+
+  const [kidTotal, setKidTotal] = useState([]);
 
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
@@ -54,10 +57,12 @@ export const Login = ({ pageUpdate, handleLogin }) => {
       displayName: name,
       phoneNumber: phone,
       zipcode: zipcode,
+      children: kidTotal,
       photoUrl:
         "https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490"
 
     };
+
 
     let status = await RegisterUser(email, password);
 
@@ -91,6 +96,106 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     setUserType(userType);
     setLoginError(null);
   };
+
+  const handleSetChildName = (name, index) => {
+    // get kid
+    const kids = [...kidTotal];
+    const thisKid = kids[index];
+    // update their data
+    thisKid.name = name;
+    kids[index] = thisKid;
+
+    // update state
+    setKidTotal(kids)
+
+  }
+
+  const handleSetChildAge = (age, index) => {
+    const kids = [...kidTotal];
+    const thisKid = kids[index];
+    thisKid.age = Number(age);
+    kids[index] = thisKid;
+    setKidTotal(kids)
+  }
+
+
+  const KidSection = ({ location, name, age }) => {
+    const [kidName, setKidName] = useState('');
+    const [kidAge, setKidAge] = useState(0);
+
+    const handleName = () => {
+      handleSetChildName(kidName, location);
+    }
+
+    const handleAge = () => {
+      handleSetChildAge(kidAge, location)
+    }
+
+    return (
+      <div className="Flex">
+
+        {/* Name Input */}
+        <div
+          className="Flex Col "
+          style={{
+            padding: 2
+          }}
+        >
+          <div style={{ textAlign: "left" }}>
+            <label htmlFor={`Child${location + 1}Name`} className="InputTextLabel">
+              {`Child ${location + 1} Name`}:
+        </label>
+          </div>
+
+          <input
+            className="InputStyle"
+            placeholder="Please Enter a name"
+            type="text"
+            name={`Child${location + 1}Name`}
+            value={name || kidName}
+            onBlur={handleName}
+            onChange={(e) => setKidName(e.target.value)}
+          />
+        </div>
+
+        {/* Age Input */}
+        <div
+          className="Flex Col "
+          style={{
+            padding: 2
+          }}
+        >
+          <div style={{ textAlign: "left" }}>
+            <label htmlFor={`Child${location}Age`} className="InputTextLabel">
+              Age:
+        </label>
+          </div>
+
+          <input
+            className="InputStyle"
+            placeholder="Enter the child's age"
+            type="number"
+            name={`Child${location}Age`}
+            value={age || kidAge}
+            onBlur={handleAge}
+            onChange={(e) => setKidAge(e.target.value)}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const addNewChildInfo = (e) => {
+    const id = kidTotal.length + 1;
+    e.preventDefault();
+    const newKid = { name: '', age: '', enrollment: interest }
+    const updatedInfo = kidTotal;
+    if (updatedInfo.length <= 4) {
+      updatedInfo.push(newKid)
+      setKidTotal([...updatedInfo])
+    }
+
+  }
 
   return (
     <div >
@@ -143,6 +248,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                     </div>
 
                     {/* Display the proper form based on their choice */}
+                    {/* New User Enrolling */}
                     {choice === 1 && (
                       <form onSubmit={handleSubmitNew}>
                         <div className="Flex Col JustifyCenter AlignItems">
@@ -153,6 +259,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                          </p>
 
                           <div className="Flex Col LoginForm BoxShadow">
+
                             <BasicInput
                               title="Full Name"
                               type="text"
@@ -185,6 +292,43 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                               value={zipcode}
                             />
 
+                            <div style={{ textAlign: "left" }}>
+                              <label htmlFor="EnrollSelect" className="InputTextLabel">
+                                Enrollment Level:
+                           </label>
+                            </div>
+                            <select name="EnrollSelect" className="InputStyle" onChange={(e) => setInterest(e.target.value)} style={{ width: 480 }}>
+                              <option>Full-Time</option>
+                              <option>Part-Time</option>
+                              <option>Drop-In</option>
+                            </select>
+
+                            {/* Kid section */}
+                            <div className="Flex Col AlignItems SimpleBorder JustifyCenter">
+
+                              <div className="PinkFont CursiveFont LargeFont">Children Info</div>
+
+                              {kidTotal && kidTotal.map((kid, index) => (
+                                <KidSection key={kid.name + index.toString()} location={index} name={kid.name} age={kid.age} />
+                              ))}
+
+                              {/* Add new Kid Info */}
+                              {kidTotal.length <= 4 ? (
+                                <button id={kidTotal.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
+                                  <div> Add Additonal Child?</div>
+                                  <img src={Add} alt="Add new child info" />
+                                </button>
+
+                              ) :
+                                // Once we hit our kid limit, disable adding more
+                                (
+                                  <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
+                                )}
+
+
+                            </div>
+
+
                             <PasswordInput
                               handlePasswordVisibility={handlePasswordVisibility}
                               setPassword={setPassword}
@@ -204,6 +348,14 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                               )}
                           </div>
                           {loginError && <Error errorMessage={loginError} />}
+
+                          <div className="Flex Col JustifyCenter AlignItems">
+
+                            <p>
+                              Note; Once your account has been created, you will be able to update your account
+                              and add details concerning any children you are looking to enroll.
+                         </p>
+                          </div>
                         </div>
                       </form>
                     )}

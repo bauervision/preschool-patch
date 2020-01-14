@@ -1,8 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Checked, Unchecked } from "../images"
 
 const SimpleTable = ({ data }) => {
-    const { headerData, bodyData } = data;
+
+    const [childData, setChildData] = useState([]);
+
+    // basic header entries
+    const headerData = ["Student Name", "Parent Name", "Contact Number", "Enrollment", "Active"];
+
+
+    useEffect(() => {
+        setNewEntries();
+        // eslint-disable-next-line
+    }, [data]);
+
+    // grab current data and format table data
+    const setNewEntries = () => {
+        let childData = [];
+        if (data) {
+            // for each parent in client data...
+            data.forEach((parent) => {
+
+                // loop through each child and create a new entry
+                parent.children.forEach((child) => {
+                    const newEntry = {
+                        name: child.name,
+                        parent: parent.name,
+                        phone: parent.phone,
+                        enrollment: child.enrollment,
+                        active: child.status
+                    };
+                    // push this child onto array
+                    childData.push(newEntry);
+
+                })
+
+            });
+
+            setChildData(childData)
+        }
+
+    }
+
 
     return (
 
@@ -21,7 +60,7 @@ const SimpleTable = ({ data }) => {
 
             {/* Create the rows of data */}
             <tbody>
-                {bodyData.map((value, index) => (
+                {childData && childData.map((value, index) => (
                     <tr key={value.name + index} >
 
                         {/* Now grab the data elements for each column */}
@@ -40,7 +79,7 @@ const SimpleTable = ({ data }) => {
                                             <>
                                                 {key === 'parent' ? (
                                                     <div className="Tooltip">
-                                                        <span className="TT_Text">Email Parent</span>
+                                                        <span className="TT_Text">Message Parent</span>
                                                         <button>{value[key]}</button>
                                                     </div>
                                                 ) : (

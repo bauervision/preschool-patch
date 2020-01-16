@@ -18,3 +18,4 @@ export { default as DecorShort } from "./decorshort.png";
 export { default as Elegant } from "./elegant.png";
 export { default as Corner } from "./corner.png";
 export { default as Add } from "./add.png";
+export { default as MessageIcon } from "./messages.png";

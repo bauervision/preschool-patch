@@ -103,7 +103,6 @@ export const PublicLanding = ({
         isHome
         loggedInUser={loggedInUser}
         handleLogOut={handleLogOut}
-        messages={0}
         isLeader={isLeader}
       />
 

@@ -8,6 +8,7 @@ import { Login } from "./Login";
 import { ProfilePage } from "./ProfilePage";
 import { MyProfilePage } from "./MyProfilePage";
 import { ClientAdmin } from "./ClientAdmin";
+import { Messages } from "./Messages";
 
 import { f, database } from "./config";
 
@@ -23,6 +24,8 @@ const App = () => {
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' }); // set based on who logs in
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
+
+  const [myMessages, setMyPessages] = useState([]);
 
   /* On Mount, fetch data, check login */
 
@@ -60,10 +63,14 @@ const App = () => {
         setLoggedInUser(curUser.public);
         // now that we know who is logged in, if we logged in a leader, we need to grab client data
         if (id) {
-          const clientEntries = curUser.public.clients;
-          clientEntries.forEach((clientId) => {
-            getClientData(clientId);
-          })
+          // now check to see if we have any clients
+          if (curUser.public.clients) {
+            const clientEntries = curUser.public.clients;
+            clientEntries.forEach((clientId) => {
+              getClientData(clientId);
+            })
+          }
+
         }
         handlePageUpdate(0);
       }
@@ -133,11 +140,11 @@ const App = () => {
             aboutMe:
               "I am brand new to Preschool Patch!  I will update my profile ASAP.",
             isLeader: false,
-            looking: true,
             children: newUserData.children,
-            name: newUserData.displayName,
+            name: newUserData.name,
             zipcode: newUserData.zipcode,
-            photoUrl: newUserData.photoUrl
+            photoUrl: newUserData.photoUrl,
+            phone: newUserData.phone,
           }
         };
 
@@ -150,19 +157,19 @@ const App = () => {
         .set(newUser)
         .then(() => {
           setLoggedInUser(newUser);
+          handleLoginCheck();
         });
 
 
     } else {
       // we logged in existing
+      handleLoginCheck();
     }
 
   };
 
-  const handleLogOut = () => {
-    setLoggedInUser(null);
+  const handleLogOut = () => setLoggedInUser(null);
 
-  };
 
   const updateSuccess = (value, message) => {
     setToast({ value, message });
@@ -175,7 +182,7 @@ const App = () => {
     const newKid = { name: "Child's name", age: 2 }
     const updatedInfo = kidTotal;
     updatedInfo.push(newKid)
-    console.log("Adding new kid", updatedInfo)
+
     setKidTotal(updatedInfo)
   }
 
@@ -185,6 +192,16 @@ const App = () => {
     window.scrollTo(0, 0);
 
     switch (page) {
+      case 6:
+        return (
+          <Messages
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+            clientData={clientData}
+          />
+        );
       case 5:
         return (
           <ClientAdmin
@@ -192,7 +209,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
-            data={clientData}
+            clientData={clientData}
           />
         );
       case 4:
@@ -274,11 +291,22 @@ const App = () => {
     // now get the data stored there, and use "on value" to make the data live
     ref.on("value", (snapshot) => {
       if (snapshot.val()) {
+        // grab the data
         const data = snapshot.val();
-        const tempClients = [...clientData];
-        tempClients.push(data.public)
-        setClientData(tempClients);
-
+        // we need to format a new object in order to better handle data later
+        const newClient = {
+          clientId,
+          clientData: data.public
+        }
+        // what is the current value of clientData?
+        const tempClients = clientData;
+        // have we already added this particular client?
+        const found = tempClients.some(item => item.clientId === clientId);
+        // as long as we havent already added them, add them
+        if(!found){
+          tempClients.push(newClient)
+          setClientData(tempClients);
+        }
       }
     });
   };

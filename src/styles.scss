@@ -507,6 +507,10 @@ $PARADISEPINK: #FF4C76;
     filter: invert(50%) sepia(93%) saturate(6585%) hue-rotate(145deg) brightness(95%) contrast(91%);
   }
 
+  .filter-darkgreen{
+    filter: invert(50%) sepia(93%) saturate(6585%) hue-rotate(145deg) brightness(65%) contrast(91%);
+  }
+
   
   .HeaderButton {
     background-color: transparent;
@@ -522,6 +526,15 @@ $PARADISEPINK: #FF4C76;
     &:hover {
       background-color: $MALACHITE;
       transform: scale(1.05);
+    }
+  }
+
+  .Header_MessageBtn{
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+    &:hover{
+      background-color: transparent;
+      transform: scale(1.5);
     }
   }
 

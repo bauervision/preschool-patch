@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 
 // Components
-import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo } from "./Components";
+import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection } from "./Components";
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
@@ -24,8 +24,6 @@ export const Login = ({ pageUpdate, handleLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
-  const [interest, setInterest] = useState(0);
-
   const [kidTotal, setKidTotal] = useState([]);
 
   const handleSubmitLogin = async (e) => {
@@ -54,9 +52,9 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     const newUserData = {
       email,
       password,
-      displayName: name,
-      phoneNumber: phone,
-      zipcode: zipcode,
+      name,
+      phone,
+      zipcode,
       children: kidTotal,
       photoUrl:
         "https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490"
@@ -118,83 +116,23 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     setKidTotal(kids)
   }
 
-
-  const KidSection = ({ location, name, age }) => {
-    const [kidName, setKidName] = useState('');
-    const [kidAge, setKidAge] = useState(0);
-
-    const handleName = () => {
-      handleSetChildName(kidName, location);
-    }
-
-    const handleAge = () => {
-      handleSetChildAge(kidAge, location)
-    }
-
-    return (
-      <div className="Flex">
-
-        {/* Name Input */}
-        <div
-          className="Flex Col "
-          style={{
-            padding: 2
-          }}
-        >
-          <div style={{ textAlign: "left" }}>
-            <label htmlFor={`Child${location + 1}Name`} className="InputTextLabel">
-              {`Child ${location + 1} Name`}:
-        </label>
-          </div>
-
-          <input
-            className="InputStyle"
-            placeholder="Please Enter a name"
-            type="text"
-            name={`Child${location + 1}Name`}
-            value={name || kidName}
-            onBlur={handleName}
-            onChange={(e) => setKidName(e.target.value)}
-          />
-        </div>
-
-        {/* Age Input */}
-        <div
-          className="Flex Col "
-          style={{
-            padding: 2
-          }}
-        >
-          <div style={{ textAlign: "left" }}>
-            <label htmlFor={`Child${location}Age`} className="InputTextLabel">
-              Age:
-        </label>
-          </div>
-
-          <input
-            className="InputStyle"
-            placeholder="Enter the child's age"
-            type="number"
-            name={`Child${location}Age`}
-            value={age || kidAge}
-            onBlur={handleAge}
-            onChange={(e) => setKidAge(e.target.value)}
-          />
-        </div>
-      </div>
-    );
-  };
-
   const addNewChildInfo = (e) => {
-    const id = kidTotal.length + 1;
     e.preventDefault();
-    const newKid = { name: '', age: '', enrollment: interest }
-    const updatedInfo = kidTotal;
+    const newKid = { name: '', age: '', enrollment: '' }
+    const updatedInfo = [...kidTotal];
     if (updatedInfo.length <= 4) {
       updatedInfo.push(newKid)
       setKidTotal([...updatedInfo])
     }
 
+  }
+
+  const handleSetChildInterest = (interest, index) => {
+    const kids = [...kidTotal];
+    const thisKid = kids[index];
+    thisKid.enrollment = interest;
+    kids[index] = thisKid;
+    setKidTotal(kids)
   }
 
   return (
@@ -208,7 +146,6 @@ export const Login = ({ pageUpdate, handleLogin }) => {
         <div className="MarginTop">
           <div
             className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter" style={{ width: '50%', margin: 'auto' }}
-
           >
             <div>
               <PageLogo
@@ -292,24 +229,23 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                               value={zipcode}
                             />
 
-                            <div style={{ textAlign: "left" }}>
-                              <label htmlFor="EnrollSelect" className="InputTextLabel">
-                                Enrollment Level:
-                           </label>
-                            </div>
-                            <select name="EnrollSelect" className="InputStyle" onChange={(e) => setInterest(e.target.value)} style={{ width: 480 }}>
-                              <option>Full-Time</option>
-                              <option>Part-Time</option>
-                              <option>Drop-In</option>
-                            </select>
 
                             {/* Kid section */}
-                            <div className="Flex Col AlignItems SimpleBorder JustifyCenter">
+                            <div className="Flex Col AlignItems SimpleBorder JustifyCenter" style={{ width: 570 }}>
 
                               <div className="PinkFont CursiveFont LargeFont">Children Info</div>
 
                               {kidTotal && kidTotal.map((kid, index) => (
-                                <KidSection key={kid.name + index.toString()} location={index} name={kid.name} age={kid.age} />
+                                <KidSection
+                                  key={kid.name + index.toString()}
+                                  location={index}
+                                  name={kid.name}
+                                  age={kid.age}
+                                  interest={kid.enrollment}
+                                  handleSetChildAge={handleSetChildAge}
+                                  handleSetChildName={handleSetChildName}
+                                  handleSetChildInterest={handleSetChildInterest}
+                                />
                               ))}
 
                               {/* Add new Kid Info */}
@@ -406,9 +342,6 @@ export const Login = ({ pageUpdate, handleLogin }) => {
       </div>
 
       <img src={Elegant} alt="decorative" className="filter-green Margins" />
-
-
-
       <PatchLogo />
       <Footer />
     </div >

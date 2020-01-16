@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Checked, Unchecked } from "../images"
 
-const SimpleTable = ({ data }) => {
+const SimpleTable = ({ data, headerData }) => {
 
     const [childData, setChildData] = useState([]);
-
-    // basic header entries
-    const headerData = ["Student Name", "Parent Name", "Contact Number", "Enrollment", "Active"];
-
 
     useEffect(() => {
         setNewEntries();
@@ -18,15 +14,16 @@ const SimpleTable = ({ data }) => {
     const setNewEntries = () => {
         let childData = [];
         if (data) {
+            console.log(data)
             // for each parent in client data...
             data.forEach((parent) => {
 
                 // loop through each child and create a new entry
-                parent.children.forEach((child) => {
+                parent.clientData.children.forEach((child) => {
                     const newEntry = {
                         name: child.name,
-                        parent: parent.name,
-                        phone: parent.phone,
+                        parent: parent.clientData.name,
+                        phone: parent.clientData.phone,
                         enrollment: child.enrollment,
                         active: child.status
                     };
@@ -60,6 +57,8 @@ const SimpleTable = ({ data }) => {
 
             {/* Create the rows of data */}
             <tbody>
+
+
                 {childData && childData.map((value, index) => (
                     <tr key={value.name + index} >
 

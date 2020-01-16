@@ -8,3 +8,6 @@ export { default as SimpleImage } from "./SimpleImage";
 export { default as Toast } from "./Toast";
 export { default as PatchLogo } from "./PatchLogo";
 export { default as SimpleTable } from "./SimpleTable";
+export { default as KidSection } from "./KidSection";
+export { default as Select } from "./Select";
+export { default as SingleMessage } from "./SingleMessage";

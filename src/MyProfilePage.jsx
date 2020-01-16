@@ -1,50 +1,69 @@
 import React, { useState, useEffect } from "react";
 
-import { EditField, SimpleImage } from "./Components";
+import { EditField, SimpleImage, KidSection, PatchLogo } from "./Components";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 
 import { f, storage, database } from "./config";
 
 import { Coloring, Kids, Table, Working } from "./images/photos";
+import { Add, Elegant } from './images';
 const galleryImages = [Coloring, Kids, Table, Working];
 
 export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader }) => {
-  // pull out public data
-  const {
-    aboutMe,
-    age,
-    available,
-    experience,
-    gallery,
-    rates,
-    infants,
-    kidTotal,
-    name,
-    photoUrl,
-    phone,
-    zipcode
-  } = loggedInUser;
+
+  // Depending on if this is a leader, or a user, we need to grab and setup our page data
+  let userData = {};
+
+  if (isLeader) {
+    userData = {
+      aboutMe: loggedInUser.aboutMe,
+      age: loggedInUser.age,
+      available: loggedInUser.available,
+      experience: loggedInUser.experience,
+      gallery: loggedInUser.gallery,
+      rates: loggedInUser.rates,
+      infants: loggedInUser.infants,
+      kidTotal: loggedInUser.kidTotal,
+      name: loggedInUser.name,
+      photoUrl: loggedInUser.photoUrl,
+      phone: loggedInUser.phone,
+      zipcode: loggedInUser.zipcode
+    }
+  } else {
+    // basic user
+    userData = {
+      aboutMe: loggedInUser.aboutMe,
+      name: loggedInUser.name,
+      phone: loggedInUser.phone,
+      zipcode: loggedInUser.zipcode,
+      children: loggedInUser.children,
+      photoUrl: loggedInUser.photoUrl,
+    }
+  }
+
 
   const [userId, setUserId] = useState(0);
-  const [updatedAboutMe, setAboutMe] = useState(aboutMe);
-  const [updatedAge, setAge] = useState(age);
-  const [updatedAvailable, setAvailable] = useState(available);
-  const [updatedExperience, setExperience] = useState(experience);
-  const [updatedGalleryDesription, setGalleryDescription] = useState(gallery && gallery.description);
-  const [updatedGalleryFeatures, setGalleryFeatures] = useState(gallery && gallery.features);
-  const [updatedFTRates, setFTRates] = useState(rates && rates.ft);
-  const [updatedPTRates, setPTRates] = useState(rates && rates.pt);
-  const [updatedDIRates, setDIRates] = useState(rates && rates.di);
-  const [updatedInfants, setInfants] = useState(infants);
-  const [updatedKidTotal, setKidTotal] = useState(kidTotal);
-  const [updatedName, setName] = useState(name);
-  const [updatedPhotoUrl, setPhotoUrl] = useState(photoUrl);
+  const [updatedAboutMe, setAboutMe] = useState(userData.aboutMe || 'Hello!');
+  const [updatedAge, setAge] = useState(userData.age);
+  const [updatedAvailable, setAvailable] = useState(userData.available);
+  const [updatedExperience, setExperience] = useState(userData.experience);
+  const [updatedGalleryDesription, setGalleryDescription] = useState(userData.gallery && userData.gallery.description);
+  const [updatedGalleryFeatures, setGalleryFeatures] = useState(userData.gallery && userData.gallery.features);
+  const [updatedFTRates, setFTRates] = useState(userData.rates && userData.rates.ft);
+  const [updatedPTRates, setPTRates] = useState(userData.rates && userData.rates.pt);
+  const [updatedDIRates, setDIRates] = useState(userData.rates && userData.rates.di);
+  const [updatedInfants, setInfants] = useState(userData.infants);
+  const [updatedKidTotal, setKidTotal] = useState(userData.kidTotal);
+  const [updatedChildren, setUpdatedChildren] = useState(userData.children);
+  const [updatedName, setName] = useState(userData.name);
+  const [updatedPhotoUrl, setPhotoUrl] = useState(userData.photoUrl);
+  const [updatedPhone, setUpdatedPhone] = useState(userData.phone);
+  const [updatedZipcode, setUpdatedZipcode] = useState(userData.zipcode);
 
 
   /* On Mount, fetch uid */
   useEffect(() => {
-
     const userId = f.auth().currentUser.uid;
     setUserId(userId);
   }, []);
@@ -53,32 +72,44 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
     e.preventDefault();
 
     // set update to current data before sending up
-    const updatedData = {
-      aboutMe: updatedAboutMe,
-      age: updatedAge,
-      available: updatedAvailable,
-      experience: updatedExperience,
-      gallery: {
-        description: updatedGalleryDesription,
-        features: updatedGalleryFeatures,
-        // TODO: files
-      },
-      rates: {
-        ft: updatedFTRates,
-        pt: updatedPTRates,
-        di: updatedDIRates
-      },
-      infants: updatedInfants,
-      kidTotal: updatedKidTotal,
-      name: updatedName,
-      photoUrl: updatedPhotoUrl,
+    let updatedData = {};
 
-    };
+    if (isLeader) {
+      updatedData = {
+        aboutMe: updatedAboutMe,
+        age: updatedAge,
+        available: updatedAvailable,
+        experience: updatedExperience,
+        gallery: {
+          description: updatedGalleryDesription,
+          features: updatedGalleryFeatures,
+          // TODO: files
+        },
+        rates: {
+          ft: updatedFTRates,
+          pt: updatedPTRates,
+          di: updatedDIRates
+        },
+        infants: updatedInfants,
+        kidTotal: updatedKidTotal,
+        name: updatedName,
+        photoUrl: updatedPhotoUrl,
 
+      };
+    } else {
+      updatedData = {
+        name: updatedName,
+        phoneNumber: updatedPhone,
+        zipcode: updatedZipcode,
+        children: updatedChildren,
+        photoUrl: updatedPhotoUrl,
+      }
+
+    }
 
     // now that we have updated data, push it up to our database
     database
-      .ref(`leaders/${userId}/public`)
+      .ref(`${isLeader ? 'leaders' : 'users'}/${userId}/public`)
       .set(updatedData)
       .then(() => {
         updateSuccess(true, "Save Successful!")
@@ -130,6 +161,44 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       }
     );
   };
+
+  const handleSetChildName = (name, index) => {
+    // get kid
+    const kids = [...updatedChildren];
+    const thisKid = kids[index];
+    // update their data
+    thisKid.name = name;
+    kids[index] = thisKid;
+    // update state
+    setUpdatedChildren(kids)
+  }
+
+  const handleSetChildAge = (age, index) => {
+    const kids = [...updatedChildren];
+    const thisKid = kids[index];
+    thisKid.age = Number(age);
+    kids[index] = thisKid;
+    setUpdatedChildren(kids)
+  }
+
+  const handleSetChildInterest = (interest, index) => {
+    const kids = [...updatedChildren];
+    const thisKid = kids[index];
+    thisKid.enrollment = interest;
+    kids[index] = thisKid;
+    setUpdatedChildren(kids)
+  }
+
+  const addNewChildInfo = (e) => {
+    e.preventDefault();
+    const newKid = { name: '', age: '', enrollment: '' }
+    const updatedInfo = updatedChildren;
+    if (updatedInfo.length <= 4) {
+      updatedInfo.push(newKid)
+      setUpdatedChildren([...updatedInfo])
+    }
+  }
+
 
   return (
     <div>
@@ -190,8 +259,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                       value={updatedAvailable}
                     />
 
-
-
                     <EditField
                       isCheck
                       title="Accepting Infants?"
@@ -210,104 +277,127 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
               <div className="Flex Row AlignItems SimpleBorder JustifyCenter">
                 <EditField
                   title="Full Name"
-                  placeholder={name}
+                  placeholder={userData.name}
                   type="text"
                   forLabel="Name"
                   onChange={setName}
                   value={updatedName}
                 />
 
-                {isLeader ? (
+                {isLeader && (
+
                   <EditField
                     title="Age"
-                    placeholder={age}
+                    placeholder={userData.age}
                     type="number"
                     forLabel="Age"
                     onChange={setAge}
                     value={updatedAge}
                   />
-                ) : (
-                    <EditField
-                      title="Phone"
-                      placeholder={phone}
-                      type="text"
-                      forLabel="Phone"
-                      onChange={setAge}
-                      value={phone}
-                    />
-                  )}
+                )}
 
-                {isLeader ? (
+                <EditField
+                  title="Phone"
+                  placeholder={userData.phone}
+                  type="text"
+                  forLabel="Phone"
+                  onChange={setUpdatedPhone}
+                  value={updatedPhone}
+                />
+
+
+                {isLeader && (
                   <EditField
                     title="Years of Experience"
-                    placeholder={experience}
+                    placeholder={userData.experience}
                     type="number"
                     forLabel="experience"
                     onChange={setExperience}
                     value={updatedExperience}
                   />
-                ) : (
-                    <EditField
-                      title="Zipcode"
-                      placeholder={zipcode}
-                      type="number"
-                      forLabel="zipcode"
-                      onChange={setExperience}
-                      value={zipcode}
-                    />
-                  )}
+                )}
+
                 <EditField
-                  title={isLeader ? "Current Student Count" : "Number of enrolling children"}
-                  placeholder={kidTotal}
+                  title="Zipcode"
+                  placeholder={userData.zipcode}
                   type="number"
-                  forLabel="kidTotal"
-                  onChange={setKidTotal}
-                  value={updatedKidTotal}
+                  forLabel="zipcode"
+                  onChange={setUpdatedZipcode}
+                  value={updatedZipcode}
                 />
+
+                {isLeader && (
+                  <EditField
+                    title="Current Student Count"
+                    placeholder={userData.kidTotal}
+                    type="number"
+                    forLabel="kidTotal"
+                    onChange={setKidTotal}
+                    value={updatedKidTotal}
+                  />
+                )}
+
               </div>
 
-              {!isLeader && (<div className="Margins">
+              {/* Kid section */}
+              {!isLeader && (
+                <div>
+                  <div className="CursiveFont LargeFont Buffer PinkFont">My Children</div>
+                  <div className="Flex Col AlignItems JustifyCenter SimpleBorder">
 
-                <div className="CursiveFont LargeFont Buffer PinkFont">Looking For...</div>
-                <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
-                  <EditField
-                    isCheck
-                    title="Full Time"
-                    type="checkbox"
-                    forLabel="Fulltime"
-                    // onChange={() => setAvailable(!updatedAvailable)}
-                    value={true}
-                  />
 
-                  <EditField
-                    isCheck
-                    title="Part-Time or Drop-In"
-                    type="checkbox"
-                    forLabel="partTime"
-                    // onChange={() => setInfants(!updatedInfants)}
-                    value={false}
-                  />
+                    {updatedChildren && updatedChildren.map((kid, index) => (
+                      <KidSection
+                        key={kid.name + index.toString()}
+                        location={index}
+                        name={kid.name}
+                        age={kid.age}
+                        interest={kid.enrollment}
+                        handleSetChildAge={handleSetChildAge}
+                        handleSetChildName={handleSetChildName}
+                        handleSetChildInterest={handleSetChildInterest}
+                      />
+                    ))}
+
+                    {/* Add new Kid Info */}
+                    {updatedChildren && updatedChildren.length <= 4 ? (
+                      <button id={updatedChildren.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
+                        <div> Add Additonal Child?</div>
+                        <img src={Add} alt="Add new child info" />
+                      </button>
+
+                    ) :
+                      // Once we hit our kid limit, disable adding more
+                      (
+                        <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
+                      )}
+
+
+                  </div>
                 </div>
-              </div>)}
+              )}
 
 
+
+
+              {/* Rates */}
               {isLeader && (
                 <div>
                   <div className="CursiveFont LargeFont Buffer PinkFont">My Rates</div>
                   <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
                     <EditField
                       title="Full Time Rate"
-                      placeholder={age}
+                      placeholder={userData.rates.ft}
                       type="number"
-                      forLabel="Age"
+                      forLabel="FT"
                       onChange={setFTRates}
                       value={updatedFTRates}
                     />
                     <EditField
                       title="Part Time Rate"
-                      placeholder={age}
+                      placeholder={userData.rates.pt}
                       type="number"
-                      forLabel="Age"
+                      forLabel="PT"
                       onChange={setPTRates}
                       value={updatedPTRates}
                     />
@@ -315,7 +405,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                       title="Drop-In Rate"
                       placeholder="Enter you preferred Drop-in rate"
                       type="number"
-                      forLabel="Age"
+                      forLabel="DI"
                       onChange={setDIRates}
                       value={updatedDIRates}
                     />
@@ -329,7 +419,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                 <EditField
                   isTextArea
                   title=""
-                  placeholder={aboutMe}
+                  placeholder={userData.aboutMe}
                   type="text"
                   forLabel="aboutMe"
                   onChange={setAboutMe}
@@ -406,6 +496,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         </div>
       </div>
 
+      <img src={Elegant} alt="decorative" className="filter-green Margins" />
+      <PatchLogo />
       <Footer />
     </div>
   );

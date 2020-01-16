@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Home } from "../images";
+import { Home, MessageIcon } from "../images";
 
 import { SignUserOut } from "../helpers/auth";
 
@@ -12,8 +12,10 @@ export const Header = ({
   isCreate,
   isAdmin,
   loggedInUser,
-  messages
+
 }) => {
+
+  const { messages } = loggedInUser;
   const LogOut = () => {
     SignUserOut();
     pageUpdate(0);
@@ -47,55 +49,52 @@ export const Header = ({
                 </div>
               )}
 
+              <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
+                {/* {(messages && messages.length > 0) && <div>{messages.length} </div>} */}
 
-
-              {messages > 0 && (
-                <button className="Header_MessageBtn">
-                  <div>{messages}  {" | "} </div>
-                  <div />
-                </button>
-              )}
-
-              {/* If we are on MyProfile page, we need to show button to go to client admin */}
-              {!myProfile && (
-                <>
-                  <div style={{ color: 'white' }}>{isLeader && ("Patch Leader")}
-                  </div>
-
-
-
-                  <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-                    {loggedInUser.name}
-                  </button>
-                </>
-
-              )}
-
-              {(isLeader && !isAdmin) && (
-                <div>
-                  {isAdmin ? (
-                    <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-                      {loggedInUser.name}
-                    </button>
-                  ) : (
-                      <button className='HeaderButton' onClick={() => pageUpdate(5)}>
-                        Client Admin
-                      </button>
-                    )
-                  }
-
-                </div>
-              )
-              }
-
-              {/* If we are logged in, always show logout */}
-              <div>
-                <button className='HeaderButton' onClick={LogOut}>Logout</button>
-              </div>
-
-
+                <img className='filter-darkgreen'  src={MessageIcon} alt="message icon" style={{ width: 20, height: 'auto' }} />
+              </button>
+              {" | "}
             </>
           )}
+
+        {/* If we are on MyProfile page, we need to show button to go to client admin */}
+        {!myProfile && (
+          <>
+            <div style={{ color: 'white' }}>{isLeader && ("Patch Leader")}
+            </div>
+
+
+
+            <button className='HeaderButton' onClick={() => pageUpdate(4)}>
+              {loggedInUser.name}
+            </button>
+          </>
+
+        )}
+
+        {(isLeader && !isAdmin) && (
+          <div>
+            {isAdmin ? (
+              <button className='HeaderButton' onClick={() => pageUpdate(4)}>
+                {loggedInUser.name}
+              </button>
+            ) : (
+                <button className='HeaderButton' onClick={() => pageUpdate(5)}>
+                  Client Admin
+                      </button>
+              )
+            }
+
+          </div>
+        )
+        }
+
+        {/* If we are logged in, always show logout */}
+        <div>
+          <button className='HeaderButton' onClick={LogOut}>Logout</button>
+        </div>
+
 
         {/* Show Home Icon, if we're not on home page' */}
         {!isHome && (

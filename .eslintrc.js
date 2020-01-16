@@ -1,8 +1,7 @@
 module.exports = {
   extends: [
-    "plugin:react/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   parser: "babel-eslint",
   env: {
@@ -28,13 +27,7 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "import/no-named-default": "off",
     "import/prefer-default-export": 0,
-    // indent: [
-    //   2,
-    //   2,
-    //   {
-    //     SwitchCase: 1
-    //   }
-    // ],
+    //"indent": [2, 2, { "SwitchCase": 1 }],
     "key-spacing": ["error", { mode: "minimum" }],
     "linebreak-style": [0, "error", "windows"],
     "max-len": 0,
@@ -62,6 +55,16 @@ module.exports = {
     "react-hooks/exhaustive-deps": "warn"
   },
   settings: {
+    "react": {
+      "createClass": "createReactClass", // Regex for Component Factory to use,
+      // default to "createReactClass"
+      "pragma": "React",  // Pragma to use, default to "React"
+      "version": "detect", // React version. "detect" automatically picks the version you have installed.
+      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+      // default to latest and warns if missing
+      // It will default to "detect" in the future
+      "flowVersion": "0.53" // Flow version
+    },
     'import/resolver': {
       node: {
         extensions: ['.js', '.jsx'],

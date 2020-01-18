@@ -14,7 +14,9 @@ const EditField = ({
   isCheck,
   isFile,
   isSelect,
-  multiple, small
+  isMessage,
+  multiple,
+  small
 }) => {
 
 
@@ -40,9 +42,10 @@ const EditField = ({
           <textarea
             name={forLabel}
             rows={small ? "2" : "8"}
-            cols="70"
+            // cols={!isMessage ? "70" : '120'}
             onChange={(e) => onChange(e.target.value)}
             value={value}
+            style={{ width: "100%" }}
 
           />
         )}

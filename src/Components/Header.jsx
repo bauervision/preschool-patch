@@ -11,11 +11,12 @@ export const Header = ({
   myProfile,
   isCreate,
   isAdmin,
+  isMessages,
   loggedInUser,
 
 }) => {
 
-  const { messages } = loggedInUser;
+
   const LogOut = () => {
     SignUserOut();
     pageUpdate(0);
@@ -49,12 +50,17 @@ export const Header = ({
                 </div>
               )}
 
-              <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
-                {/* {(messages && messages.length > 0) && <div>{messages.length} </div>} */}
+              {!isMessages && (
+                <>
+                  <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
+                    {/* {(messages && messages.length > 0) && <div>{messages.length} </div>} */}
 
-                <img className='filter-darkgreen'  src={MessageIcon} alt="message icon" style={{ width: 20, height: 'auto' }} />
-              </button>
-              {" | "}
+                    <img className='filter-darkgreen' src={MessageIcon} alt="message icon" style={{ width: 20, height: 'auto' }} />
+                  </button>
+                  {" | "}
+                </>
+              )}
+
             </>
           )}
 
@@ -67,7 +73,7 @@ export const Header = ({
 
 
             <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-              {loggedInUser.name}
+              {loggedInUser && loggedInUser.name}
             </button>
           </>
 
@@ -77,7 +83,7 @@ export const Header = ({
           <div>
             {isAdmin ? (
               <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-                {loggedInUser.name}
+                {loggedInUser && loggedInUser.name}
               </button>
             ) : (
                 <button className='HeaderButton' onClick={() => pageUpdate(5)}>

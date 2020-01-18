@@ -32,7 +32,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} />
+        <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Profile Page</div>
 

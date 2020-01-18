@@ -2,46 +2,59 @@ import React, { useState, useEffect } from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
-import { SingleMessage } from "./Components";
+import { SingleMessage, EditField } from "./Components";
 
 import { Logo, Elegant } from "./images";
 
+import { database } from './config';
 
-export const Messages = ({ pageUpdate, loggedInUser, clientData, isLeader }) => {
-    const [activeClient, setActiveClient] = useState(clientData[0].clientId);
+export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader }) => {
+    const [activeClientId, setActiveClient] = useState(myMessages[0].messenger); // the first messager is default message
+    const [activeClientName, setActiveClientName] = useState(clientData && clientData[0].clientData.name);
     const [activeMessages, setActiveMessages] = useState([]);
-
-    const { messages } = loggedInUser;
-
-
-
+    const [newMessage, setNewMessage] = useState('');
 
     useEffect(() => {
-        Object.entries(messages).find(([key, value]) => {
-            if (key === activeClient) {
-                console.log(value.messageData)
+        Object.entries(myMessages).find(([key, value]) => {
+            console.log(key, value)
+            if (value.messenger === activeClientId) {
                 setActiveMessages(value.messageData);
             }
-
         })
-    }, [activeClient, activeMessages, messages]);
+    }, [activeClientId, myMessages]);
 
 
+    const handleNewMessage = () => {
+
+        const messageData = {
+            author: userId,
+            message: newMessage,
+            date: '1/17/2020',
+            liked: false,
+            unread: false
+        }
+
+        const updatedMessages = [...activeMessages];
+
+        updatedMessages.push(messageData);
+
+        // database.ref(`messages/${messageId}`).set(updatedMessages)
+        //     .then(() => {
+        //         setNewMessage('')
+        //     });
+    }
 
     return (
         <div>
             <div>
-                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} />
+                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} isMessages />
 
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Messenger</div>
 
                 {/* Client Data*/}
                 <div
-                    className="Flex AlignItems SeeThru "
-                    style={{
-                        justifyContent: "space-evenly",
+                    className="Flex AlignItems JustifyCenter SeeThru PaddingBottom"
 
-                    }}
                 >
                     {/* My Messages */}
                     <div className="Flex Col Buffer MarginTop">
@@ -50,29 +63,44 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, isLeader }) => 
                         </div>
 
                         {/* Buttons to switch between clients */}
-                        <div className="Flex ">
+                        <div className="Flex AlignItems JustifyCenter ">
                             {clientData && clientData.map((client) => (
                                 <button
                                     key={client.clientData.name}
                                     type="button"
-                                    onClick={() => setActiveClient(client.clientId)} >{client.clientData.name}</button>
+                                    onClick={() => {
+                                        setActiveClient(client.clientId);
+                                        setActiveClientName(client.clientData.name)
+                                    }} >{client.clientData.name}</button>
                             ))}
                         </div>
 
                         {/* Message Data */}
-                        <div className="MarginTop SimpleBorder">
+                        <div className="MarginTop SimpleBorder" >
+                            <div className="CursiveFont LargeFont PinkFont">{activeClientName}</div>
+                            {(activeMessages.length > 0 ? (activeMessages.map((elem, index) => <SingleMessage key={index.toString()} data={elem} userId={userId} />)) : (
+                                <div>No Messages yet!</div>
+                            ))}
 
 
-                            {activeMessages && activeMessages.map((elem, index) => {
+                            <EditField
+                                isTextArea
+                                isMessage
+                                small
+                                title=""
+                                placeholder="What would you like to say?"
+                                type="text"
+                                forLabel="NewMessage"
+                                onChange={setNewMessage}
+                                value={newMessage}
+                            />
+                            <button
 
-                                return (
-                                    <SingleMessage key={index.toString()} data={elem} />
-                                )
-                            })}
+                                type="button"
+                                onClick={handleNewMessage} >Send</button>
+
 
                         </div>
-
-
 
                     </div>
 

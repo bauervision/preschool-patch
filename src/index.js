@@ -18,17 +18,18 @@ const App = () => {
   const [data, setData] = useState({});// raw data from DB
   const [clientData, setClientData] = useState([]);// raw data from DB
   const [selection, setSelection] = useState({}); // whose profile are we viewing?
-  const [loggedInUser, setLoggedInUser] = useState({}); // logged in user data
+  const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
+  const [userId, setUserId] = useState("");
 
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' }); // set based on who logs in
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
+  const [myMessages, setMyMessages] = useState([]);
 
-  const [myMessages, setMyPessages] = useState([]);
+
 
   /* On Mount, fetch data, check login */
-
   useEffect(() => {
     handleLoginCheck();
     // eslint-disable-next-line
@@ -36,10 +37,18 @@ const App = () => {
 
   // check login status
   const handleLoginCheck = () => {
+    // console.log('handleLoginCheck')
     f.auth().onAuthStateChanged((user) => {
       if (user) {
-        getUserData(user);
-        updateSuccess(true, "Welcome!")
+        // make sure we arent already logged in
+        if (!loggedInUser) {
+          // console.log("!loggedInUser so getUserData")
+          getUserData(user);
+          updateSuccess(true, "Welcome!")
+        } else {
+          // console.log("logged in!")
+        }
+
       } else {
         // logged out
         setLoggedInUser(null);
@@ -49,6 +58,9 @@ const App = () => {
   };
 
   const getUserData = (user) => {
+    // ("Get User Data")
+    // setuserId right away
+    setUserId(user.uid);
     // which type of user is logged in?
     const id = Object.keys(data).find((elem) => elem === user.uid);
 
@@ -72,7 +84,13 @@ const App = () => {
           }
 
         }
-        handlePageUpdate(0);
+
+        // regardless of whether the user is a teacher or a parent
+        // we need to get the message data
+        const messageEntries = curUser.public.messages;
+        messageEntries.forEach((messageId) => {
+          getMessageData(messageId);
+        })
       }
     });
   }
@@ -114,6 +132,7 @@ const App = () => {
             infants: newUserData.infants,
             isLeader: true,
             kidTotal: 0,
+            messages: ["None"],
             name: newUserData.displayName,
             phone: newUserData.phoneNumber,
             photoUrl: newUserData.photoUrl,
@@ -141,6 +160,7 @@ const App = () => {
               "I am brand new to Preschool Patch!  I will update my profile ASAP.",
             isLeader: false,
             children: newUserData.children,
+            messages: ["None"],
             name: newUserData.name,
             zipcode: newUserData.zipcode,
             photoUrl: newUserData.photoUrl,
@@ -188,8 +208,9 @@ const App = () => {
 
   /* Page Router */
   const onPage = (page) => {
+
     // reset window scroll position with each page change
-    window.scrollTo(0, 0);
+    // TODO: remove this comment:  window.scrollTo(0, 0);
 
     switch (page) {
       case 6:
@@ -200,6 +221,8 @@ const App = () => {
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
             clientData={clientData}
+            userId={userId}
+            myMessages={myMessages}
           />
         );
       case 5:
@@ -220,6 +243,7 @@ const App = () => {
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
             isLeader={isLeader}
+            clientData={clientData}
           />
         );
       case 3:
@@ -228,6 +252,7 @@ const App = () => {
             pageUpdate={handlePageUpdate}
             data={selection}
             loggedInUser={loggedInUser}
+            clientData={clientData}
           />
         );
       case 2:
@@ -238,6 +263,7 @@ const App = () => {
             handleLogin={handleLogin}
             loggedInUser={loggedInUser}
             isLeader={isLeader}
+            clientData={clientData}
 
           />
         );
@@ -251,6 +277,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             kidTotal={kidTotal}
             addNewChildInfo={addNewChildInfo}
+            clientData={clientData}
           />
         );
       default:
@@ -264,6 +291,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             launchToast={toast}
             isLeader={isLeader}
+            clientData={clientData}
           />
         );
     }
@@ -273,6 +301,8 @@ const App = () => {
   useEffect(() => {
     getLeaderData();
   }, [isLeader]);
+
+
 
   const getLeaderData = () => {
     // grab ref to the data
@@ -301,9 +331,9 @@ const App = () => {
         // what is the current value of clientData?
         const tempClients = clientData;
         // have we already added this particular client?
-        const found = tempClients.some(item => item.clientId === clientId);
+        const found = tempClients.some((item) => item.clientId === clientId);
         // as long as we havent already added them, add them
-        if(!found){
+        if (!found) {
           tempClients.push(newClient)
           setClientData(tempClients);
         }
@@ -311,6 +341,44 @@ const App = () => {
     });
   };
 
+
+  const getMessageData = (messageId) => {
+    // grab ref to the data
+    const ref = database.ref(`messages/${messageId}`);
+    // now get the data stored there, and use "on value" to make the data live
+    ref.on("value", (snapshot) => {
+      if (snapshot.val()) {
+        // grab the data
+        const data = snapshot.val();
+        // we need to figure out, besides us, who is the other person in the message data?
+        let messenger = '';
+        Object.entries(data).find(([key, value]) => {
+          // look inside the data and compare authors, if the other person isnt us, store it
+          if (value.author !== userId) {
+            messenger = value.author
+          }
+        });
+
+        // we need to format a new object in order to better handle data later
+        const myMessageData = {
+          messageId,
+          messenger,
+          messageData: data
+        }
+        // what is the current value of myMessages?
+        const tempMessages = myMessages;
+        // have we already added this particular message set?
+        const found = tempMessages.some((item) => item.messageId === messageId);
+        // as long as we havent already added them, add them
+        if (!found) {
+          tempMessages.push(myMessageData)
+          setMyMessages(tempMessages);
+        }
+      }
+    });
+  };
+
+  // BIG TODO:  add in proper routing so page doesnt update on refresh so bad
   return (
     <div className="App FixedBG ">
       {/* Handle which page to load based on state page value */}

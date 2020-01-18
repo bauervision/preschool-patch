@@ -68,6 +68,12 @@ $PARADISEPINK: #FF4C76;
     padding: 30px;
   }
 
+  .MessageBorder {
+    border: solid 1px rgb(255, 138, 132);
+    border-radius: 5px;
+    padding: 10px;
+  }
+
   .CheckBox {
     border: none;
     background-color: transparent;
@@ -297,6 +303,10 @@ $PARADISEPINK: #FF4C76;
     text-align: left;
   }
 
+  .TextRight{
+    text-align: right;
+  }
+
   .BoxShadow {
     box-shadow: 10px 10px 20px lightslategray;
   }
@@ -330,6 +340,11 @@ $PARADISEPINK: #FF4C76;
   }
 
   .PaddingTop{
+    padding-top: 20px;
+  }
+
+  
+  .PaddingBottom{
     padding-top: 20px;
   }
 

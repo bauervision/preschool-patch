@@ -28,7 +28,6 @@ const App = () => {
   const [myMessages, setMyMessages] = useState([]);
 
 
-
   /* On Mount, fetch data, check login */
   useEffect(() => {
     handleLoginCheck();
@@ -73,9 +72,10 @@ const App = () => {
       if (snapshot.val()) {
         const curUser = snapshot.val();
         setLoggedInUser(curUser.public);
-        // now that we know who is logged in, if we logged in a leader, we need to grab client data
+
+        // now that we know who is logged in
         if (id) {
-          // now check to see if we have any clients
+          // if we logged in a leader, check to see if we have any clients
           if (curUser.public.clients) {
             const clientEntries = curUser.public.clients;
             clientEntries.forEach((clientId) => {
@@ -83,14 +83,19 @@ const App = () => {
             })
           }
 
+        } else {
+          // not a leader
+          // but we do need to grab...
         }
 
         // regardless of whether the user is a teacher or a parent
         // we need to get the message data
         const messageEntries = curUser.public.messages;
-        messageEntries.forEach((messageId) => {
-          getMessageData(messageId);
-        })
+        if (messageEntries && messageEntries.length > 0) {
+          messageEntries.forEach((messageId) => {
+            getMessageData(messageId);
+          })
+        }
       }
     });
   }
@@ -220,9 +225,9 @@ const App = () => {
             loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
-            clientData={clientData}
+            clientData={clientData && clientData}
             userId={userId}
-            myMessages={myMessages}
+            myMessages={myMessages && myMessages}
           />
         );
       case 5:
@@ -350,28 +355,14 @@ const App = () => {
       if (snapshot.val()) {
         // grab the data
         const data = snapshot.val();
-        // we need to figure out, besides us, who is the other person in the message data?
-        let messenger = '';
-        Object.entries(data).find(([key, value]) => {
-          // look inside the data and compare authors, if the other person isnt us, store it
-          if (value.author !== userId) {
-            messenger = value.author
-          }
-        });
 
-        // we need to format a new object in order to better handle data later
-        const myMessageData = {
-          messageId,
-          messenger,
-          messageData: data
-        }
         // what is the current value of myMessages?
         const tempMessages = myMessages;
         // have we already added this particular message set?
         const found = tempMessages.some((item) => item.messageId === messageId);
         // as long as we havent already added them, add them
         if (!found) {
-          tempMessages.push(myMessageData)
+          tempMessages.push(data)
           setMyMessages(tempMessages);
         }
       }

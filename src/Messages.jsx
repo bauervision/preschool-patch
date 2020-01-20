@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
-import { SingleMessage, EditField } from "./Components";
+import { SingleMessage, EditField, MessageNotification } from "./Components";
 
 import { Logo, Elegant } from "./images";
 
 import { database } from './config';
 
 export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader }) => {
-    const [activeClientId, setActiveClient] = useState(myMessages[0].messenger); // the first messager is default message
-    const [activeClientName, setActiveClientName] = useState(clientData && clientData[0].clientData.name);
+    const [activeClientId, setActiveClient] = useState((myMessages[0] && myMessages[0].from) || {}); // the first messager is default message
+    const [activeClientName, setActiveClientName] = useState((clientData[0] && clientData[0].clientData.name) || '');
     const [activeMessages, setActiveMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     useEffect(() => {
         Object.entries(myMessages).find(([key, value]) => {
-            console.log(key, value)
-            if (value.messenger === activeClientId) {
+
+            if (value.from === activeClientId) {
                 setActiveMessages(value.messageData);
             }
         })
@@ -53,58 +53,73 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                 {/* Client Data*/}
                 <div
-                    className="Flex AlignItems JustifyCenter SeeThru PaddingBottom"
+                    className="SeeThru PaddingBottom"
 
                 >
                     {/* My Messages */}
-                    <div className="Flex Col Buffer MarginTop">
-                        <div>
-                            <div className="CursiveFont SuperFont PinkFont">My Messages</div>
-                        </div>
+                    <div className="Buffer MarginTop">
 
-                        {/* Buttons to switch between clients */}
-                        <div className="Flex AlignItems JustifyCenter ">
-                            {clientData && clientData.map((client) => (
-                                <button
-                                    key={client.clientData.name}
-                                    type="button"
-                                    onClick={() => {
-                                        setActiveClient(client.clientId);
-                                        setActiveClientName(client.clientData.name)
-                                    }} >{client.clientData.name}</button>
-                            ))}
-                        </div>
+                        <div className="CursiveFont SuperFont PinkFont">My Messages</div>
 
-                        {/* Message Data */}
-                        <div className="MarginTop SimpleBorder" >
-                            <div className="CursiveFont LargeFont PinkFont">{activeClientName}</div>
-                            {(activeMessages.length > 0 ? (activeMessages.map((elem, index) => <SingleMessage key={index.toString()} data={elem} userId={userId} />)) : (
-                                <div>No Messages yet!</div>
-                            ))}
+                        {/* Message Columns */}
+                        <div className="Flex Between Buffer">
+                            <div style={{ width: '30%' }}>All Messages
+                            {(myMessages.length > 0 ? (myMessages.map((elem, index) => <MessageNotification key={elem.from} name={elem.fromName} url={elem.fromUrl} />)) : (
+                                    <div>No Messages yet!</div>
+                                ))}
+
+                            </div>
 
 
-                            <EditField
-                                isTextArea
-                                isMessage
-                                small
-                                title=""
-                                placeholder="What would you like to say?"
-                                type="text"
-                                forLabel="NewMessage"
-                                onChange={setNewMessage}
-                                value={newMessage}
-                            />
-                            <button
+                            <div style={{ width: '70%' }}>
+                                {/* Buttons to switch between clients */}
+                                <div className="Flex AlignItems JustifyCenter ">
+                                    {clientData && clientData.map((client) => (
+                                        <button
+                                            key={client.clientData.name}
+                                            type="button"
+                                            onClick={() => {
+                                                setActiveClient(client.clientId);
+                                                setActiveClientName(client.clientData.name)
+                                            }} >{client.clientData.name}</button>
+                                    ))}
+                                </div>
 
-                                type="button"
-                                onClick={handleNewMessage} >Send</button>
+                                {/* Message Data */}
+                                <div className="MarginTop SimpleBorder" >
+                                    <div className="CursiveFont LargeFont PinkFont">{activeClientName}</div>
+                                    {(activeMessages.length > 0 ? (activeMessages.map((elem, index) => <SingleMessage key={index.toString()} data={elem} userId={userId} />)) : (
+                                        <div>No Messages yet!</div>
+                                    ))}
 
 
+                                    {activeMessages.length > 0 && (
+                                        <>
+                                            <EditField
+                                                isTextArea
+                                                isMessage
+                                                small
+                                                title=""
+                                                placeholder="What would you like to say?"
+                                                type="text"
+                                                forLabel="NewMessage"
+                                                onChange={setNewMessage}
+                                                value={newMessage}
+                                            />
+
+                                            <button
+                                                type="button"
+                                                onClick={handleNewMessage} >Send
+                                        </button>
+                                        </>
+                                    )}
+
+
+                                </div>
+                            </div>
                         </div>
 
                     </div>
-
-
 
                 </div>
 

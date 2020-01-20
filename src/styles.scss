@@ -383,6 +383,14 @@ $PARADISEPINK: #FF4C76;
     justify-content: flex-end;
   }
 
+  .NotifyBtn{
+
+    &:hover{
+      background-color: $PARADISEPINK;
+      color: $GHOSTWHITE
+    }
+  }
+
   .Tab{
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
@@ -452,6 +460,11 @@ $PARADISEPINK: #FF4C76;
 
   .Red {
     border-color: darkred;
+  }
+
+  .MessageBubble{
+    background-color: $PARADISEPINK;
+    color: $GHOSTWHITE;
   }
 
   .LoginError {

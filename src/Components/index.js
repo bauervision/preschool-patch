@@ -11,3 +11,4 @@ export { default as SimpleTable } from "./SimpleTable";
 export { default as KidSection } from "./KidSection";
 export { default as Select } from "./Select";
 export { default as SingleMessage } from "./SingleMessage";
+export { default as MessageNotification } from "./MessageNotification";

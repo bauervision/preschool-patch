@@ -13,8 +13,6 @@ const EditField = ({
   isTextArea,
   isCheck,
   isFile,
-  isSelect,
-  isMessage,
   multiple,
   small
 }) => {

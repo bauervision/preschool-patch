@@ -7,6 +7,7 @@ $GHOSTWHITE: #fbfbff;
 $SONICSILVER: #757575;
 $PANSYPURPLE: #82204A;
 $PARADISEPINK: #FF4C76;
+$LIGHTPINK: rgb(255, 112, 146);
 .App {
   font-family: "Raleway", sans-serif;
   text-align: center;
@@ -71,7 +72,7 @@ $PARADISEPINK: #FF4C76;
   .MessageBorder {
     border: solid 1px rgb(255, 138, 132);
     border-radius: 5px;
-    padding: 10px;
+    padding-left: 5px;
   }
 
   .CheckBox {
@@ -187,9 +188,9 @@ $PARADISEPINK: #FF4C76;
     color:$GHOSTWHITE;
   }
 
-  .PinkFont{
-    color:$PARADISEPINK;
-  }
+  .PinkFont{ color:$PARADISEPINK; }
+
+  .WhiteFont{ color: $GHOSTWHITE; }
 
   .Image{
     width: 256px;
@@ -201,20 +202,13 @@ $PARADISEPINK: #FF4C76;
     }
   }
 
-  .SeeThru{
-    background-color: rgba(255,255,255,0.8);
-  }
-  .LargeFont {
-    font-size: 28pt;
-  }
+  .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
-  .SuperFont {
-    font-size: 34pt;
-  }
+  .LargeFont { font-size: 28pt; }
 
-  .RedicFont{
-    font-size: 60pt;
-  }
+  .SuperFont { font-size: 34pt; }
+
+  .RedicFont{ font-size: 60pt; }
 
   .Logo {
     margin-left: 200px;
@@ -247,19 +241,11 @@ $PARADISEPINK: #FF4C76;
     color: $GHOSTWHITE;    
   }
 
-  .RoundBorder{
-    border-radius: 20px;
-  }
+  .RoundBorder{ border-radius: 20px; }
 
-  .WhiteFill {
-    background-color: $GHOSTWHITE;
-    
-    
-  }
+  .WhiteFill {  background-color: $GHOSTWHITE; }
 
-  .Price{
-    font-family: 'Niconne', cursive;
-  }
+  .Price{ font-family: 'Niconne', cursive; }
 
   .Card {
     display: flex;
@@ -287,70 +273,37 @@ $PARADISEPINK: #FF4C76;
     }
   }
 
-  .CursiveFont {
-    font-family: "Dancing Script", cursive;
-  }
+  .CursiveFont { font-family: "Dancing Script", cursive; }
 
-  .profileText {
-    color: $PATCHGREEN;
-  }
+  .profileText { color: $PATCHGREEN; }
 
-  .textMargin {
-    margin: 5px;
-  }
+  .textMargin { margin: 5px; }
 
-  .TextLeft{
-    text-align: left;
-  }
+  .TextLeft{ text-align: left; }
 
-  .TextRight{
-    text-align: right;
-  }
+  .TextRight{ text-align: right; }
 
-  .BoxShadow {
-    box-shadow: 10px 10px 20px lightslategray;
-  }
+  .BoxShadow { box-shadow: 10px 10px 20px lightslategray; }
 
-  .LightShadow {
-    box-shadow: 10px 10px 40px $GHOSTWHITE;
-  }
+  .LightShadow { box-shadow: 10px 10px 40px $GHOSTWHITE; }
 
-  .InnerShadow {
-    box-shadow: inset 7px 7px 30px rgba(0, 220, 0, 0.2);
-  }
+  .InnerShadow { box-shadow: inset 7px 7px 30px rgba(0, 220, 0, 0.2); }
 
-  .InnerShadowWhite {
-    box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1);
-  }
+  .InnerShadowWhite { box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1); }
 
-  .Margins{
-    margin: 50px;
-  }
+  .Margins{ margin: 50px; }
 
-  .MarginTop{
-    margin-top: 50px;
-  }
+  .MarginTop{ margin-top: 50px; }
 
-  .Padding{
-    padding: 20px;
-  }
+  .Padding{ padding: 20px; }
 
-  .PaddingBoost{
-    padding: 60px;
-  }
+  .PaddingBoost{ padding: 60px; }
 
-  .PaddingTop{
-    padding-top: 20px;
-  }
-
+  .PaddingTop{ padding-top: 20px; }
   
-  .PaddingBottom{
-    padding-top: 20px;
-  }
+  .PaddingBottom{ padding-top: 20px; }
 
-  .Flex {
-    display: flex;
-  }
+  .Flex { display: flex; }
 
   .Evenly{
     justify-content: space-evenly;
@@ -384,11 +337,92 @@ $PARADISEPINK: #FF4C76;
   }
 
   .NotifyBtn{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: solid 1px $PANSYPURPLE;
+    border-radius: 5px;
+    margin: 5px;
 
     &:hover{
       background-color: $PARADISEPINK;
       color: $GHOSTWHITE
     }
+    &:hover div{
+      color:$GHOSTWHITE;
+    }
+    &:hover .Alert{
+      filter: invert(100%) ;
+    }
+
+    p{
+      font-size: 12pt;
+      font-family: "Raleway", sans-serif;
+    }
+
+    span{
+      font-size: 10pt;
+      font-family: "Raleway", sans-serif;
+      color: $SONICSILVER;
+    }
+
+    img{
+      width: 30%;
+      height: auto;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 50%;
+      border-bottom-right-radius: 50%;
+      border-bottom-left-radius: 5px;
+
+    }
+    
+  }
+
+  .NotifyBtn_Unread{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: solid 1px $PANSYPURPLE;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: $LIGHTPINK;
+    color: $GHOSTWHITE;
+    &:hover{
+      background-color: $PARADISEPINK;
+      color: $GHOSTWHITE
+    }
+    &:hover div{
+      color:$GHOSTWHITE;
+    }
+    &:hover .Alert{
+      filter: invert(100%) ;
+    }
+
+    & .Alert{
+      filter: invert(100%) ;
+    }
+
+    p{
+      font-size: 12pt;
+      font-family: "Raleway", sans-serif;
+    }
+
+    span{
+      font-size: 10pt;
+      font-family: "Raleway", sans-serif;
+      color: $SONICSILVER;
+    }
+
+    img{
+      width: 30%;
+      height: auto;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 50%;
+      border-bottom-right-radius: 50%;
+      border-bottom-left-radius: 5px;
+
+    }
+    
   }
 
   .Tab{
@@ -491,6 +525,17 @@ $PARADISEPINK: #FF4C76;
     top: -2px;
     right: 5px;
   }
+
+.OverFlow{
+  overflow-y: auto;
+}
+
+.LightPinkBorder{
+  border: solid 1px rgb(250, 177, 173);
+  border-radius: 10px;
+  
+}
+
   textarea {
     font-family: "Raleway", sans-serif;
     padding: 20px;

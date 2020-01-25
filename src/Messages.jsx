@@ -62,18 +62,32 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         <div className="CursiveFont SuperFont PinkFont">My Messages</div>
 
                         {/* Message Columns */}
-                        <div className="Flex Between Buffer">
-                            <div style={{ width: '30%' }}>All Messages
-                            {(myMessages.length > 0 ? (myMessages.map((elem, index) => <MessageNotification key={elem.from} name={elem.fromName} url={elem.fromUrl} />)) : (
-                                    <div>No Messages yet!</div>
-                                ))}
+                        <div className="Flex Between Buffer ">
+
+                            {/*  Left side Message Notifcations */}
+                            <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>All Messages
+
+                            <div className="OverFlow LightPinkBorder" style={{ height: '70%' }}>
+                                    {(myMessages.length > 0 ? (myMessages.map((elem, index) =>
+                                        <MessageNotification
+                                            key={elem.from}
+                                            name={elem.fromName}
+                                            url={elem.fromUrl}
+                                            lastDate={elem.lastMessage}
+                                            unread={elem.unread}
+                                        />)) : (
+                                            <div>No Messages yet!</div>
+                                        ))}
+                                </div>
+
 
                             </div>
 
 
-                            <div style={{ width: '70%' }}>
+                            {/* Right Side Client Messages */}
+                            <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '70%' }}> Client Messages
                                 {/* Buttons to switch between clients */}
-                                <div className="Flex AlignItems JustifyCenter ">
+                                <div className="Flex AlignItems JustifyCenter SimpleBorder">
                                     {clientData && clientData.map((client) => (
                                         <button
                                             key={client.clientData.name}

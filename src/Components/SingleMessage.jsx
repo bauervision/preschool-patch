@@ -9,7 +9,7 @@ const SingleMessage = ({ data, userId }) => {
         <div className={`Flex Col Buffer ${myMessage ? 'TextRight' : 'TextLeft'} `}>
             <div className="" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>{data.date}</div>
             <div className={`MessageBorder TextLeft ${!myMessage && 'MessageBubble'}`}>
-                <div >{data.message}</div>
+                <div style={{ fontSize: 24, padding: 10 }}>{data.message}</div>
             </div>
 
             <div>{data.liked}</div>

@@ -30,7 +30,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
             if (value.from === activeClientId) {
                 setActiveMessagesID(value.messagesId);
-                console.log("value.messagesId", value.messagesId)
                 setActiveMessages(value.messageData);
             }
         })
@@ -54,17 +53,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
         // now we need to update the whole myMessages array with the new messageData
         // grab the current active thread
-        console.log("activeClientId", activeClientId)
-        console.log("myMessages", myMessages)
-        const updatedCurrentMessages = myMessages.find((elem) => elem.from = activeClientId);
+        const updatedCurrentMessages = myMessages.find((elem) => elem.from === activeClientId);
+
         // update the mssageData array
         updatedCurrentMessages.messageData = updatedMessages;
-        console.log(updatedCurrentMessages)
 
-        // database.ref(`messages/${activeMessagesID}`).set(updatedMessages)
-        //     .then(() => {
-        //         setNewMessage('') // clear out the text box
-        //     });
+        // push to DB
+        database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages)
+            .then(() => {
+                setNewMessage('') // clear out the text box
+            });
     }
 
 

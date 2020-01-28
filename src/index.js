@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
+
 import "./styles.scss";
 import { PublicLanding } from "./PublicLanding";
 import { CreateAccount } from "./CreateAccount";
@@ -90,12 +91,17 @@ const App = () => {
 
         // regardless of whether the user is a teacher or a parent
         // we need to get the message data
+
+        /* curUser.public.messages is an array of ids which point to
+        the messages array, which holds all of the message data specifics */
         const messageEntries = curUser.public.messages;
         if (messageEntries && messageEntries.length > 0) {
           messageEntries.forEach((messageId) => {
             getMessageData(messageId);
           })
         }
+
+
       }
     });
   }

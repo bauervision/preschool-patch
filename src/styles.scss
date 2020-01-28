@@ -229,6 +229,23 @@ $LIGHTPINK: rgb(255, 112, 146);
     border-color: none !important;
   }
 
+  
+  .SocialMessageBtn {
+    border: solid;
+    border-width: 2px;
+    margin: 0px 30px;
+    background-color: transparent;
+    border-radius: 60px;
+    transition: all 0.3s ease-in-out;
+
+    &:hover{
+      transform: scale(1.1);
+    }
+  }
+
+  .SocialMessageBtn_UnActive { border-color: $MALACHITE; box-shadow: 1px 1px 10px $PATCHGREEN;}
+  .SocialMessageBtn_Active { border-color: $GHOSTWHITE; box-shadow: 1px 1px 10px $GHOSTWHITE}
+
   .Add {
     background-color: transparent;
     border-radius: 60px;
@@ -301,7 +318,7 @@ $LIGHTPINK: rgb(255, 112, 146);
 
   .PaddingTop{ padding-top: 20px; }
   
-  .PaddingBottom{ padding-top: 20px; }
+  .PaddingBottom{ padding-bottom: 20px; }
 
   .Flex { display: flex; }
 
@@ -343,7 +360,7 @@ $LIGHTPINK: rgb(255, 112, 146);
     border: solid 1px $PANSYPURPLE;
     border-radius: 5px;
     margin: 5px;
-
+cursor: pointer;
     &:hover{
       background-color: $PARADISEPINK;
       color: $GHOSTWHITE
@@ -528,6 +545,7 @@ $LIGHTPINK: rgb(255, 112, 146);
 
 .OverFlow{
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .LightPinkBorder{

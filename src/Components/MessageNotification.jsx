@@ -1,8 +1,7 @@
 import React from "react";
 import { Corner } from "../images";
-const MessageNotification = ({ name, url, lastDate, unread }) => (
-
-    <div className={`${!unread ? 'NotifyBtn' : 'NotifyBtn_Unread'} `} >
+const MessageNotification = ({ name, url, lastDate, unread, activeId, switchMessage }) => (
+    <div className={`${!unread ? 'NotifyBtn' : 'NotifyBtn_Unread'} `} onClick={() => switchMessage(activeId, name)}>
 
         <img src={url} alt="profilePic" />
         <div className='Col CursiveFont ' style={{ width: '80%', fontSize: 24 }}>{name}</div>

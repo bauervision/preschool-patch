@@ -364,8 +364,10 @@ const App = () => {
 
         // what is the current value of myMessages?
         const tempMessages = myMessages;
+
+        console.log("data ->", data, tempMessages)
         // have we already added this particular message set?
-        const found = tempMessages.some((item) => item.messageId === messageId);
+        const found = tempMessages.some((item) => item.messagesId === messageId);
         // as long as we havent already added them, add them
         if (!found) {
           tempMessages.push(data)

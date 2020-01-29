@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
@@ -11,52 +11,78 @@ import moment from 'moment';
 
 export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader }) => {
 
+
+
+    const [stateMessages, setStateMessages] = useState(myMessages);
     const [activeClientId, setActiveClient] = useState((clientData[0] && clientData[0].clientData.id) || ''); // the first messager is default message
     const [activeClientName, setActiveClientName] = useState((clientData[0] && clientData[0].clientData.name) || '');
     const [activeMessages, setActiveMessages] = useState([]);
     const [activeMessagesID, setActiveMessagesID] = useState('')
     const [newMessage, setNewMessage] = useState('');
 
+    // const messagesRef = useRef(myMessages);
+    // const stateMessagesRef = useRef(stateMessages);
+
+    // useEffect(() => {
+    //     if (messagesRef.current !== stateMessagesRef.current) {
+    //         console.log("props and state is different")
+    //         setStateMessages(messagesRef.current)
+    //     } else {
+    //         console.log("ELSE props is the same as state")
+    //     }
+    // }, [messagesRef, stateMessagesRef]);
+
+    // store my messages right away into state, so that we can turn off 'unread' as they get read
+
+
     // handle incoming myMessages and sort the data for the left column
     useEffect(() => {
         // sort by date, earliest at the top
-        myMessages.sort((a, b) => moment(b.lastMessage).diff(a.lastMessage))
+        stateMessages.sort((a, b) => moment(b.lastMessage).diff(a.lastMessage))
 
-    }, [myMessages]);
+    }, [stateMessages]);
 
     // set the active messages data
     useEffect(() => {
-        Object.entries(myMessages).find(([key, value]) => {
-
+        Object.entries(stateMessages).find(([key, value]) => {
             if (value.from === activeClientId) {
                 setActiveMessagesID(value.messagesId);
                 setActiveMessages(value.messageData);
             }
         })
-    }, [activeClientId, myMessages]);
+    }, [activeClientId, stateMessages]);
 
 
     const handleNewMessage = () => {
 
+        const now = moment().format('MM/DD/YYYY');
         const messageData = {
             author: userId,
             message: newMessage,
-            date: moment().format('MM/DD/YYYY'),
-            liked: false,
-            unread: 0 // sorting later with numbers is easier
+            date: now,
         }
 
         // get and set current active message data
         // this is the message thread we are currently writing in
         const updatedMessages = [...activeMessages];
         updatedMessages.push(messageData);
+        setActiveMessages(updatedMessages)
+
 
         // now we need to update the whole myMessages array with the new messageData
         // grab the current active thread
-        const updatedCurrentMessages = myMessages.find((elem) => elem.from === activeClientId);
+        const updatedCurrentMessages = stateMessages.find((elem) => elem.from === activeClientId);
 
-        // update the mssageData array
+        // update the messageData array
         updatedCurrentMessages.messageData = updatedMessages;
+
+        // setup lastMessage object
+        updatedCurrentMessages.lastMessage = {
+            date: now,
+            author: userId
+        }
+
+        updatedCurrentMessages.unread = 1;
 
         // push to DB
         database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages)
@@ -67,6 +93,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
     const switchMessage = (newId, newName) => {
+
+        const currentThread = stateMessages.find((elem) => elem.from === newId);
+        // when we switch to a message, if it is unread, toggle it
+        currentThread.unread = currentThread.unread === 1 && 0; // now its been read
         setActiveClient(newId);
         setActiveClientName(newName)
     }
@@ -88,16 +118,17 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>All Messages
 
                              <div className="OverFlow LightPinkBorder" >
-                                {(myMessages.length > 0 ? (myMessages.map((elem) =>
+                                {(stateMessages.length > 0 ? (stateMessages.map((elem) =>
                                     <MessageNotification
                                         key={elem.from}
                                         name={elem.fromName}
                                         url={elem.fromUrl}
-                                        lastDate={elem.lastMessage}
+                                        lastMessage={elem.lastMessage}
                                         unread={elem.unread}
                                         activeId={elem.from}
                                         activeName={elem.fromName}
                                         switchMessage={switchMessage}
+                                        showAsUnread={elem.unread && (elem.from !== userId)}
                                     />)) : (
                                         <div>No Messages yet!</div>
                                     ))}

@@ -11,9 +11,6 @@ const SingleMessage = ({ data, userId }) => {
             <div className={`MessageBorder TextLeft ${!myMessage && 'MessageBubble'}`}>
                 <div style={{ fontSize: 24, padding: 10 }}>{data.message}</div>
             </div>
-
-            <div>{data.liked}</div>
-            <div>{data.unread}</div>
         </div>
     )
 }

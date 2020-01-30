@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
 
@@ -16,7 +16,7 @@ import { f, database } from "./config";
 const App = () => {
 
   const [currentPage, setPage] = useState(0);
-  const [data, setData] = useState({});// raw data from DB
+  const [leaderData, setLeaderData] = useState({});// raw data from DB
   const [clientData, setClientData] = useState([]);// raw data from DB
   const [selection, setSelection] = useState({}); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
@@ -29,11 +29,55 @@ const App = () => {
   const [myMessages, setMyMessages] = useState([]);
 
 
+
+  // function usePrevious(value) {
+  //   const ref = useRef();
+  //   useEffect(() => {
+  //     ref.current = value;
+  //   });
+  //   return ref.current;
+  // }
+
+
   /* On Mount, fetch data, check login */
   useEffect(() => {
     handleLoginCheck();
     // eslint-disable-next-line
-  }, [data]);
+  }, [leaderData]);
+
+
+  /* On Mount, fetch ALL leader data */
+  useEffect(() => {
+    getLeaderData();
+  }, [isLeader]);
+
+
+  // call on mount
+  useEffect(() => {
+    if (myMessages && myMessages.length > 0) {
+
+      myMessages.forEach((id) => {
+        database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
+          const data = snap.val();
+          console.log("Calling ref")
+          if (id.messageData.length !== data.length) {
+            const newMessage = data[data.length - 1]
+            const updatedMessages = [...myMessages];
+            const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId)
+
+            if (index !== -1) {
+              updatedMessages[index].messageData.push(newMessage);
+              setMyMessages(updatedMessages)
+            }
+
+          }
+
+
+        })
+      })
+    }
+  });
+
 
   // check login status
   const handleLoginCheck = () => {
@@ -51,8 +95,9 @@ const App = () => {
 
       } else {
         // logged out
-        setLoggedInUser(null);
-        updateSuccess(true, "Logged Out")
+        handleLogOut();
+
+
       }
     });
   };
@@ -62,7 +107,7 @@ const App = () => {
     // setuserId right away
     setUserId(user.uid);
     // which type of user is logged in?
-    const id = Object.keys(data).find((elem) => elem === user.uid);
+    const id = Object.keys(leaderData).find((elem) => elem === user.uid);
 
     // if we found a valid id, then this is a leader
     if (id) {
@@ -84,9 +129,6 @@ const App = () => {
             })
           }
 
-        } else {
-          // not a leader
-          // but we do need to grab...
         }
 
         // regardless of whether the user is a teacher or a parent
@@ -106,6 +148,11 @@ const App = () => {
     });
   }
 
+
+  const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
+    // push to DB
+    database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
+  }
   const handlePageUpdate = (page) => setPage(page);
 
   const handleMemberSelection = (member) => {
@@ -199,7 +246,13 @@ const App = () => {
 
   };
 
-  const handleLogOut = () => setLoggedInUser(null);
+  const handleLogOut = () => {
+    setLoggedInUser(null);
+    setUserId('');
+    setIsLeader(false);
+    setMyMessages([])
+    updateSuccess(true, "Logged Out")
+  }
 
 
   const updateSuccess = (value, message) => {
@@ -217,111 +270,13 @@ const App = () => {
     setKidTotal(updatedInfo)
   }
 
-  /* Page Router */
-  const onPage = (page) => {
-
-    // reset window scroll position with each page change
-    // TODO: remove this comment:  window.scrollTo(0, 0);
-
-    switch (page) {
-      case 6:
-        return (
-          <Messages
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            clientData={clientData && clientData}
-            userId={userId}
-            myMessages={myMessages && myMessages}
-          />
-        );
-      case 5:
-        return (
-          <ClientAdmin
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            clientData={clientData}
-          />
-        );
-      case 4:
-        return (
-          <MyProfilePage
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            isLeader={isLeader}
-            clientData={clientData}
-          />
-        );
-      case 3:
-        return (
-          <ProfilePage
-            pageUpdate={handlePageUpdate}
-            data={selection}
-            loggedInUser={loggedInUser}
-            clientData={clientData}
-          />
-        );
-      case 2:
-        return (
-          <CreateAccount
-            pageUpdate={handlePageUpdate}
-            data={data}
-            handleLogin={handleLogin}
-            loggedInUser={loggedInUser}
-            isLeader={isLeader}
-            clientData={clientData}
-
-          />
-        );
-      case 1:
-        return (
-          <Login
-            pageUpdate={handlePageUpdate}
-            data={data}
-            handleLogin={handleLogin}
-            handleLogOut={handleLogOut}
-            loggedInUser={loggedInUser}
-            kidTotal={kidTotal}
-            addNewChildInfo={addNewChildInfo}
-            clientData={clientData}
-          />
-        );
-      default:
-        return (
-          <PublicLanding
-            pageUpdate={handlePageUpdate}
-            data={data}
-            handleMemberSelection={handleMemberSelection}
-            handleLogin={handleLogin}
-            handleLogOut={handleLogOut}
-            loggedInUser={loggedInUser}
-            launchToast={toast}
-            isLeader={isLeader}
-            clientData={clientData}
-          />
-        );
-    }
-  };
-
-  /* On Mount, fetch ALL leader data */
-  useEffect(() => {
-    getLeaderData();
-  }, [isLeader]);
-
-
-
   const getLeaderData = () => {
     // grab ref to the data
     const leaderData = database.ref("leaders");
     // now get the data stored there, and use "on value" to make the data live
     leaderData.on("value", (snapshot) => {
       if (snapshot.val()) {
-        setData(snapshot.val());
+        setLeaderData(snapshot.val());
       }
     });
   };
@@ -355,9 +310,7 @@ const App = () => {
 
   const getMessageData = (messageId) => {
     // grab ref to the data
-    const ref = database.ref(`messages/${messageId}`);
-    // now get the data stored there, and use "on value" to make the data live
-    ref.on("value", (snapshot) => {
+    database.ref(`messages/${messageId}`).on("value", (snapshot) => {
       if (snapshot.val()) {
         // grab the data
         const data = snapshot.val();
@@ -365,9 +318,9 @@ const App = () => {
         // what is the current value of myMessages?
         const tempMessages = myMessages;
 
-        console.log("data ->", data, tempMessages)
         // have we already added this particular message set?
         const found = tempMessages.some((item) => item.messagesId === messageId);
+
         // as long as we havent already added them, add them
         if (!found) {
           tempMessages.push(data)
@@ -376,6 +329,110 @@ const App = () => {
       }
     });
   };
+
+
+  /* Page Router */
+  const onPage = (page) => {
+
+    // reset window scroll position with each page change
+    // TODO: remove this comment:  window.scrollTo(0, 0);
+
+    switch (page) {
+      case 6:
+        return (
+          <Messages
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+            clientData={clientData && clientData}
+            userId={userId}
+            myMessages={myMessages && myMessages}
+            isLeader={isLeader}
+            handleMessageUpdates={handleMessageUpdates}
+          />
+        );
+      case 5:
+        return (
+          <ClientAdmin
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+            clientData={clientData}
+            myMessages={myMessages && myMessages}
+            isLeader={isLeader}
+          />
+        );
+      case 4:
+        return (
+          <MyProfilePage
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+            isLeader={isLeader}
+            clientData={clientData}
+            myMessages={myMessages && myMessages}
+
+          />
+        );
+      case 3:
+        return (
+          <ProfilePage
+            pageUpdate={handlePageUpdate}
+            data={selection}
+            loggedInUser={loggedInUser}
+            clientData={clientData}
+            myMessages={myMessages && myMessages}
+            isLeader={isLeader}
+          />
+        );
+      case 2:
+        return (
+          <CreateAccount
+            pageUpdate={handlePageUpdate}
+            leaderData={leaderData}
+            handleLogin={handleLogin}
+            loggedInUser={loggedInUser}
+            isLeader={isLeader}
+            clientData={clientData}
+
+          />
+        );
+      case 1:
+        return (
+          <Login
+            pageUpdate={handlePageUpdate}
+            leaderData={leaderData}
+            handleLogin={handleLogin}
+            handleLogOut={handleLogOut}
+            loggedInUser={loggedInUser}
+            kidTotal={kidTotal}
+            addNewChildInfo={addNewChildInfo}
+            clientData={clientData}
+          />
+        );
+      default:
+        return (
+          <PublicLanding
+            pageUpdate={handlePageUpdate}
+            leaderData={leaderData}
+            handleMemberSelection={handleMemberSelection}
+            handleLogin={handleLogin}
+            handleLogOut={handleLogOut}
+            loggedInUser={loggedInUser}
+            launchToast={toast}
+            isLeader={isLeader}
+            clientData={clientData}
+            myMessages={myMessages && myMessages}
+            userId={userId}
+
+          />
+        );
+    }
+  };
+
 
   // BIG TODO:  add in proper routing so page doesnt update on refresh so bad
   return (

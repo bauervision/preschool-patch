@@ -9,11 +9,33 @@ import { Logo, Elegant } from "./images";
 import { database } from './config';
 import moment from 'moment';
 
-export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader }) => {
+export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates }) => {
+
+    const figureOutMessengerId = () => {
+        // if the user is a leader, set first client as default message
+        if (isLeader) {
+            return (clientData[0] && clientData[0].clientData.id) || '';
+        } else {
+            // otherwise default to the first message in myMessages
+            return (myMessages && myMessages[0].from) || '';
+        }
+    }
+
+    const figureOutMessengerName = () => {
+        // if the user is a leader, set first client as default message
+        if (isLeader) {
+            return (clientData[0] && clientData[0].clientData.name) || '';
+        } else {
+            // otherwise default to the first message in myMessages
+            const name = myMessages[0].from === userId ? myMessages[0].toName : myMessages[0].fromName;
+            return name || '';
+
+        }
+    }
 
 
-    const [activeClientId, setActiveClient] = useState((clientData[0] && clientData[0].clientData.id) || ''); // the first messager is default message
-    const [activeClientName, setActiveClientName] = useState((clientData[0] && clientData[0].clientData.name) || '');
+    const [activeThreadId, setActiveThreadId] = useState(figureOutMessengerId());
+    const [activeThreadName, setActiveThreadName] = useState(figureOutMessengerName());
     const [activeMessages, setActiveMessages] = useState([]);
     const [activeMessagesID, setActiveMessagesID] = useState('')
     const [newMessage, setNewMessage] = useState('');
@@ -22,18 +44,17 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     useEffect(() => {
         // sort by date, earliest at the top
         myMessages.sort((a, b) => moment(b.lastMessage.date).diff(a.lastMessage.date))
-
     }, [myMessages]);
 
     // set the active messages data
     useEffect(() => {
         Object.entries(myMessages).find(([key, value]) => {
-            if (value.from === activeClientId) {
+            if (value.from === activeThreadId) {
                 setActiveMessagesID(value.messagesId);
                 setActiveMessages(value.messageData);
             }
         })
-    }, [activeClientId, myMessages, userId]);
+    }, [activeThreadId, myMessages, userId]);
 
 
     const handleNewMessage = () => {
@@ -48,13 +69,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // get and set current active message data
         // this is the message thread we are currently writing in
         const updatedMessages = [...activeMessages];
+        // update the current last message to being read
+        updatedMessages[updatedMessages.length - 1].unread = 0;
+
+        console.log(updatedMessages[updatedMessages.length - 1])
         updatedMessages.push(messageData);
         setActiveMessages(updatedMessages)
 
-
         // now we need to update the whole myMessages array with the new messageData
         // grab the current active thread
-        const updatedCurrentMessages = myMessages.find((elem) => elem.from === activeClientId);
+        const updatedCurrentMessages = myMessages.find((elem) => elem.from === activeThreadId);
 
         // update the messageData array
         updatedCurrentMessages.messageData = updatedMessages;
@@ -65,19 +89,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             author: userId
         }
 
-        updatedCurrentMessages.unread = 1;
+        handleMessageUpdates(activeMessagesID, updatedCurrentMessages);
 
-        // push to DB
-        database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages)
-            .then(() => {
-                setNewMessage('') // clear out the text box
-            });
+        setNewMessage('') // clear out the text box
+
     }
 
 
     const switchMessage = (newId, newName) => {
-        setActiveClient(newId);
-        setActiveClientName(newName)
+        setActiveThreadId(newId);
+        setActiveThreadName(newName)
     }
 
     return (
@@ -97,17 +118,32 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>All Messages
 
                              <div className="OverFlow LightPinkBorder" >
-                                {(myMessages.length > 0 ? (myMessages.map((elem) =>
-                                    <MessageNotification
-                                        key={elem.from}
-                                        name={elem.fromName}
-                                        url={elem.fromUrl}
-                                        lastMessage={elem.lastMessage}
-                                        activeId={elem.from}
-                                        activeName={elem.fromName}
-                                        switchMessage={switchMessage}
-                                        showAsUnread={(elem.unread === 1) && (elem.lastMessage.author !== userId)}
-                                    />)) : (
+                                {(myMessages.length > 0 ? (myMessages.map((elem) => {
+
+                                    // if the last message isn't from us, then it's from them, so mark it unread
+                                    const showAsUnread = elem.lastMessage.author !== userId;
+                                    // we need to determine if this is our message thread, or someone elses
+                                    // so if from is me...
+
+                                    // display message with the 'To' data
+                                    const messageFromId = (elem.from === userId) ? elem.to : elem.from;
+                                    const messageFromName = (elem.from === userId) ? elem.toName : elem.fromName;
+                                    const messageFromUrl = (elem.from === userId) ? elem.toUrl : elem.fromUrl;
+
+
+                                    return (
+                                        <MessageNotification
+                                            key={messageFromId}
+                                            name={messageFromName}
+                                            url={messageFromUrl}
+                                            lastMessage={elem.lastMessage}
+                                            activeId={messageFromId}
+                                            switchMessage={switchMessage}
+                                            showAsUnread={showAsUnread}
+                                        />
+                                    )
+                                }
+                                )) : (
                                         <div>No Messages yet!</div>
                                     ))}
                             </div>
@@ -118,40 +154,47 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                         {/* Right Side Client Messages */}
                         <div className="Flex Col" style={{ width: '70%' }}>
-                            <div className="Flex AlignItems GreenFill Padding">
 
-                                <div className="CursiveFont LargeFont" >Client Messages</div>
+                            {/* If we are a leader, show the buttons */}
+                            {isLeader && (
+                                <div className="Flex AlignItems GreenFill Padding">
 
-                                {/* Buttons to switch between clients */}
-                                <div className="Flex AlignItems JustifyCenter">
-                                    {clientData && clientData.map((client) => (
-                                        <div
-                                            className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeClientId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
-                                            key={client.clientData.name}
-                                            type="button"
-                                            onClick={() => {
-                                                setActiveClient(client.clientId);
-                                                setActiveClientName(client.clientData.name)
-                                            }} >
-                                            <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
-                                        </div>
-                                    ))}
+                                    <div className="CursiveFont LargeFont" >Client Messages</div>
+
+                                    {/* Buttons to switch between clients */}
+                                    <div className="Flex AlignItems JustifyCenter">
+                                        {clientData && clientData.map((client) => (
+                                            <div
+                                                className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeThreadId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
+                                                key={client.clientData.name}
+                                                type="button"
+                                                onClick={() => {
+                                                    setActiveThreadId(client.clientId);
+                                                    setActiveThreadName(client.clientData.name)
+                                                }} >
+                                                <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
+                                            </div>
+                                        ))}
+                                    </div>
+
                                 </div>
+                            )}
 
-                            </div>
 
 
                             {/* Message Data */}
                             <div className="MarginTop PinkBorder" >
-                                <div className="CursiveFont LargeFont PinkFont">{activeClientName}</div>
+                                <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
                                 {(activeMessages && activeMessages.length > 0 ?
-                                    (activeMessages.map((elem, index) => <SingleMessage key={index.toString()} data={elem} userId={userId} />))
+                                    (activeMessages.map((elem, index) =>
+                                        <SingleMessage
+                                            key={index.toString()}
+                                            data={elem}
+                                            userId={userId} />))
                                     : (<div>No Messages yet!</div>)
                                 )}
 
 
-                                {/* {activeMessages && activeMessages.length > 0 && (
-                                    <> */}
                                 <EditField
                                     isTextArea
                                     isMessage

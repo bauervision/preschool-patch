@@ -9,7 +9,13 @@ import { RegisterUser } from "./helpers/auth";
 import { Elegant } from "./images"
 // import { f, storage } from "./config";
 
-export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
+export const CreateAccount = ({
+  pageUpdate,
+  loggedInUser,
+  handleLogin,
+  newMessageAlert,
+  isLeader,
+  myMessages }) => {
   // handle local state
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
@@ -81,7 +87,14 @@ export const CreateAccount = ({ pageUpdate, loggedInUser, handleLogin }) => {
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} />
+        <Header
+          isCreate
+          pageUpdate={pageUpdate}
+          loggedInUser={loggedInUser}
+          isLeader={isLeader}
+          myMessages={myMessages && myMessages}
+          newMessageAlert={newMessageAlert}
+        />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Create Leader Account</div>
 

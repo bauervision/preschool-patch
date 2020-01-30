@@ -8,27 +8,21 @@ import { Toast } from "./Components";
 
 import { Logo, Elegant, Corner } from "./images";
 
-// import { Coloring, Kids, Table, Working } from "./images/photos";
-// const images = [
-//   { src: { Coloring }, info: "First Image" },
-//   { src: { Kids }, info: "Second Image" },
-//   { src: { Table }, info: "Third Image" },
-//   { src: { Working }, info: "Fourth Image" }
-// ];
-
-
 export const PublicLanding = ({
   pageUpdate,
-  data,
+  leaderData,
   handleMemberSelection,
   handleLogin,
   handleLogOut,
   loggedInUser,
   launchToast,
-  isLeader
+  isLeader,
+  myMessages,
+  newMessageAlert,
+  userId
 }) => {
   // handle local state
-  const [leaderData, setLeaderData] = useState([]);
+  // const [leaderData, setLeaderData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
@@ -38,13 +32,13 @@ export const PublicLanding = ({
   /* On Mount, fetch data, check login */
   useEffect(() => {
     // incoming data is an obj, so lets convert it to a useable array
-    const leadersArray = Object.entries(data);
+    const leadersArray = Object.entries(leaderData);
     let newData = [];
     leadersArray.forEach((elem) => { newData.push(elem[1].public) })
-    setLeaderData(newData);
+    // setLeaderData(newData);
     setFilteredData(newData);
 
-  }, [data]);
+  }, [leaderData]);
 
 
   // handleFilters
@@ -104,6 +98,9 @@ export const PublicLanding = ({
         loggedInUser={loggedInUser}
         handleLogOut={handleLogOut}
         isLeader={isLeader}
+        myMessages={myMessages && myMessages}
+        newMessageAlert={newMessageAlert}
+        userId={userId}
       />
 
       <div className="Flex AlignItems  Buffer " style={{ marginTop: 80 }}>

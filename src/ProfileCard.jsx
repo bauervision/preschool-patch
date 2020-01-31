@@ -13,7 +13,8 @@ export const ProfileCard = ({ data, handleSelection }) => {
     name,
     rating,
     zipcode,
-    photoUrl
+    photoUrl,
+
 
   } = data;
 

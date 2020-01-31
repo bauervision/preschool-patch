@@ -12,7 +12,6 @@ export const PublicLanding = ({
   pageUpdate,
   leaderData,
   handleMemberSelection,
-  handleLogin,
   handleLogOut,
   loggedInUser,
   launchToast,

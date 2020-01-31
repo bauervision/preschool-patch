@@ -4,13 +4,12 @@ import { Home, MessageIcon } from "../images";
 
 import { SignUserOut } from "../helpers/auth";
 
-import { f, database } from "../config";
-
 export const Header = ({
   pageUpdate,
+  myProfile,
   isHome,
   isLeader,
-  myProfile,
+  isLogin,
   isCreate,
   isAdmin,
   isMessages,
@@ -31,12 +30,6 @@ export const Header = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
-
-
-
-
-
-
   const LogOut = () => {
     SignUserOut();
     pageUpdate(0);
@@ -55,9 +48,15 @@ export const Header = ({
         {/* We're not yet logged in */}
         {!loggedInUser ? (
           // If we are not logged in, the only option we should see on the header is to signup
-          <div>
-            <button className='HeaderButton' onClick={() => pageUpdate(1)}>Login / Signup</button>
-          </div>
+          // IF we're not on the login page
+          <>
+            {!isLogin && (
+              <div>
+                <button className='HeaderButton' onClick={() => pageUpdate(1)}>Login / Signup</button>
+              </div>
+            )}
+          </>
+
         ) : (
             // we are now logged in
             <>
@@ -120,24 +119,24 @@ export const Header = ({
               </div>
 
 
-              {/* Show Home Icon, if we're not on home page' */}
-              {!isHome && (
-                <div>
-                  <img
-                    src={Home}
-                    alt="Home icon"
-                    className="Header_Logo"
-                    onClick={() => pageUpdate(0)}
-                  />
-                </div>
-              )}
+
 
 
 
             </>
           )}
 
-
+        {/* Show Home Icon, if we're not on home page' */}
+        {!isHome && (
+          <div>
+            <img
+              src={Home}
+              alt="Home icon"
+              className="Header_Logo"
+              onClick={() => pageUpdate(0)}
+            />
+          </div>
+        )}
       </div >
 
 

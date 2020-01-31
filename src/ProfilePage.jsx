@@ -25,9 +25,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
 
   } = data;
 
-  const handleContact = () => {
-    console.log(`Send message to ${name}`)
-  }
+  const buttonLabel = loggedInUser ? (`Contact ${name}`) : (`Login to contact ${name}`);
 
   return (
     <div>
@@ -124,10 +122,12 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
               <p>{aboutMe}</p>
 
               {/* Contact Button: If loggedInUser, otherwise notify to login*/}
-              {loggedInUser ? (
-                <button onClick={handleContact} className="CursiveFont LargeFont">{`Contact ${name}`}</button>) : (
-                  <button onClick={() => pageUpdate(1)} className="CursiveFont LargeFont">{`Login to Contact ${name}`}</button>
-                )}
+              <button
+                onClick={() => pageUpdate(!loggedInUser ? 1 : 6)}
+                className="CursiveFont LargeFont">
+                {buttonLabel}
+              </button>
+
             </div>
 
 

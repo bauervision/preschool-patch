@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 
@@ -59,20 +59,15 @@ const App = () => {
       myMessages.forEach((id) => {
         database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
           const data = snap.val();
-          console.log("Calling ref")
           if (id.messageData.length !== data.length) {
             const newMessage = data[data.length - 1]
             const updatedMessages = [...myMessages];
             const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId)
-
             if (index !== -1) {
               updatedMessages[index].messageData.push(newMessage);
               setMyMessages(updatedMessages)
             }
-
           }
-
-
         })
       })
     }
@@ -314,13 +309,10 @@ const App = () => {
       if (snapshot.val()) {
         // grab the data
         const data = snapshot.val();
-
         // what is the current value of myMessages?
         const tempMessages = myMessages;
-
         // have we already added this particular message set?
         const found = tempMessages.some((item) => item.messagesId === messageId);
-
         // as long as we havent already added them, add them
         if (!found) {
           tempMessages.push(data)
@@ -335,7 +327,7 @@ const App = () => {
   const onPage = (page) => {
 
     // reset window scroll position with each page change
-    // TODO: remove this comment:  window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
     switch (page) {
       case 6:
@@ -350,6 +342,7 @@ const App = () => {
             myMessages={myMessages && myMessages}
             isLeader={isLeader}
             handleMessageUpdates={handleMessageUpdates}
+            currentSelection={selection}
           />
         );
       case 5:

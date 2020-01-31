@@ -6,30 +6,68 @@ import { SingleMessage, EditField, MessageNotification } from "./Components";
 
 import { Logo, Elegant } from "./images";
 
-import { database } from './config';
 import moment from 'moment';
 
-export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates }) => {
+const defaultMessage = {
+    from: '',
+    fromName: '',
+    fromUrl: '',
+    lastMessage: {
+        author: '',
+        date: ''
+    },
+    messageData: [],
+    messagesId: '',
+    to: '',
+    toName: '',
+    toUrl: ''
+};
+
+export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates, currentSelection }) => {
+
+    const now = moment().format('MM/DD/YYYY');
+    // mount
+    useEffect(() => {
+        defaultMessage.from = userId;
+        defaultMessage.fromName = loggedInUser.name;
+        defaultMessage.fromUrl = loggedInUser.photoUrl;
+        defaultMessage.lastMessage.author = userId;
+        defaultMessage.lastMessage.date = now;
+        defaultMessage.messageData = [{ author: userId, date: now, message: '' }];
+        defaultMessage.messagesId = "generatenewId";
+        defaultMessage.to = currentSelection.id;
+        defaultMessage.toName = currentSelection.name;
+        defaultMessage.toUrl = currentSelection.photoUrl;
+        console.log(defaultMessage)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentSelection]);
 
     const figureOutMessengerId = () => {
         // if the user is a leader, set first client as default message
         if (isLeader) {
-            return (clientData[0] && clientData[0].clientData.id) || '';
+            if (clientData[0]) {
+                return (clientData[0].clientData.id);
+            }
+            return defaultMessage.id;
         } else {
-            // otherwise default to the first message in myMessages
-            return (myMessages && myMessages[0].from) || '';
+            if (myMessages[0]) {
+                return myMessages[0].from;
+            }
+            return defaultMessage.from;
         }
     }
 
     const figureOutMessengerName = () => {
-        // if the user is a leader, set first client as default message
         if (isLeader) {
-            return (clientData[0] && clientData[0].clientData.name) || '';
+            if (clientData[0]) {
+                return (clientData[0].clientData.name);
+            }
+            return defaultMessage.fromName;
         } else {
-            // otherwise default to the first message in myMessages
-            const name = myMessages[0].from === userId ? myMessages[0].toName : myMessages[0].fromName;
-            return name || '';
-
+            if (myMessages[0]) {
+                return myMessages[0].name;
+            }
+            return defaultMessage.toName;
         }
     }
 
@@ -48,6 +86,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
     // set the active messages data
     useEffect(() => {
+        // eslint-disable-next-line no-unused-vars
         Object.entries(myMessages).find(([key, value]) => {
             if (value.from === activeThreadId) {
                 setActiveMessagesID(value.messagesId);
@@ -71,8 +110,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         const updatedMessages = [...activeMessages];
         // update the current last message to being read
         updatedMessages[updatedMessages.length - 1].unread = 0;
-
-        console.log(updatedMessages[updatedMessages.length - 1])
         updatedMessages.push(messageData);
         setActiveMessages(updatedMessages)
 
@@ -184,7 +221,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                             {/* Message Data */}
                             <div className="MarginTop PinkBorder" >
-                                <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
+                                <div className="CursiveFont LargeFont PinkFont">{currentSelection ? currentSelection.name : activeThreadName}</div>
                                 {(activeMessages && activeMessages.length > 0 ?
                                     (activeMessages.map((elem, index) =>
                                         <SingleMessage

@@ -148,6 +148,7 @@ const App = () => {
     // push to DB
     database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
   }
+
   const handlePageUpdate = (page) => setPage(page);
 
   const handleMemberSelection = (member) => {
@@ -245,7 +246,8 @@ const App = () => {
     setLoggedInUser(null);
     setUserId('');
     setIsLeader(false);
-    setMyMessages([])
+    setMyMessages([]);
+    setSelection(null);
     updateSuccess(true, "Logged Out")
   }
 
@@ -390,7 +392,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             isLeader={isLeader}
             clientData={clientData}
-
+            myMessages={myMessages && myMessages}
           />
         );
       case 1:

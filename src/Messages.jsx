@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { default as UUID } from "uuid/v1";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 import { SingleMessage, EditField, MessageNotification } from "./Components";
@@ -7,20 +7,21 @@ import { SingleMessage, EditField, MessageNotification } from "./Components";
 import { Logo, Elegant } from "./images";
 
 import moment from 'moment';
+import { database } from "./config";
 
 const defaultMessage = {
-    from: '',
-    fromName: '',
-    fromUrl: '',
+    from: null,
+    fromName: null,
+    fromUrl: null,
     lastMessage: {
-        author: '',
-        date: ''
+        author: null,
+        date: null
     },
     messageData: [],
-    messagesId: '',
-    to: '',
-    toName: '',
-    toUrl: ''
+    messagesId: null,
+    to: null,
+    toName: null,
+    toUrl: null
 };
 
 export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates, currentSelection }) => {
@@ -34,41 +35,32 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         defaultMessage.lastMessage.author = userId;
         defaultMessage.lastMessage.date = now;
         defaultMessage.messageData = [{ author: userId, date: now, message: '' }];
-        defaultMessage.messagesId = "generatenewId";
-        defaultMessage.to = currentSelection.id;
-        defaultMessage.toName = currentSelection.name;
-        defaultMessage.toUrl = currentSelection.photoUrl;
-        console.log(defaultMessage)
+        defaultMessage.messagesId = null;
+        defaultMessage.to = currentSelection && currentSelection.id;
+        defaultMessage.toName = currentSelection && currentSelection.name;
+        defaultMessage.toUrl = currentSelection && currentSelection.photoUrl;
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentSelection]);
 
     const figureOutMessengerId = () => {
         // if the user is a leader, set first client as default message
-        if (isLeader) {
-            if (clientData[0]) {
-                return (clientData[0].clientData.id);
-            }
-            return defaultMessage.id;
-        } else {
-            if (myMessages[0]) {
-                return myMessages[0].from;
-            }
-            return defaultMessage.from;
+
+        if (myMessages[0]) {
+
+            return myMessages[0].from === userId ? myMessages[0].to : myMessages[0].from;
         }
+        return 'unknown';
+
     }
 
     const figureOutMessengerName = () => {
-        if (isLeader) {
-            if (clientData[0]) {
-                return (clientData[0].clientData.name);
-            }
-            return defaultMessage.fromName;
-        } else {
-            if (myMessages[0]) {
-                return myMessages[0].name;
-            }
-            return defaultMessage.toName;
+
+        if (myMessages[0]) {
+            return myMessages[0].from === userId ? myMessages[0].toName : myMessages[0].fromName;
         }
+        return 'unknown';
+
     }
 
 
@@ -78,6 +70,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     const [activeMessagesID, setActiveMessagesID] = useState('')
     const [newMessage, setNewMessage] = useState('');
 
+
     // handle incoming myMessages and sort the data for the left column
     useEffect(() => {
         // sort by date, earliest at the top
@@ -86,14 +79,24 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
     // set the active messages data
     useEffect(() => {
-        // eslint-disable-next-line no-unused-vars
-        Object.entries(myMessages).find(([key, value]) => {
-            if (value.from === activeThreadId) {
+        // if we have myMessages, display them
+        if (myMessages) {
+            // eslint-disable-next-line no-unused-vars
+            Object.entries(myMessages).find(([key, value]) => {
+                if (value.from === activeThreadId) {
+                    setActiveMessagesID(value.messagesId);
+                    setActiveMessages(value.messageData);
+
+                }
                 setActiveMessagesID(value.messagesId);
                 setActiveMessages(value.messageData);
-            }
-        })
-    }, [activeThreadId, myMessages, userId]);
+            })
+        } else if (currentSelection) {
+            setActiveMessagesID(currentSelection.id);
+            setActiveMessages(defaultMessage.messageData);
+        }
+
+    }, [activeThreadId, currentSelection, myMessages, userId]);
 
 
     const handleNewMessage = () => {
@@ -108,25 +111,40 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // get and set current active message data
         // this is the message thread we are currently writing in
         const updatedMessages = [...activeMessages];
-        // update the current last message to being read
-        updatedMessages[updatedMessages.length - 1].unread = 0;
         updatedMessages.push(messageData);
         setActiveMessages(updatedMessages)
 
         // now we need to update the whole myMessages array with the new messageData
         // grab the current active thread
-        const updatedCurrentMessages = myMessages.find((elem) => elem.from === activeThreadId);
+        let updatedCurrentThread = {};
+        let messageId = '';
+        // we have current set of messages
+        if (myMessages.length > 0) {
+            updatedCurrentThread = myMessages.find((elem) => elem.from === activeThreadId);
+            // since we have valid myMessages, just use the id we have
+            messageId = activeMessagesID;
+
+        } else if (Object.entries(currentSelection).length > 0) {
+            // we need a new set
+            updatedCurrentThread = defaultMessage;
+            messageId = UUID();
+            updatedCurrentThread.messagesId = messageId;
+            // store this new uuid into this users messages array
+            database.ref(`users/${userId}/public/messages`).set([messageId]);
+            // and into the receiptants array so they will see it
+            database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set([messageId]);
+        }
 
         // update the messageData array
-        updatedCurrentMessages.messageData = updatedMessages;
+        updatedCurrentThread.messageData = updatedMessages;
 
         // setup lastMessage object
-        updatedCurrentMessages.lastMessage = {
+        updatedCurrentThread.lastMessage = {
             date: now,
             author: userId
         }
 
-        handleMessageUpdates(activeMessagesID, updatedCurrentMessages);
+        handleMessageUpdates(messageId, updatedCurrentThread);
 
         setNewMessage('') // clear out the text box
 
@@ -137,6 +155,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         setActiveThreadId(newId);
         setActiveThreadName(newName)
     }
+
 
     return (
         <div>
@@ -159,6 +178,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                                     // if the last message isn't from us, then it's from them, so mark it unread
                                     const showAsUnread = elem.lastMessage.author !== userId;
+
                                     // we need to determine if this is our message thread, or someone elses
                                     // so if from is me...
 
@@ -196,7 +216,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                             {isLeader && (
                                 <div className="Flex AlignItems GreenFill Padding">
 
-                                    <div className="CursiveFont LargeFont" >Client Messages</div>
+                                    <div className="CursiveFont LargeFont" >My Clients</div>
 
                                     {/* Buttons to switch between clients */}
                                     <div className="Flex AlignItems JustifyCenter">
@@ -221,35 +241,46 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                             {/* Message Data */}
                             <div className="MarginTop PinkBorder" >
-                                <div className="CursiveFont LargeFont PinkFont">{currentSelection ? currentSelection.name : activeThreadName}</div>
-                                {(activeMessages && activeMessages.length > 0 ?
-                                    (activeMessages.map((elem, index) =>
-                                        <SingleMessage
-                                            key={index.toString()}
-                                            data={elem}
-                                            userId={userId} />))
-                                    : (<div>No Messages yet!</div>)
-                                )}
+                                <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
+
+                                {((currentSelection && Object.entries(currentSelection).length > 0) || (activeMessages.length > 0)) ? (
+                                    <>
+                                        {/* Display all the messages if any */}
+                                        {activeMessages.map((elem, index) =>
+
+                                            <SingleMessage
+                                                key={index.toString()}
+                                                data={elem}
+                                                userId={userId}
+                                            />
+
+                                        )}
+
+                                        <EditField
+                                            isTextArea
+                                            isMessage
+                                            small
+                                            title=""
+                                            placeholder="What would you like to say?"
+                                            type="text"
+                                            forLabel="NewMessage"
+                                            onChange={setNewMessage}
+                                            value={newMessage}
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={handleNewMessage} >Send
+                                             </button>
+
+                                    </>
+                                ) :
+                                    // No current selection, and no active messages
+                                    (<div>{!myMessages ? 'Reach out to a Patch Teacher to start a conversation!'
+                                        : 'Select a message to view it'}</div>)
+                                }
 
 
-                                <EditField
-                                    isTextArea
-                                    isMessage
-                                    small
-                                    title=""
-                                    placeholder="What would you like to say?"
-                                    type="text"
-                                    forLabel="NewMessage"
-                                    onChange={setNewMessage}
-                                    value={newMessage}
-                                />
-
-                                <button
-                                    type="button"
-                                    onClick={handleNewMessage} >Send
-                                        </button>
-                                {/* </>
-                                )} */}
 
 
                             </div>

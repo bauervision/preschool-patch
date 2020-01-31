@@ -10,7 +10,7 @@ import { Coloring, Kids, Table, Working } from "./images/photos";
 import { Add, Elegant } from './images';
 const galleryImages = [Coloring, Kids, Table, Working];
 
-export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader }) => {
+export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages }) => {
 
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
   let userData = {};
@@ -203,7 +203,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} isLeader={isLeader} />
+        <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
 

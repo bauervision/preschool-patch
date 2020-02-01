@@ -40,6 +40,17 @@ export const Header = ({
     <header className="Header LightShadow">
       <div className="Flex AlignItems">
 
+        {/* Show Home Icon, if we're not on home page' */}
+        {!isHome && (
+          <div>
+            <img
+              src={Home}
+              alt="Home icon"
+              className="Header_Logo"
+              onClick={() => pageUpdate(0)}
+            />
+          </div>
+        )}
 
         <div>
           <input placeholder="Search" className="InputStyle" />
@@ -126,17 +137,7 @@ export const Header = ({
             </>
           )}
 
-        {/* Show Home Icon, if we're not on home page' */}
-        {!isHome && (
-          <div>
-            <img
-              src={Home}
-              alt="Home icon"
-              className="Header_Logo"
-              onClick={() => pageUpdate(0)}
-            />
-          </div>
-        )}
+
       </div >
 
 

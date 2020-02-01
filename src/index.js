@@ -59,7 +59,9 @@ const App = () => {
       myMessages.forEach((id) => {
         database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
           const data = snap.val();
+
           if (id.messageData.length !== data.length) {
+            // new message found
             const newMessage = data[data.length - 1]
             const updatedMessages = [...myMessages];
             const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId)
@@ -71,7 +73,7 @@ const App = () => {
         })
       })
     }
-  });
+  }, [myMessages]);
 
 
   // check login status
@@ -310,7 +312,7 @@ const App = () => {
     database.ref(`messages/${messageId}`).on("value", (snapshot) => {
       if (snapshot.val()) {
         // grab the data
-        const data = snapshot.val();
+        const data = snapshot.val(); console.log(data)
         // what is the current value of myMessages?
         const tempMessages = myMessages;
         // have we already added this particular message set?
@@ -327,6 +329,10 @@ const App = () => {
 
   /* Page Router */
   const onPage = (page) => {
+
+    // if (selection && (page !== 6 || page !== 3)) {
+    //   setSelection(null)
+    // }
 
     // reset window scroll position with each page change
     window.scrollTo(0, 0);

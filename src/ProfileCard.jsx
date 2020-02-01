@@ -81,9 +81,9 @@ export const ProfileCard = ({ data, handleSelection }) => {
 
         <div className="Tooltip">
           <span className="TT_Text">Full-time, Part-time, and Drop-in rates</span>
-          <div className="Price LargeFont PinkFont">${rates.ft}</div>
-          <div className="Price LargeFont PinkFont">${rates.pt}</div>
-          <div className="Price LargeFont PinkFont">${rates.di}</div>
+          <div className="Price LargeFont PinkFont">${rates && rates.ft}</div>
+          <div className="Price LargeFont PinkFont">${rates && rates.pt}</div>
+          <div className="Price LargeFont PinkFont">${rates && rates.di}</div>
 
         </div>
       </div>

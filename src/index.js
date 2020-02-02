@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
 
@@ -30,13 +30,13 @@ const App = () => {
 
 
 
-  // function usePrevious(value) {
-  //   const ref = useRef();
-  //   useEffect(() => {
-  //     ref.current = value;
-  //   });
-  //   return ref.current;
-  // }
+  function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
 
 
   /* On Mount, fetch data, check login */
@@ -51,16 +51,19 @@ const App = () => {
     getLeaderData();
   }, [isLeader]);
 
+  const prevMessages = usePrevious(myMessages);
 
   // call on mount
   useEffect(() => {
-    if (myMessages && myMessages.length > 0) {
 
+    if (myMessages != prevMessages) {
+      console.log("myMessages have updated")
       myMessages.forEach((id) => {
         database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
           const data = snap.val();
 
           if (id.messageData.length !== data.length) {
+            console.log('new message found')
             // new message found
             const newMessage = data[data.length - 1]
             const updatedMessages = [...myMessages];
@@ -73,7 +76,7 @@ const App = () => {
         })
       })
     }
-  }, [myMessages]);
+  });
 
 
   // check login status
@@ -135,6 +138,7 @@ const App = () => {
         the messages array, which holds all of the message data specifics */
         const messageEntries = curUser.public.messages;
         if (messageEntries && messageEntries.length > 0) {
+          console.log(messageEntries)
           messageEntries.forEach((messageId) => {
             getMessageData(messageId);
           })
@@ -308,20 +312,33 @@ const App = () => {
 
 
   const getMessageData = (messageId) => {
+    console.log(messageId, "fetched")
+    // what is the current value of myMessages?
+    const tempMessages = myMessages;
+
     // grab ref to the data
     database.ref(`messages/${messageId}`).on("value", (snapshot) => {
       if (snapshot.val()) {
         // grab the data
-        const data = snapshot.val(); console.log(data)
-        // what is the current value of myMessages?
-        const tempMessages = myMessages;
+        const data = snapshot.val();
+
         // have we already added this particular message set?
         const found = tempMessages.some((item) => item.messagesId === messageId);
         // as long as we havent already added them, add them
         if (!found) {
+          // push a new element into the message array
           tempMessages.push(data)
-          setMyMessages(tempMessages);
+          console.log("set state with data push, messageID NOT found")
+        } else {
+          // otherwise we have found the messageId,so update state with new value
+          // grab where this message id is within myMessages
+          const index = tempMessages.findIndex((elem) => elem.messagesId === messageId);
+          // update it with new data
+          tempMessages[index] = data;
+          console.log("set state with data update, messageID found", tempMessages)
         }
+        console.log(tempMessages)
+        setMyMessages(tempMessages);
       }
     });
   };

@@ -18,26 +18,15 @@ const App = () => {
   const [currentPage, setPage] = useState(0);
   const [leaderData, setLeaderData] = useState({});// raw data from DB
   const [clientData, setClientData] = useState([]);// raw data from DB
-  const [selection, setSelection] = useState({}); // whose profile are we viewing?
+  const [selection, setSelection] = useState({ id: 'none' }); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
   const [userId, setUserId] = useState("");
 
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
-  const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' }); // set based on who logs in
+  const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
   const [myMessages, setMyMessages] = useState([]);
-
-
-
-  function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  }
-
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
@@ -51,11 +40,9 @@ const App = () => {
     getLeaderData();
   }, [isLeader]);
 
-  const prevMessages = usePrevious(myMessages);
 
-  // // call on mount
+  // call on mount
   useEffect(() => {
-    // console.log(prevMessages && prevMessages.length, myMessages.length)
     if (myMessages) {
       myMessages.forEach((id) => {
         database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
@@ -148,7 +135,8 @@ const App = () => {
   }
 
 
-  const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
+  const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages, userId) => {
+
     // push to DB
     database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages).then(() => {
       // now update state
@@ -156,9 +144,12 @@ const App = () => {
       const index = myMessages.find((elem) => elem.messagesId === activeMessagesID);
       updatedMessages[index] = updatedCurrentMessages;
       setMyMessages(updatedMessages)
+      setSelection(null); // no longer an active selection from profile page
 
     });
   }
+
+
 
   const handlePageUpdate = (page) => setPage(page);
 

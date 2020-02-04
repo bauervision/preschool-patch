@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 
@@ -135,7 +135,7 @@ const App = () => {
   }
 
 
-  const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages, userId) => {
+  const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
 
     // push to DB
     database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages).then(() => {

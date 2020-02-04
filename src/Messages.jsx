@@ -43,7 +43,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentSelection]);
 
-
     const [activeThreadId, setActiveThreadId] = useState(null); // messagesId
     const [activeThreadName, setActiveThreadName] = useState(null); // fromName or toName
     const [activeThread, setActiveThread] = useState([]); // messageData
@@ -106,7 +105,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
         // if we want to send a new message to a new contact
         if (sendToNewContact) {
-            console.log("We've selected someone from profile page!")
 
             // next check to see if that user has messages already
             const foundSelectionThreadId = myMessages.findIndex((thread) => (thread.from === currentSelection.id) || (thread.to === currentSelection.id));
@@ -117,7 +115,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 setActiveThreadName(myMessages[foundSelectionThreadId].from === userId ? myMessages[foundSelectionThreadId].toName : myMessages[foundSelectionThreadId].fromName);
             } else {
                 // we don't have any prior messages so this is a brand new contact
-                console.log("brand new contact")
                 setActiveThreadId(defaultMessage.messagesId);
                 setActiveThread(defaultMessage.messageData);
                 setActiveThreadName(defaultMessage.toName)
@@ -151,8 +148,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     // nothing unread, so display nothing
                 }
             }
-
-
         }
     }, [sendToNewContact, myMessages, userId, activeThreadId, currentSelection]);
 
@@ -184,16 +179,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 updatedCurrentThread = defaultMessage;
                 sendToDBMessageId = UUID();
                 updatedCurrentThread.messagesId = sendToDBMessageId;
-                console.log("hitting DB as a new contact");
 
                 // handle setting new message ids into users messages array
                 if (!loggedInUser.messages) {
-                    console.log("This is the users very first message")
                     // set this users messages array
                     database.ref(`users/${userId}/public/messages`).set([sendToDBMessageId]);
 
                 } else {
-                    console.log("This is not the users very first contact")
                     // add to the messages array
                     const updatedMessagesArray = loggedInUser.messages;
                     updatedMessagesArray.push(sendToDBMessageId);
@@ -206,7 +198,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     const data = snap.val();
                     // if not null, then they already have messages, so append to them
                     if (data) {
-                        console.log("not leaders' first message, so update their array", data);
                         const updatedMessagesArray = data;
                         updatedMessagesArray.push(sendToDBMessageId);
                         database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updatedMessagesArray);
@@ -241,7 +232,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         }
 
         // push to DB
-        handleMessageUpdates(sendToDBMessageId, updatedCurrentThread, userId);
+        handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
         // since we've sent a message, this thread is no longer a new contact
         setSendToNewContact(false);
         setNewMessage('') // clear out the text box

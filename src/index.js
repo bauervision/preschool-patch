@@ -74,6 +74,7 @@ const App = () => {
           // console.log("!loggedInUser so getUserData")
           getUserData(user);
           updateSuccess(true, "Welcome!")
+
         } else {
           // console.log("logged in!")
         }
@@ -96,7 +97,8 @@ const App = () => {
 
     // if we found a valid id, then this is a leader
     if (id) {
-      setIsLeader(true)
+      setIsLeader(true);
+
     }
 
     database.ref(`${id ? 'leaders' : 'users'}/${user.uid}`).on("value", (snapshot) => {
@@ -104,17 +106,7 @@ const App = () => {
         const curUser = snapshot.val();
         setLoggedInUser(curUser.public);
 
-        // now that we know who is logged in
-        if (id) {
-          // if we logged in a leader, check to see if we have any clients
-          if (curUser.public.clients) {
-            const clientEntries = curUser.public.clients;
-            clientEntries.forEach((clientId) => {
-              getClientData(clientId);
-            })
-          }
 
-        }
 
         // regardless of whether the user is a teacher or a parent
         // we need to get the message data
@@ -129,6 +121,19 @@ const App = () => {
           })
         }
 
+        // now that we know who is logged in
+        if (id) {
+          // if we logged in a leader, check to see if we have any clients
+          if (curUser.public.clients) {
+            const clientEntries = curUser.public.clients;
+            clientEntries.forEach((clientId) => {
+              getClientData(clientId);
+            })
+          }
+
+          setPage(5); // if a leader has logged in, skip to client admin
+
+        }
 
       }
     });
@@ -373,8 +378,10 @@ const App = () => {
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
             clientData={clientData}
+            userId={userId}
             myMessages={myMessages && myMessages}
             isLeader={isLeader}
+            handleMessageUpdates={handleMessageUpdates}
           />
         );
       case 4:

@@ -7,9 +7,9 @@ import { Ratings, SimpleTable } from "./Components";
 import { Logo, Elegant } from "./images";
 
 
-export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData }) => {
+export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData, myMessages }) => {
     // pull out public data
-    const { rating } = loggedInUser;
+    const { rating } = loggedInUser && loggedInUser;
 
     // basic header entries
     const clientHeader = ["Student Name", "Parent Name", "Contact Number", "Enrollment", "Active"];
@@ -17,7 +17,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData }) => {
     return (
         <div>
             <div>
-                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} />
+                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} />
 
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Client Admin</div>
 

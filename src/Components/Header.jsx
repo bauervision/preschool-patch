@@ -21,14 +21,14 @@ export const Header = ({
   const [newMessageAlert, setNewMessageAlert] = useState(false);
 
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (myMessages && myMessages.length > 0) {
       const foundUnread = myMessages.some((elem) => elem.lastMessage.author !== userId);
       setNewMessageAlert(foundUnread)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+
+  }, [myMessages, userId]);
 
   const LogOut = () => {
     SignUserOut();
@@ -83,8 +83,6 @@ export const Header = ({
               {!isMessages && (
                 <>
                   <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
-
-
                     <img className={`${newMessageAlert ? 'filter-pink' : ' filter-darkgreen'}`} src={MessageIcon} alt="message icon" style={{ width: 30, height: 'auto' }} />
                   </button>
                   {" | "}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { default as UUID } from "uuid/v1";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
@@ -49,19 +49,19 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     const [activeThread, setActiveThread] = useState([]); // messageData
     const [newMessage, setNewMessage] = useState('');
     const [sendToNewContact, setSendToNewContact] = useState(false);
-    const [brandNewContact, setBrandNewContact] = useState(false);
+
 
     // handle default threadId
     useEffect(() => {
         // if we have a currentSelection, then we're trying to send a new message
         if ((currentSelection && Object.entries(currentSelection).length > 0)) {
             // use default message
-            setActiveThreadId(defaultMessage.from)
+            setActiveThreadId(defaultMessage.messagesId)
         } else {
             // we arent selected on a new contact to message, so load up the first unread message
             const foundUnread = myMessages.findIndex((elem) => elem.lastMessage.author !== userId);
             if (foundUnread !== -1) {
-                setActiveThreadId(myMessages[foundUnread].from);
+                setActiveThreadId(myMessages[foundUnread].messagesId);
             } else {
                 // we didnt find an unread message, so load nothing and let the user select one
                 setActiveThreadId(null);
@@ -95,80 +95,81 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     }, [currentSelection])
 
 
+
+
     // handle incoming myMessages and sort the data for the left column
     useEffect(() => {
+        console.log("myMessages has updated")
         // sort by date, earliest at the top
         myMessages.sort((a, b) => moment(b.lastMessage.date).diff(a.lastMessage.date))
     }, [myMessages]);
 
+    const prevMessages = useRef(myMessages);
+    const prevThread = useRef(activeThreadId);
+
     // set the active messages data
     useEffect(() => {
-        // if we want to send a new message to a new contact
-        if (sendToNewContact) {
-            Object.entries(myMessages).find(([key, value]) => {
-                const threadId = value.from === userId ? value.to : value.from;
-                if (threadId === currentSelection.id) {
-                    setActiveThreadId(value.from);
-                    setActiveThread(value.messageData);
-                    setActiveThreadName(value.from === userId ? value.toName : value.fromName)
+        console.log(prevMessages, myMessages)
+        if (prevThread.current !== activeThreadId) {
+            // if we want to send a new message to a new contact
+            if (sendToNewContact) {
+                console.log("We've selected someone from profile page!")
+
+                // next check to see if we're coming from profile page, and that user has messages
+                const foundSelectionThreadId = myMessages.findIndex((thread) => (thread.from === currentSelection.id) || (thread.to === currentSelection.id));
+                if (foundSelectionThreadId !== -1) {
+                    // we've found the current selection in myMessages
+                    setActiveThreadId(myMessages[foundSelectionThreadId].messagesId);
+                    setActiveThread(myMessages[foundSelectionThreadId].messageData);
+                    setActiveThreadName(myMessages[foundSelectionThreadId].from === userId ? myMessages[foundSelectionThreadId].toName : myMessages[foundSelectionThreadId].fromName);
                 } else {
-                    setBrandNewContact(true)
-                    setActiveThreadId(defaultMessage.from);
+                    // we don't have any prior messages so this is a brand new contact
+                    console.log("brand new contact")
+                    setActiveThreadId(defaultMessage.messagesId);
                     setActiveThread(defaultMessage.messageData);
                     setActiveThreadName(defaultMessage.toName)
                 }
-            })
 
 
-        } else if (myMessages) {
-            console.log(myMessages)
-            // eslint-disable-next-line no-unused-vars
-            Object.entries(myMessages).find(([key, value]) => {
+            } else if (myMessages) {
 
-                if ((value.from || value.to) === activeThreadId) {
-                    console.log("value = threadId")
-                    // we have an activeThreadId and we found the corresponding message, so display it
-                    setActiveThreadId(value.from);
-                    setActiveThread(value.messageData);
-                    setActiveThreadName(value.from === userId ? value.toName : value.fromName);
-                } else {
-                    console.log("value != threadId")
-                    // havent found activeThreadId in myMessages, or we dont have activeThreadId
-
-                    // does myMessages contain the id of who we are selected on from profile page?
-                    if ((value.from || value.to) === (currentSelection && currentSelection.id)) {
-                        console.log("value = currentSelection")
-                        setActiveThreadId(value.from);
-                        setActiveThread(value.messageData);
-                        setActiveThreadName(value.from === userId ? value.toName : value.fromName);
-
-                        // now check to see if we have any unread incoming messages and display those
-                    } else if (value.lastMessage.author !== userId) {
-                        console.log("value = unread")
-                        setActiveThreadId(value.from);
-                        setActiveThread(value.messageData);
-                        setActiveThreadName(value.from === userId ? value.toName : value.fromName);
-                        // finally, no activeThreadId, no one is selected, and no unread messages
-                    } else if (activeThreadId) {
-                        console.log("value != threadId but we have a threadId")
-                        setActiveThreadId(value.from);
-                        setActiveThread(value.messageData);
-                        setActiveThreadName(value.from === userId ? value.toName : value.fromName);
+                // load up whatever message thread we have selected first
+                if (activeThreadId) {
+                    const foundActiveThreadId = myMessages.findIndex((thread) => thread.messagesId === activeThreadId);
+                    if (foundActiveThreadId !== -1) {
+                        setActiveThreadId(myMessages[foundActiveThreadId].messagesId);
+                        setActiveThread(myMessages[foundActiveThreadId].messageData);
+                        setActiveThreadName(myMessages[foundActiveThreadId].from === userId ? myMessages[foundActiveThreadId].toName : myMessages[foundActiveThreadId].fromName);
                     } else {
-                        console.log("Nothing selected, show display no messages", activeThreadId, value.messageData, myMessages)
+                        // activeId wasn't found?  Really?
                     }
 
+                } else {
+                    // nothing is selected so handle default behavior
+
+                    // first check to see if there are any unread messages
+                    const foundUnreadThreadId = myMessages.findIndex((thread) => thread.lastMessage.author !== userId);
+                    if (foundUnreadThreadId !== -1) {
+                        setActiveThreadId(myMessages[foundUnreadThreadId].messagesId);
+                        setActiveThread(myMessages[foundUnreadThreadId].messageData);
+                        setActiveThreadName(myMessages[foundUnreadThreadId].from === userId ? myMessages[foundUnreadThreadId].toName : myMessages[foundUnreadThreadId].fromName);
+
+                    } else {
+                        // nothing unread, so display nothing
+                    }
                 }
-
-            })
+            } else {
+                // we don't have my Messages?
+                console.log("myMessages is null?")
+            }
+            // prevMessages.current = myMessages;
         }
-
-    });
+    }, [sendToNewContact, myMessages, userId, activeThreadId, currentSelection.id]);
 
 
     const handleNewMessage = () => {
 
-        const messageData = {
+        const newMessageData = {
             author: userId,
             message: newMessage,
             date: now,
@@ -177,14 +178,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // get and set current active message data
         // this is the message thread we are currently writing in
         const updatedMessages = [...activeThread];
-        updatedMessages.push(messageData);
+        updatedMessages.push(newMessageData);
 
         // now we need to update the whole myMessages array with the new messageData
         // grab the current active thread
         let updatedCurrentThread = {};
         // this is used for sending to the DB only
         let sendToDBMessageId = '';
-
 
         if (sendToNewContact) {
             // is the currentSelection found within MyMessages?
@@ -195,6 +195,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 sendToDBMessageId = UUID();
                 updatedCurrentThread.messagesId = sendToDBMessageId;
                 console.log("hitting DB as a new contact");
+
+                // handle setting new message ids into users messages array
                 if (!loggedInUser.messages) {
                     console.log("This is the users very first message")
                     // set this users messages array
@@ -209,13 +211,15 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                 }
 
-                // check the receiptants array
+                // now check the receiptants array
                 database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).once('value', (snap) => {
                     const data = snap.val();
                     // if not null, then they already have messages, so append to them
                     if (data) {
                         console.log("not leaders' first message, so update their array", data);
-
+                        const updatedMessagesArray = data;
+                        updatedMessagesArray.push(sendToDBMessageId);
+                        database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updatedMessagesArray);
                     } else {
                         // otherwise, this is the receipiants first message as well, so create the array
                         database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set([sendToDBMessageId]);
@@ -225,17 +229,18 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
             } else {
                 // this is a contact we selected on from profile page and wanted to re-contact
-                const found = myMessages.findIndex((elem) => elem.messagesId === activeThreadId);
-                updatedCurrentThread = myMessages[found] // since we have valid myMessages,
-                sendToDBMessageId = updatedCurrentThread.messagesId; //  just use the id we have
+                sendToDBMessageId = myMessages[foundNewCntact].messagesId; //  just use the id we have
             }
 
         } else if (myMessages.length > 0) {
             // messaging someone we've already connected with via messenger alone
-            const found = myMessages.findIndex((elem) => ((elem.from === activeThreadId) || (elem.to === activeThreadId)));
+            const found = myMessages.findIndex((elem) => (elem.messagesId === activeThreadId));
             updatedCurrentThread = myMessages[found] // since we have valid myMessages
             sendToDBMessageId = updatedCurrentThread.messagesId; // just use the id we have
+        } else {
+            // what are we doing here?
         }
+
         // update the messageData array
         updatedCurrentThread.messageData = updatedMessages;
 
@@ -250,13 +255,12 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         setNewMessage('') // clear out the text box
     }
 
-
     const switchMessage = (newId, newName) => {
+        console.log("switch to messagesId", newId)
         setActiveThreadId(newId);
         setActiveThreadName(newName);
         // if we've clicked on a previous message, obv we no longer are sending to a new contact
         setSendToNewContact(false);
-
     }
 
 
@@ -283,17 +287,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                     const showAsUnread = elem.lastMessage.author !== userId;
 
                                     // we need to determine if this is our message thread, or someone elses
-                                    const messageFromId = (elem.from === userId) ? elem.to : elem.from;
                                     const messageFromName = (elem.from === userId) ? elem.toName : elem.fromName;
                                     const messageFromUrl = (elem.from === userId) ? elem.toUrl : elem.fromUrl;
 
                                     return (
                                         <MessageNotification
-                                            key={messageFromId}
+                                            key={elem.messagesId}
                                             name={messageFromName}
                                             url={messageFromUrl}
                                             lastMessage={elem.lastMessage}
-                                            activeId={messageFromId}
+                                            activeId={elem.messagesId}
                                             switchMessage={switchMessage}
                                             showAsUnread={showAsUnread}
                                         />

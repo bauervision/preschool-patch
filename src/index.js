@@ -53,17 +53,15 @@ const App = () => {
 
   const prevMessages = usePrevious(myMessages);
 
-  // call on mount
+  // // call on mount
   useEffect(() => {
-
-    if (myMessages != prevMessages) {
-      console.log("myMessages have updated")
+    // console.log(prevMessages && prevMessages.length, myMessages.length)
+    if (myMessages) {
       myMessages.forEach((id) => {
         database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
           const data = snap.val();
 
           if (id.messageData.length !== data.length) {
-            console.log('new message found')
             // new message found
             const newMessage = data[data.length - 1]
             const updatedMessages = [...myMessages];
@@ -138,7 +136,7 @@ const App = () => {
         the messages array, which holds all of the message data specifics */
         const messageEntries = curUser.public.messages;
         if (messageEntries && messageEntries.length > 0) {
-          console.log(messageEntries)
+
           messageEntries.forEach((messageId) => {
             getMessageData(messageId);
           })
@@ -152,7 +150,14 @@ const App = () => {
 
   const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
     // push to DB
-    database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
+    database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages).then(() => {
+      // now update state
+      const updatedMessages = [...myMessages];
+      const index = myMessages.find((elem) => elem.messagesId === activeMessagesID);
+      updatedMessages[index] = updatedCurrentMessages;
+      setMyMessages(updatedMessages)
+
+    });
   }
 
   const handlePageUpdate = (page) => setPage(page);
@@ -312,7 +317,6 @@ const App = () => {
 
 
   const getMessageData = (messageId) => {
-    console.log(messageId, "fetched")
     // what is the current value of myMessages?
     const tempMessages = myMessages;
 
@@ -328,16 +332,16 @@ const App = () => {
         if (!found) {
           // push a new element into the message array
           tempMessages.push(data)
-          console.log("set state with data push, messageID NOT found")
+
         } else {
           // otherwise we have found the messageId,so update state with new value
           // grab where this message id is within myMessages
           const index = tempMessages.findIndex((elem) => elem.messagesId === messageId);
           // update it with new data
           tempMessages[index] = data;
-          console.log("set state with data update, messageID found", tempMessages)
+
         }
-        console.log(tempMessages)
+
         setMyMessages(tempMessages);
       }
     });

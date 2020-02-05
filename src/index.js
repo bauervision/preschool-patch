@@ -10,18 +10,20 @@ import { ProfilePage } from "./ProfilePage";
 import { MyProfilePage } from "./MyProfilePage";
 import { ClientAdmin } from "./ClientAdmin";
 import { Messages } from "./Messages";
+import { Admin } from "./Admin";
 
 import { f, database } from "./config";
 
 const App = () => {
 
+  const [patchData, setPatchData] = useState([]); // all user data for admin
   const [currentPage, setPage] = useState(0);
   const [leaderData, setLeaderData] = useState({});// raw data from DB
   const [clientData, setClientData] = useState([]);// raw data from DB
   const [selection, setSelection] = useState({ id: 'none' }); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
   const [userId, setUserId] = useState("");
-
+  const [isAdmin, setIsAdmin] = useState(false); // set based on who logs in
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
@@ -71,7 +73,6 @@ const App = () => {
       if (user) {
         // make sure we arent already logged in
         if (!loggedInUser) {
-          // console.log("!loggedInUser so getUserData")
           getUserData(user);
           updateSuccess(true, "Welcome!")
 
@@ -82,61 +83,132 @@ const App = () => {
       } else {
         // logged out
         handleLogOut();
-
-
       }
     });
   };
 
   const getUserData = (user) => {
-    // ("Get User Data")
     // setuserId right away
     setUserId(user.uid);
+
     // which type of user is logged in?
-    const id = Object.keys(leaderData).find((elem) => elem === user.uid);
-
-    // if we found a valid id, then this is a leader
-    if (id) {
-      setIsLeader(true);
-
-    }
-
-    database.ref(`${id ? 'leaders' : 'users'}/${user.uid}`).on("value", (snapshot) => {
+    let admin = false;
+    // check to see if we are an admin
+    database.ref(`admin/${user.uid}`).once("value", (snapshot) => {
       if (snapshot.val()) {
-        const curUser = snapshot.val();
-        setLoggedInUser(curUser.public);
+        const adminUser = snapshot.val();
 
+        if (adminUser) {
+          admin = true;
+          setIsAdmin(true);
+          setLoggedInUser(adminUser.public);
 
+          // get our messages
+          const messageEntries = adminUser.public.messages;
+          if (messageEntries && messageEntries.length > 0) {
 
-        // regardless of whether the user is a teacher or a parent
-        // we need to get the message data
-
-        /* curUser.public.messages is an array of ids which point to
-        the messages array, which holds all of the message data specifics */
-        const messageEntries = curUser.public.messages;
-        if (messageEntries && messageEntries.length > 0) {
-
-          messageEntries.forEach((messageId) => {
-            getMessageData(messageId);
-          })
-        }
-
-        // now that we know who is logged in
-        if (id) {
-          // if we logged in a leader, check to see if we have any clients
-          if (curUser.public.clients) {
-            const clientEntries = curUser.public.clients;
-            clientEntries.forEach((clientId) => {
-              getClientData(clientId);
+            messageEntries.forEach((messageId) => {
+              getMessageData(messageId);
             })
           }
 
-          setPage(5); // if a leader has logged in, skip to client admin
+          // now get all patch user data
+          let data = {
+            table: [],
+            all: []
+          };
+          // first get the leaders
+          database.ref('leaders').on("value", (snapshot) => {
+            if (snapshot.val()) {
+              const leaders = snapshot.val();
+              Object.entries(leaders).forEach(([key, value]) => {
+                // we dont't need all the values for admin table
+                const newEntry = {
+                  name: value.public.name,
+                  isLeader: value.public.isLeader.toString(),
+                  kidTotal: value.public.kidTotal,
+                  messageThreads: (value.public.messages && value.public.messages.length) || 0,
+                  phone: value.public.phone,
+                  email: value.private.email,
+                  zipcode: value.public.zipcode,
+                }
+                data.table.push(newEntry);
+                // but we do need all when we select a row from the table
+                data.all.push(value)
+              })
+            }
+          });
 
+          // now get the users
+          database.ref('users').on("value", (snapshot) => {
+            if (snapshot.val()) {
+              const users = snapshot.val();
+              Object.entries(users).forEach(([key, value]) => {
+                // we dont't need all the values for admin purposes
+                const newEntry = {
+                  name: value.public.name,
+                  isLeader: value.public.isLeader.toString(),
+                  kidTotal: (value.public.children && value.public.children.length) || 0,
+                  messageThreads: (value.public.messages && value.public.messages.length) || 0,
+                  phone: value.public.phone,
+                  email: value.private.email,
+                  zipcode: value.public.zipcode,
+                }
+                data.table.push(newEntry);
+                data.all.push(value)
+              })
+            }
+          });
+
+
+          setPatchData(data);
+          setPage(7);
         }
-
       }
     });
+
+    // if we aren't an admin, then handle users and leaders
+    if (!admin) {
+      const leader = Object.keys(leaderData).find((elem) => elem === user.uid);
+
+      if (leader) {
+        setIsLeader(true);
+      }
+
+      database.ref(`${leader ? 'leaders' : 'users'}/${user.uid}`).on("value", (snapshot) => {
+        if (snapshot.val()) {
+          const curUser = snapshot.val();
+
+          setLoggedInUser(curUser.public);
+
+          // regardless of whether the user is a teacher,a parent
+          // we need to get the message data
+
+          /* curUser.public.messages is an array of ids which point to
+          the messages array, which holds all of the message data specifics */
+          const messageEntries = curUser.public.messages;
+          if (messageEntries && messageEntries.length > 0) {
+
+            messageEntries.forEach((messageId) => {
+              getMessageData(messageId);
+            })
+          }
+
+          // now that we know who is logged in
+          if (leader) {
+            // if we logged in a leader, check to see if we have any clients
+            if (curUser.public.clients) {
+              const clientEntries = curUser.public.clients;
+              clientEntries.forEach((clientId) => {
+                getClientData(clientId);
+              })
+            }
+            setPage(5); // if a leader has logged in, skip to client admin
+          }
+        }
+      });
+
+    }
   }
 
 
@@ -355,6 +427,21 @@ const App = () => {
     window.scrollTo(0, 0);
 
     switch (page) {
+      case 7:
+        return (
+          <Admin
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+            userId={userId}
+            myMessages={myMessages && myMessages}
+            isLeader={isLeader}
+            handleMessageUpdates={handleMessageUpdates}
+            patchData={patchData}
+
+          />
+        );
       case 6:
         return (
           <Messages

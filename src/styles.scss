@@ -567,10 +567,12 @@ $LIGHTPINK: rgb(255, 112, 146);
     border-radius: 20px;
     border: 1px solid $PATCHGREEN;
   }
-  
-  
-
+  tr{
+    padding: 10px;
+  }
+  tr:hover{ background-color:$MALACHITE; color:$GHOSTWHITE}
   tr:nth-child(even){background-color: #f2f2f2;}
+  tr:nth-child(even):hover{background-color: $MALACHITE;color:$GHOSTWHITE}
 
   thead{
     border-collapse: collapse;

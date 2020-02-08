@@ -49,8 +49,7 @@ export const Admin = ({ pageUpdate, loggedInUser, patchData }) => {
     const handleRowSelection = (memberData) => {
         // incoming selection will only contain simple table data, so find this user in all data
         const selectedMember = patchData.all.find((elem) => elem.private.email === memberData.email)
-        setSelection(selectedMember)
-        console.log(selectedMember)
+        setSelection(selectedMember);
     }
 
 
@@ -83,9 +82,7 @@ export const Admin = ({ pageUpdate, loggedInUser, patchData }) => {
 
                             <div className="CursiveFont LargeFont PinkFont Padding">Active Enrollments: <strong>{totalActiveEnrollments} </strong></div>
 
-                            <div>Total Active Leaders: <strong>{activeLeaders} / {totalLeaders}</strong></div>
-                            <div>Total Active Users: <strong>{activeUsers} / {totalUsers}</strong></div>
-
+                            <div>Total Active Leaders: <strong>{activeLeaders} / {totalLeaders}</strong>  -  Total Active Users: <strong>{activeUsers} / {totalUsers}</strong></div>
 
                         </div>
 
@@ -103,7 +100,7 @@ export const Admin = ({ pageUpdate, loggedInUser, patchData }) => {
                         </div>
 
 
-                        <div className="Flex JustifyCenter SimpleBorder MarginTop">
+                        <div className="Flex JustifyCenter PinkBorder MarginTop">
                             {selection ? (
                                 <DetailViewAdmin data={selection} />
                             ) : (

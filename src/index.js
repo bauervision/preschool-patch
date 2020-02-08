@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
@@ -14,6 +15,8 @@ import { Admin } from "./Admin";
 
 import { f, database } from "./config";
 
+import moment from 'moment';
+
 const App = () => {
 
   const [patchData, setPatchData] = useState([]); // all user data for admin
@@ -23,7 +26,6 @@ const App = () => {
   const [selection, setSelection] = useState({ id: 'none' }); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
   const [userId, setUserId] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false); // set based on who logs in
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
@@ -34,7 +36,7 @@ const App = () => {
   useEffect(() => {
     handleLoginCheck();
     // eslint-disable-next-line
-  }, [leaderData]);
+  }, [loggedInUser]);
 
 
   /* On Mount, fetch ALL leader data */
@@ -44,26 +46,30 @@ const App = () => {
 
 
   // call on mount
-  useEffect(() => {
-    if (myMessages) {
-      myMessages.forEach((id) => {
-        database.ref(`messages/${id.messagesId}/messageData`).on('value', (snap) => {
-          const data = snap.val();
+  // useEffect(() => {
+  //   console.log("index myMessages has changed", myMessages)
+  //   if (myMessages) {
+  //     myMessages.forEach((id) => {
+  //       database.ref(`messages/${id.messagesId}/messageData`).on('child_added', (snap) => {
+  //         const data = snap.val();
 
-          if (id.messageData.length !== data.length) {
-            // new message found
-            const newMessage = data[data.length - 1]
-            const updatedMessages = [...myMessages];
-            const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId)
-            if (index !== -1) {
-              updatedMessages[index].messageData.push(newMessage);
-              setMyMessages(updatedMessages)
-            }
-          }
-        })
-      })
-    }
-  });
+  //         if (id.messageData.length !== data.length) {
+  //           // new message found
+  //           const newMessage = data[data.length - 1]
+  //           const updatedMessages = [...myMessages];
+  //           const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId)
+  //           if (index !== -1) {
+  //             updatedMessages[index].messageData.push(newMessage);
+  //             console.log(updatedMessages)
+  //             setMyMessages(updatedMessages)
+  //           } else {
+  //             console.log("found id in messages")
+  //           }
+  //         }
+  //       })
+  //     })
+  //   }
+  // }, [myMessages]);
 
 
   // check login status
@@ -100,12 +106,14 @@ const App = () => {
 
         if (adminUser) {
           admin = true;
-          setIsAdmin(true);
           setLoggedInUser(adminUser.public);
 
           // get our messages
           const messageEntries = adminUser.public.messages;
-          if (messageEntries && messageEntries.length > 0) {
+          const hasMessages = (messageEntries && messageEntries.length > 0);
+          const pullMessages = messageEntries.length !== myMessages.length;
+
+          if (hasMessages && pullMessages) {
 
             messageEntries.forEach((messageId) => {
               getMessageData(messageId);
@@ -187,23 +195,32 @@ const App = () => {
           /* curUser.public.messages is an array of ids which point to
           the messages array, which holds all of the message data specifics */
           const messageEntries = curUser.public.messages;
-          if (messageEntries && messageEntries.length > 0) {
 
-            messageEntries.forEach((messageId) => {
-              getMessageData(messageId);
-            })
+          if (messageEntries && messageEntries.length > 0) {
+            const hasMessages = (messageEntries && messageEntries.length > 0);
+            const pullMessages = hasMessages && (messageEntries && messageEntries.length !== myMessages.length);
+            if (hasMessages && pullMessages) {
+
+              messageEntries.forEach((messageId) => {
+                // check to see if this id is already in our messages
+                const foundId = myMessages.some((elem) => elem.messagesId === messageId);
+                if (!foundId) {
+                  getMessageData(messageId);
+                }
+              })
+            }
           }
 
-          // now that we know who is logged in
+
+          // if we logged in a leader, check to see if we have any clients
           if (leader) {
-            // if we logged in a leader, check to see if we have any clients
             if (curUser.public.clients) {
               const clientEntries = curUser.public.clients;
               clientEntries.forEach((clientId) => {
                 getClientData(clientId);
               })
             }
-            setPage(5); // if a leader has logged in, skip to client admin
+            setPage(5); // leader has logged in, skip to client admin
           }
         }
       });
@@ -213,20 +230,9 @@ const App = () => {
 
 
   const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
-
     // push to DB
-    database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages).then(() => {
-      // now update state
-      const updatedMessages = [...myMessages];
-      const index = myMessages.find((elem) => elem.messagesId === activeMessagesID);
-      updatedMessages[index] = updatedCurrentMessages;
-      setMyMessages(updatedMessages)
-      setSelection(null); // no longer an active selection from profile page
-
-    });
+    database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
   }
-
-
 
   const handlePageUpdate = (page) => setPage(page);
 
@@ -323,9 +329,9 @@ const App = () => {
 
   const handleLogOut = () => {
     setLoggedInUser(null);
-    setUserId('');
+    setUserId(null);
     setIsLeader(false);
-    setMyMessages([]);
+    // setMyMessages(null);
     setSelection(null);
     updateSuccess(true, "Logged Out")
   }
@@ -410,6 +416,7 @@ const App = () => {
 
         }
 
+        tempMessages.sort((a, b) => moment(b.lastMessage.date).diff(a.lastMessage.date))
         setMyMessages(tempMessages);
       }
     });

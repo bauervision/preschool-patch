@@ -69,6 +69,13 @@ $LIGHTPINK: rgb(255, 112, 146);
     padding: 30px;
   }
 
+  
+  .PinkBorder {
+    border: solid 1px $PARADISEPINK;
+    border-radius: 20px;
+    padding: 30px;
+  }
+
   .MessageBorder {
     border: solid 1px rgb(255, 138, 132);
     border-radius: 5px;
@@ -204,6 +211,8 @@ $LIGHTPINK: rgb(255, 112, 146);
 
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
+  .MediumFont { font-size: 20pt; }
+
   .LargeFont { font-size: 28pt; }
 
   .SuperFont { font-size: 34pt; }
@@ -288,6 +297,13 @@ $LIGHTPINK: rgb(255, 112, 146);
       height: auto;
       transition: width 1s;
     }
+  }
+
+  .AdminPic{
+    border-radius: 50px;
+      width: 200px;
+      height: auto;
+      transition: width 1s;
   }
 
   .CursiveFont { font-family: "Dancing Script", cursive; }

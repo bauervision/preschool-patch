@@ -17,7 +17,6 @@ export const PublicLanding = ({
   launchToast,
   isLeader,
   myMessages,
-  newMessageAlert,
   userId
 }) => {
   // handle local state
@@ -98,7 +97,6 @@ export const PublicLanding = ({
         handleLogOut={handleLogOut}
         isLeader={isLeader}
         myMessages={myMessages && myMessages}
-        newMessageAlert={newMessageAlert}
         userId={userId}
       />
 

@@ -214,7 +214,7 @@ const App = () => {
 
           // if we logged in a leader, check to see if we have any clients
           if (leader) {
-            if (curUser.public.clients) {
+            if (curUser.public.clients && curUser.public.clients.length > 0) {
               const clientEntries = curUser.public.clients;
               clientEntries.forEach((clientId) => {
                 getClientData(clientId);
@@ -268,6 +268,7 @@ const App = () => {
               features: ["Warm and Inviting", "Fenced in backyard"],
               files: []
             },
+            id: user.uid,
             infants: newUserData.infants,
             isLeader: true,
             kidTotal: 0,
@@ -297,6 +298,8 @@ const App = () => {
           public: {
             aboutMe:
               "I am brand new to Preschool Patch!  I will update my profile ASAP.",
+            enrollment: { submitted: false },
+            id: user.uid,
             isLeader: false,
             children: newUserData.children,
             messages: ["None"],
@@ -488,7 +491,8 @@ const App = () => {
             isLeader={isLeader}
             clientData={clientData}
             myMessages={myMessages && myMessages}
-
+            launchToast={toast}
+            userId={userId}
           />
         );
       case 3:

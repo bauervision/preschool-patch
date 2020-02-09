@@ -44,12 +44,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     }, [currentSelection]);
 
     const [activeMessages, setActiveMessages] = useState(myMessages); // messagesId
-    const [submitEnrollment, setSubmitEnrollment] = useState(loggedInUser.enrollment.submitted || false)
+    const [submitEnrollment, setSubmitEnrollment] = useState((loggedInUser.enrollment && loggedInUser.enrollment.submitted) || false)
     const [activeThreadId, setActiveThreadId] = useState(null); // messagesId
     const [activeThreadName, setActiveThreadName] = useState(null); // fromName or toName
     const [activeThread, setActiveThread] = useState([]); // messageData
     const [newMessage, setNewMessage] = useState('');
     const [sendToNewContact, setSendToNewContact] = useState(false);
+    const [childrenWarning, setChildrenWarning] = useState(false);
 
 
     // handle default threadId
@@ -115,6 +116,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
     // set the active messages data
     useEffect(() => {
+        console.log(sendToNewContact, activeMessages, myMessages)
         // if we want to send a new message to a new contact
         if (sendToNewContact) {
 
@@ -141,7 +143,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
         } else if (activeMessages) {
-
+            console.log(activeThreadId)
             // load up whatever message thread we have selected first
             if (activeThreadId) {
                 const foundActiveThreadId = activeMessages.findIndex((thread) => thread.messagesId === activeThreadId);
@@ -149,8 +151,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     setActiveThreadId(activeMessages[foundActiveThreadId].messagesId);
                     setActiveThread(activeMessages[foundActiveThreadId].messageData);
                     setActiveThreadName(activeMessages[foundActiveThreadId].from === userId ? activeMessages[foundActiveThreadId].toName : activeMessages[foundActiveThreadId].fromName);
-                } else {
-                    // activeId wasn't found?  Really?
                 }
 
             } else {
@@ -169,7 +169,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             }
         }
 
-    }, [sendToNewContact, activeMessages, userId, activeThreadId, currentSelection]);
+    }, [sendToNewContact, activeMessages, userId, activeThreadId, currentSelection, myMessages]);
 
 
     const handleNewMessage = () => {
@@ -209,7 +209,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     updatedCurrentThread.messagesId = sendToDBMessageId;
 
                     // add to the messages array
-                    const updatedMessagesArray = loggedInUser.messages;
+                    const updatedMessagesArray = loggedInUser.messages || [];
                     updatedMessagesArray.push(sendToDBMessageId);
                     database.ref(`users/${userId}/public/messages`).set(updatedMessagesArray);
 
@@ -236,12 +236,12 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 // no prior messages, this is the very first contact
                 // we need a new message thread
                 updatedCurrentThread = defaultMessage;
+                // and a fresh ID
                 sendToDBMessageId = UUID();
                 updatedCurrentThread.messagesId = sendToDBMessageId;
 
                 // handle setting new message array for future contacts
                 database.ref(`users/${userId}/public/messages`).set([sendToDBMessageId]);
-
 
                 // now check the receiptants array
                 database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).once('value', (snap) => {
@@ -292,6 +292,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         if (index !== -1) {
             updateAllMessages[index] = updatedCurrentThread;
             setActiveMessages(updateAllMessages)
+        } else {
+            console.log("index = -1, means that myMessages is emprty and we need state update ")
         }
 
 
@@ -306,7 +308,14 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
     const handleSubmitEnrollment = () => {
-        setSubmitEnrollment(!submitEnrollment);
+
+        if (!loggedInUser.children) {
+            setChildrenWarning(true)
+        } else {
+            setSubmitEnrollment(!submitEnrollment);
+        }
+
+
 
         // now hit DB with updates
 
@@ -328,7 +337,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         const clientData = {
             accepted: false,
             active: false,
-            children: [{}], // TODO map all of the children this user has set in their profile
+            children: loggedInUser.children || [],
             dateSubmitted: now,
             clientId: userId,
             joinedOn: 'NA',
@@ -355,8 +364,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     }
 
     // handle conditional render
-    const showingThread = (sendToNewContact || (activeThread && activeThread.length > 0));
-    const showEnrollmentButton = showingThread && !loggedInUser.enrollment.submitted;
+    const showingThread = !isLeader && ((sendToNewContact || (activeThread && activeThread.length > 0)));
+    const showEnrollmentButton = !isLeader && (showingThread && !loggedInUser.enrollment.submitted);
 
     return (
         <div>
@@ -436,6 +445,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                             {/* Message Data */}
                             <div className="MarginTop PinkBorder" >
                                 <div className="Flex AlignItems">
+
+                                    {/* Enrollment Button */}
                                     {(showingThread && showEnrollmentButton) &&
                                         <button
                                             type="button"
@@ -450,6 +461,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                     <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
                                 </div>
                                 {submitEnrollment && (<div> You will receive an email when she has accepted your enrollment </div>)}
+                                {childrenWarning && (<div className="PinkBorder">
+                                    <div>You need to assign children in your profile first! </div>
+                                    <div>Only add the children you want enrolled, then come back and submit enrollment</div>
+                                </div>)}
 
                                 {showingThread ? (
                                     <>

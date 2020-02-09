@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { EditField, SimpleImage, KidSection, PatchLogo } from "./Components";
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
+import { Toast } from "./Components";
 
 import { f, storage, database } from "./config";
 
@@ -10,7 +11,7 @@ import { Coloring, Kids, Table, Working } from "./images/photos";
 import { Add, Elegant } from './images';
 const galleryImages = [Coloring, Kids, Table, Working];
 
-export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages }) => {
+export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, launchToast, userId }) => {
 
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
   let userData = {};
@@ -43,8 +44,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   }
 
 
-  const [userId, setUserId] = useState(0);
-  const [updatedAboutMe, setAboutMe] = useState(userData.aboutMe || 'Hello!');
+
+  const [updatedAboutMe, setAboutMe] = useState(userData.aboutMe || 'Looking forward to the first day of Preschool Patch!!');
   const [updatedAge, setAge] = useState(userData.age);
   const [updatedAvailable, setAvailable] = useState(userData.available);
   const [updatedExperience, setExperience] = useState(userData.experience);
@@ -55,18 +56,13 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [updatedDIRates, setDIRates] = useState(userData.rates && userData.rates.di);
   const [updatedInfants, setInfants] = useState(userData.infants);
   const [updatedKidTotal, setKidTotal] = useState(userData.kidTotal);
-  const [updatedChildren, setUpdatedChildren] = useState(userData.children);
+  const [updatedChildren, setUpdatedChildren] = useState(userData.children || []);
   const [updatedName, setName] = useState(userData.name);
   const [updatedPhotoUrl, setPhotoUrl] = useState(userData.photoUrl);
   const [updatedPhone, setUpdatedPhone] = useState(userData.phone);
   const [updatedZipcode, setUpdatedZipcode] = useState(userData.zipcode);
 
 
-  /* On Mount, fetch uid */
-  useEffect(() => {
-    const userId = f.auth().currentUser.uid;
-    setUserId(userId);
-  }, []);
 
   const handleDataUpdate = (e) => {
     e.preventDefault();
@@ -98,15 +94,21 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       };
     } else {
       updatedData = {
-        name: updatedName,
-        phoneNumber: updatedPhone,
-        zipcode: updatedZipcode,
+        // be sure to verify that we don't overwrite any values in the DB that we didnt update
+        aboutMe: updatedAboutMe,
         children: updatedChildren,
         photoUrl: updatedPhotoUrl,
+        enrollment: loggedInUser.enrollment,// like this
+        id: userId, // and this
+        isLeader: false,
+        messages: loggedInUser.messages && loggedInUser.messages, // and these
+        name: updatedName,
+        phone: updatedPhone,
+        zipcode: updatedZipcode,
       }
 
     }
-
+    console.log((updatedData))
     // now that we have updated data, push it up to our database
     database
       .ref(`${isLeader ? 'leaders' : 'users'}/${userId}/public`)
@@ -117,6 +119,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       });
   };
 
+  // TODO update gallery images
   const handleGalleryUpdate = (files) => {
     console.log(files)
   }
@@ -182,10 +185,15 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   }
 
   const handleSetChildInterest = (interest, index) => {
-    const kids = [...updatedChildren];
-    const thisKid = kids[index];
-    thisKid.enrollment = interest;
-    kids[index] = thisKid;
+    let kids = [...updatedChildren];
+    // if user selects None, this will remove the child from the list
+    if (interest === 'None') {
+      kids = kids.slice(index)
+    } else if ((interest !== 'Select Service...') && (interest !== 'None')) {
+      const thisKid = kids[index];
+      thisKid.enrollment = interest;
+      kids[index] = thisKid;
+    }
     setUpdatedChildren(kids)
   }
 
@@ -345,6 +353,10 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   <div className="CursiveFont LargeFont Buffer PinkFont">My Children</div>
                   <div className="Flex Col AlignItems JustifyCenter SimpleBorder">
 
+                    <div className="PinkFont">
+                      <div> Assign only the children you want to enroll in classes here. </div>
+                      <div> Be sure to verify that your prospective teacher can accomodate your children. </div>
+                    </div>
 
                     {updatedChildren && updatedChildren.map((kid, index) => (
                       <KidSection
@@ -360,16 +372,26 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                     ))}
 
                     {/* Add new Kid Info */}
-                    {updatedChildren && updatedChildren.length <= 4 ? (
-                      <button id={updatedChildren.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
-                        <div> Add Additonal Child?</div>
-                        <img src={Add} alt="Add new child info" />
-                      </button>
+                    {updatedChildren.length <= 4 ? (
+                      <>
+                        <button id={updatedChildren.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
+                          <div> Add Additonal Child?</div>
+                          <img src={Add} alt="Add new child info" />
+                        </button>
 
+                        {updatedChildren.length > 0 &&
+                          <div >
+                            <div> Set Enrollment Level to None to remove a child from the list </div>
+
+                          </div>
+                        }
+                      </>
                     ) :
                       // Once we hit our kid limit, disable adding more
                       (
-                        <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
+                        <div className="PinkFont">
+                          5 is the max for any single Preschool Patch!
+                        </div>
                       )}
 
 
@@ -415,7 +437,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
 
 
               <div>
-                <div className="CursiveFont LargeFont Buffer PinkFont">About Me</div>
+                <div className="CursiveFont LargeFont Buffer PinkFont">{isLeader ? 'About Me' : 'Important Info about my children'}</div>
                 <EditField
                   isTextArea
                   title=""
@@ -499,6 +521,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       <img src={Elegant} alt="decorative" className="filter-green Margins" />
       <PatchLogo />
       <Footer />
+      <Toast showToast={launchToast.value} message={launchToast.message} />
+
     </div>
   );
 };

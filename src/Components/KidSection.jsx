@@ -92,7 +92,7 @@ const KidSection = ({
                 </div>
 
                 <Select
-                    data={["Full-Time", "Part-Time", "Drop-In"]}
+                    data={["Select Service...", "Full-Time", "Part-Time", "Drop-In", "None"]}
                     name={`Child${location}Interest`}
                     width={130}
                     onChange={setInterest}

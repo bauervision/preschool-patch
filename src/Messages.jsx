@@ -329,7 +329,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             submittedTo: submittedToId,
             submittedToName: activeThreadName
         }
-        // database.ref(`users/${userId}/public/enrollment`).set(enrollment);
+        database.ref(`users/${userId}/public/enrollment`).set(enrollment);
 
         // set our info into the teachers client data
 
@@ -348,9 +348,9 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
         let clientList = [];
         // grab teachers client list, so we can append of create it
-        // database.ref(`leaders/${currentSelection.id}/public/clients`).once('value', (snap) => {
-        //     clientList = snap.val();
-        // });
+        database.ref(`leaders/${submittedToId}/public/clients`).once('value', (snap) => {
+            clientList = snap.val();
+        });
 
         // if we have a list, then we need to append to it
         if (clientList) {
@@ -360,7 +360,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             clientList = [clientData]
         }
 
-        console.log(enrollment, clientList)
+        // finally push the new client to the teacher so they will know about it
+        database.ref(`leaders/${submittedToId}/public/clients`).set(clientList);
     }
 
     // handle conditional render

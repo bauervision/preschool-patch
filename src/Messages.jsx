@@ -92,6 +92,11 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         }
     }, [sendToNewContact, activeMessages, userId, activeThreadId, currentSelection]);
 
+    useEffect(() => {
+        console.log("activeThread has changed", activeThread)
+    }, [activeThread])
+
+
     // handle default thread name
     useEffect(() => {
         if (sendToNewContact) {
@@ -146,9 +151,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
         } else if (activeMessages) {
-
+            console.log("We have activeMessages", activeMessages)
             // load up whatever message thread we have selected first
             if (activeThreadId) {
+
                 const foundActiveThreadId = activeMessages.findIndex((thread) => thread.messagesId === activeThreadId);
                 if (foundActiveThreadId !== -1) {
                     setActiveThreadId(activeMessages[foundActiveThreadId].messagesId);
@@ -382,11 +388,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     }
 
     // handle conditional render
-    const showingThread = !isLeader && ((sendToNewContact || (activeThread && activeThread.length > 0)));
+    const showingThread = sendToNewContact || (activeThread && activeThread.length > 0);
     const showEnrollmentButton = !isLeader && showingThread;
 
-    const showEnrollmentDetails = showEnrollmentButton && (loggedInUser.enrollment.submittedToName === activeThreadName);
-    const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (loggedInUser.enrollment.submittedToName !== activeThreadName);
+    const myTeacher = loggedInUser.enrollment.accepted && (loggedInUser.enrollment.submittedToName === activeThreadName);
+
+    const showEnrollmentDetails = (showEnrollmentButton && !loggedInUser.enrollment.accepted) && (myTeacher);
+    const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (!myTeacher);
 
 
     return (
@@ -406,7 +414,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>All Messages
 
                              <div className="OverFlow LightPinkBorder" >
-                                {(myMessages && myMessages.length > 0 ? (myMessages.map((elem) => {
+                                {(activeMessages && activeMessages.length > 0 ? (activeMessages.map((elem) => {
 
                                     // if the last message isn't from us, then it's from them, so mark it unread
                                     const showAsUnread = elem.lastMessage.author !== userId;
@@ -441,56 +449,72 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                             {/* If we are a leader, show the buttons */}
                             {isLeader && (
-                                <div className="Flex AlignItems GreenFill Padding">
+                                <div className="Flex AlignItems MessageClientHeader Padding">
 
-                                    <div className="CursiveFont LargeFont" >My Clients</div>
+                                    <div className="CursiveFont LargeFont WhiteFont" >My Clients</div>
 
                                     {/* Buttons to switch between clients */}
                                     <div className="Flex AlignItems JustifyCenter">
-                                        {clientData && clientData.map((client) => (
-                                            <div
-                                                className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeThreadId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
-                                                key={client.clientData.name}
-                                                type="button"
-                                                onClick={() => {
-                                                    setActiveThreadId(client.clientId);
-                                                    setActiveThreadName(client.clientData.name)
-                                                }} >
-                                                <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
-                                            </div>
-                                        ))}
+                                        {clientData && clientData.map((client) => {
+
+                                            const message = activeMessages.find((elem) => ((elem.to === client.clientId) || (elem.from === client.clientId)))
+
+                                            return (
+                                                <div
+                                                    className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeThreadId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
+                                                    key={client.clientData.name}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setActiveThreadId(message.messagesId);
+                                                        setActiveThreadName(client.clientData.name)
+                                                    }} >
+                                                    <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
+                                                </div>
+                                            )
+                                        })}
                                     </div>
 
                                 </div>
                             )}
 
                             {/* Message Data */}
-                            <div className="MarginTop PinkBorder" >
-                                <div className="Flex AlignItems">
+                            <div className="MessageFrame" >
+                                <div className="Flex AlignItems Between">
 
-                                    {/* Enrollment Button */}
-                                    {(showingThread && showEnrollmentButton) &&
-                                        <button
-                                            type="button" disabled={disableEnrollment}
-                                            title={`${submitEnrollment ?
-                                                'Revoking Enrollment will remove the request from this teacher' :
-                                                'Submitting Enrollment will notify the teacher that you have selected her!'}`}
-                                            onClick={handleSubmitEnrollment}>
-                                            {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
-                                        </button>
-                                    }
+                                    <div className="Flex AlignItems">
+                                        {/* Enrollment Button */}
+                                        {(showingThread && showEnrollmentButton) &&
+                                            <button
+                                                type="button" disabled={disableEnrollment}
+                                                title={`${submitEnrollment ?
+                                                    'Revoking Enrollment will remove the request from this teacher' :
+                                                    'Submitting Enrollment will notify the teacher that you have selected her!'}`}
+                                                onClick={handleSubmitEnrollment}>
+                                                {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
+                                            </button>
+                                        }
 
-                                    <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
+                                        <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
 
-                                    {disableEnrollment && (<div style={{ marginLeft: 20 }}>
+                                    </div>
+
+                                    {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div style={{ marginLeft: 20 }}>
                                         <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
                                         <div>You can only enroll with one teacher at a time</div>
                                     </div>)}
 
+                                    {myTeacher &&
+                                        <div className="Padding">
+                                            <div>You are actively enrolled with this teacher!</div>
+                                        </div>}
+
+
                                 </div>
 
                                 {/* Handle Warnings for Enrollment */}
-                                {showEnrollmentDetails && (<div> She has been notified of your choice andy you will receive an email when she has accepted your enrollment </div>)}
+                                {showEnrollmentDetails &&
+                                    <div>She has been notified of your choice andy you will receive an email when she has accepted your enrollment</div>}
+
 
                                 {childrenWarning && (<div className="PinkBorder">
                                     <div>You need to assign children in your profile first! </div>

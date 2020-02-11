@@ -99,7 +99,7 @@ export const Header = ({
                 </div>
               )}
 
-              {!isAdmin && <button className='HeaderButton' onClick={() => pageUpdate(5)}>Client Admin</button>}
+              {(!isAdmin && isLeader) && <button className='HeaderButton' onClick={() => pageUpdate(5)}>Client Admin</button>}
 
               {/* If we are logged in, always show logout */}
               <button className='HeaderButton' onClick={LogOut}>Logout</button>

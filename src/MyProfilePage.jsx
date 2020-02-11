@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { EditField, SimpleImage, KidSection, PatchLogo } from "./Components";
 import { Header } from "./Components/Header";

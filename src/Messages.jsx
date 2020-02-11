@@ -26,7 +26,7 @@ const defaultMessage = {
 
 export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates, currentSelection }) => {
 
-    const now = moment().format('MM/DD/YYYY');
+    const now = moment().toDate().getTime();
     // mount setup default message
     useEffect(() => {
         defaultMessage.from = userId;
@@ -44,7 +44,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     }, [currentSelection]);
 
     const [activeMessages, setActiveMessages] = useState(myMessages); // messagesId
-    const [submitEnrollment, setSubmitEnrollment] = useState((loggedInUser.enrollment && loggedInUser.enrollment.submitted) || false)
+    const [submitEnrollment, setSubmitEnrollment] = useState()
     const [activeThreadId, setActiveThreadId] = useState(null); // messagesId
     const [activeThreadName, setActiveThreadName] = useState(null); // fromName or toName
     const [activeThread, setActiveThread] = useState([]); // messageData
@@ -52,6 +52,9 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     const [sendToNewContact, setSendToNewContact] = useState(false);
     const [childrenWarning, setChildrenWarning] = useState(false);
 
+    useEffect(() => {
+        setSubmitEnrollment((loggedInUser.enrollment && loggedInUser.enrollment.submitted) || false)
+    }, [loggedInUser, submitEnrollment])
 
     // handle default threadId
     useEffect(() => {
@@ -116,7 +119,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
     // set the active messages data
     useEffect(() => {
-        console.log(sendToNewContact, activeMessages, myMessages)
+
         // if we want to send a new message to a new contact
         if (sendToNewContact) {
 
@@ -143,7 +146,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
         } else if (activeMessages) {
-            console.log(activeThreadId)
+
             // load up whatever message thread we have selected first
             if (activeThreadId) {
                 const foundActiveThreadId = activeMessages.findIndex((thread) => thread.messagesId === activeThreadId);
@@ -154,17 +157,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 }
 
             } else {
-                // nothing is selected so handle default behavior
-
-                // first check to see if there are any unread messages
+                // nothing is selected so see if there are any unread messages
                 const foundUnreadThreadId = activeMessages.findIndex((thread) => thread.lastMessage.author !== userId);
                 if (foundUnreadThreadId !== -1) {
                     setActiveThreadId(activeMessages[foundUnreadThreadId].messagesId);
                     setActiveThread(activeMessages[foundUnreadThreadId].messageData);
                     setActiveThreadName(activeMessages[foundUnreadThreadId].from === userId ? activeMessages[foundUnreadThreadId].toName : activeMessages[foundUnreadThreadId].fromName);
 
-                } else {
-                    // nothing unread, so display nothing
                 }
             }
         }
@@ -309,31 +308,31 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
     const handleSubmitEnrollment = () => {
 
+        const stateEnrollment = submitEnrollment;
+        // make sure user has children assigned first
         if (!loggedInUser.children) {
             setChildrenWarning(true)
         } else {
             setSubmitEnrollment(!submitEnrollment);
         }
 
-
-
         // now hit DB with updates
-
         const submittedToId = activeMessages[0].fromName === activeThreadName ? activeMessages[0].from : activeMessages[0].to;
 
-        // first setup our enrollment status
-        const enrollment = {
+        // first setup our enrollment status, if we're enrolling versus revoking
+        const enrollment = !stateEnrollment ? {
             accepted: false,
             dateSubmitted: now,
             submitted: true,
             submittedTo: submittedToId,
             submittedToName: activeThreadName
-        }
+        } : { submitted: false };
+
         database.ref(`users/${userId}/public/enrollment`).set(enrollment);
 
         // set our info into the teachers client data
 
-        // first setup our enrollment status
+        // first setup our enrollment status as long the user hasnt revoked it
         const clientData = {
             accepted: false,
             active: false,
@@ -344,34 +343,56 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             submitted: true,
             name: loggedInUser.name,
             photoUrl: loggedInUser.photoUrl
-        }
+        };
 
         let clientList = [];
         // grab teachers client list, so we can append of create it
         database.ref(`leaders/${submittedToId}/public/clients`).once('value', (snap) => {
             clientList = snap.val();
+            // if we have a list, then we need to adjust it
+            if (clientList) {
+                // see if client list current has this client
+                const index = clientList.findIndex((elem) => elem.name === loggedInUser.name);
+
+
+                // we want to enroll
+                if (!stateEnrollment) {
+                    // we didnt find this client already
+                    if (index === -1) {
+                        clientList.push(clientData);
+                    }
+                } else {
+
+                    // we want to revoke enrollment, make sure we've found this client
+                    if (index !== -1) {
+                        clientList.splice(index, 1);
+                    }
+                }
+
+            } else {
+                // otherwise, teacher has no clients yet, we need to set it as an array with its first element
+                clientList = [clientData]
+            }
+
+            // finally push the new client to the teacher so they will know about it
+            database.ref(`leaders/${submittedToId}/public/clients`).set(clientList);
         });
 
-        // if we have a list, then we need to append to it
-        if (clientList) {
-            clientList.push(clientData);
-        } else {
-            // otherwise, we need to set it as an array with its first element
-            clientList = [clientData]
-        }
 
-        // finally push the new client to the teacher so they will know about it
-        database.ref(`leaders/${submittedToId}/public/clients`).set(clientList);
     }
 
     // handle conditional render
     const showingThread = !isLeader && ((sendToNewContact || (activeThread && activeThread.length > 0)));
-    const showEnrollmentButton = !isLeader && (showingThread && !loggedInUser.enrollment.submitted);
+    const showEnrollmentButton = !isLeader && showingThread;
+
+    const showEnrollmentDetails = showEnrollmentButton && (loggedInUser.enrollment.submittedToName === activeThreadName);
+    const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (loggedInUser.enrollment.submittedToName !== activeThreadName);
+
 
     return (
         <div>
             <div>
-                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} isMessages />
+                <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} isLeader={true} isMessages />
 
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Messenger</div>
 
@@ -450,7 +471,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                     {/* Enrollment Button */}
                                     {(showingThread && showEnrollmentButton) &&
                                         <button
-                                            type="button"
+                                            type="button" disabled={disableEnrollment}
                                             title={`${submitEnrollment ?
                                                 'Revoking Enrollment will remove the request from this teacher' :
                                                 'Submitting Enrollment will notify the teacher that you have selected her!'}`}
@@ -460,12 +481,22 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                     }
 
                                     <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
+
+                                    {disableEnrollment && (<div style={{ marginLeft: 20 }}>
+                                        <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
+                                        <div>You can only enroll with one teacher at a time</div>
+                                    </div>)}
+
                                 </div>
-                                {submitEnrollment && (<div> You will receive an email when she has accepted your enrollment </div>)}
+
+                                {/* Handle Warnings for Enrollment */}
+                                {showEnrollmentDetails && (<div> She has been notified of your choice andy you will receive an email when she has accepted your enrollment </div>)}
+
                                 {childrenWarning && (<div className="PinkBorder">
                                     <div>You need to assign children in your profile first! </div>
                                     <div>Only add the children you want enrolled, then come back and submit enrollment</div>
                                 </div>)}
+
 
                                 {showingThread ? (
                                     <>

@@ -1,18 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
-import { Ratings, SimpleTable } from "./Components";
+import { Toast } from "./Components";
+import { Ratings, SimpleTable, DetailViewClient } from "./Components";
 
-import { Logo, Elegant } from "./images";
+import { Corner, Logo, Elegant } from "./images";
 
 
-export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData, myMessages }) => {
+export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection }) => {
+
+    const [clientState, setClientState] = useState();
+    const [clientDataState, setClientDataState] = useState();
+    const [selection, setSelection] = useState(null);
+    const [toast, setToast] = useState(false);
+
     // pull out public data
-    const { rating } = loggedInUser && loggedInUser;
+    const { clients, rating } = loggedInUser && loggedInUser;
+
+    useEffect(() => {
+        if (loggedInUser) {
+            setClientState(clients)
+        }
+
+    }, [clients, loggedInUser]);
+
+    useEffect(() => {
+        if (loggedInUser) {
+            setClientDataState(clientData)
+        }
+
+    }, [clientData, loggedInUser])
 
     // basic header entries
-    const clientHeader = ["Student Name", "Parent Name", "Contact Number", "Enrollment", "Active"];
+    const clientHeader = ["Student Name", "Age", "Parent Name", "Contact Number", "Enrollment", "Active"];
+
+    const handleRowSelection = (memberData) => {
+        const selectedClient = clientDataState.find((elem) => elem.clientData.name === memberData.parent)
+        setSelection(selectedClient);
+    }
+
+    const handleEnrollment = (accepted, updatedClientData, updatedClient) => {
+
+        if (accepted) {
+            // update state
+            setClientDataState(updatedClientData)
+            setClientState(updatedClient);
+            setToast({ value: true, message: 'Congrats! You have a new Client!' });
+            setTimeout(() => setToast({ value: false, message: '' }), 3000);
+        } else {
+            setClientDataState(updatedClientData)
+            setClientState(updatedClient);
+            setToast({ value: true, message: 'Please email a reason to the parent' });
+            setTimeout(() => setToast({ value: false, message: '' }), 4000);
+        }
+
+    }
+
+    const handleSelection = (memberData) => {
+        // Pass current selection up to parent in order to render profile page
+        handleMemberSelection(memberData);
+    };
 
     return (
         <div>
@@ -30,7 +78,6 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData, myMessages }
                     }}
                 >
 
-
                     {/* My Clients */}
                     <div className="Flex Col Buffer MarginTop">
                         <div>
@@ -38,18 +85,45 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData, myMessages }
                             <Ratings rating={rating} />
                         </div>
 
-                        <div className="MarginTop">
-                            {/* Client Table Data */}
-                            {clientData.length > 0 ? (
-                                <SimpleTable data={clientData} headerData={clientHeader} />
-                            ) : (
-                                    <div className="SimpleBorder">
-                                        <div className="PinkFont CursiveFont LargeFont">Sorry, no clients yet!</div>
-                                        <p>{"As soon as a parent selects you as their child's teacher, you will see them show up here."}</p>
-                                    </div>
-                                )}
 
-                        </div>
+                        {loadingClients ? (
+                            <div className="Flex Col JustifyCenter AlignItems">
+                                <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
+                            </div>
+                        ) : (
+                                <>
+                                    <div className="MarginTop">
+                                        {/* Client Table Data */}
+                                        {clientDataState && clientDataState.length > 0 ? (
+                                            <SimpleTable data={clientDataState} headerData={clientHeader} handleSelection={handleRowSelection} />
+                                        ) : (
+                                                <div className="SimpleBorder MarginBottom">
+                                                    <div className="PinkFont CursiveFont LargeFont">Sorry, no clients yet!</div>
+                                                    <p>{"As soon as a parent selects you as their child's teacher, you will see them show up here."}</p>
+                                                </div>
+                                            )}
+
+                                    </div>
+
+                                    {clientState.length > 0 && (
+                                        <div className="Flex JustifyCenter PinkBorder MarginTop">
+                                            {selection ? (
+                                                <DetailViewClient
+                                                    enrollmentData={clientState}
+                                                    selection={selection}
+                                                    handleEnrollment={handleEnrollment}
+                                                    handleSelection={handleSelection}
+                                                    pageUpdate={pageUpdate} />
+                                            ) : (
+                                                    <div>Make a selection from the table to view specific details about the client</div>
+                                                )}
+
+                                        </div>
+                                    )}
+
+                                </>
+                            )}
+
 
 
 
@@ -68,6 +142,8 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, clientData, myMessages }
             </div>
 
             <Footer />
+
+            <Toast showToast={toast.value} message={toast.message} />
         </div>
     );
 };

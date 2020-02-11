@@ -327,6 +327,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   .Margins{ margin: 50px; }
 
   .MarginTop{ margin-top: 50px; }
+  .MarginBottom{ margin-bottom: 50px; }
 
   .Padding{ padding: 20px; }
 
@@ -659,6 +660,9 @@ $LIGHTPINK: rgb(255, 112, 146);
     &:hover {
       background-color: $MALACHITE;
       transform: scale(1.05);
+    }
+    &:disabled{
+      background-color: rgba(115, 119, 115, 0.4);
     }
   }
 

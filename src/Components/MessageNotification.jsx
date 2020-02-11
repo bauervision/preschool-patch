@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment"
 import { Corner } from "../images";
 const MessageNotification = ({ name, url, lastMessage, activeId, switchMessage, showAsUnread }) => (
 
@@ -6,7 +7,7 @@ const MessageNotification = ({ name, url, lastMessage, activeId, switchMessage, 
         <img src={url} alt="profilePic" />
         <div className="Flex Col" style={{ width: '80%' }}>
             <div className='Col CursiveFont ' style={{ fontSize: 24 }}>{name}</div>
-            <p>{lastMessage.date}</p>
+            <p>{moment(lastMessage.date).fromNow()}</p>
         </div>
 
         <div className="Flex Col" >

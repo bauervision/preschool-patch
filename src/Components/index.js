@@ -14,3 +14,4 @@ export { default as Select } from "./Select";
 export { default as SingleMessage } from "./SingleMessage";
 export { default as MessageNotification } from "./MessageNotification";
 export { default as DetailViewAdmin } from "./DetailViewAdmin";
+export { default as DetailViewClient } from "./DetailViewClient";

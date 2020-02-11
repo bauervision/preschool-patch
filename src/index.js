@@ -31,7 +31,7 @@ const App = () => {
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
   const [myMessages, setMyMessages] = useState([]);
-
+  const [loadingClients, setLoadingClients] = useState(true);
   /* On Mount, fetch data, check login */
   useEffect(() => {
     handleLoginCheck();
@@ -44,33 +44,22 @@ const App = () => {
     getLeaderData();
   }, [isLeader]);
 
-
-  // call on mount
-  // useEffect(() => {
-  //   console.log("index myMessages has changed", myMessages)
-  //   if (myMessages) {
-  //     myMessages.forEach((id) => {
-  //       database.ref(`messages/${id.messagesId}/messageData`).on('child_added', (snap) => {
-  //         const data = snap.val();
-
-  //         if (id.messageData.length !== data.length) {
-  //           // new message found
-  //           const newMessage = data[data.length - 1]
-  //           const updatedMessages = [...myMessages];
-  //           const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId)
-  //           if (index !== -1) {
-  //             updatedMessages[index].messageData.push(newMessage);
-  //             console.log(updatedMessages)
-  //             setMyMessages(updatedMessages)
-  //           } else {
-  //             console.log("found id in messages")
-  //           }
-  //         }
-  //       })
-  //     })
-  //   }
-  // }, [myMessages]);
-
+  /* Handle Loading Client Data */
+  useEffect(() => {
+    if (loggedInUser) {
+      // if we have clients
+      if (loggedInUser.clients) {
+        // once state matches DB
+        if (clientData.length === loggedInUser.clients.length) {
+          // turn off the loader
+          setLoadingClients(false)
+        }
+      } else {
+        // we dont have any clients, so turn off the loader
+        setLoadingClients(false)
+      }
+    }
+  }, [clientData.length, isLeader, loggedInUser]);
 
   // check login status
   const handleLoginCheck = () => {
@@ -216,8 +205,8 @@ const App = () => {
           if (leader) {
             if (curUser.public.clients && curUser.public.clients.length > 0) {
               const clientEntries = curUser.public.clients;
-              clientEntries.forEach((clientId) => {
-                getClientData(clientId);
+              clientEntries.forEach((client) => {
+                getClientData(client.clientId);
               })
             }
             setPage(5); // leader has logged in, skip to client admin
@@ -250,7 +239,6 @@ const App = () => {
       if (isLeader) {
         newUser = {
           private: {
-            email: newUserData.email,
             joined: user.metadata.creationTime,
             lastLogin: user.metadata.lastSignInTime
           },
@@ -260,6 +248,7 @@ const App = () => {
             age: newUserData.age,
             assisted: false,
             available: true,
+            email: newUserData.email,
             bgCheckWilling: newUserData.backgroundCheck,
             bgCheckComplete: false,
             experience: newUserData.experience,
@@ -291,13 +280,11 @@ const App = () => {
       } else {
         newUser = {
           private: {
-            email: newUserData.email,
             joined: user.metadata.creationTime,
             lastLogin: user.metadata.lastSignInTime
           },
           public: {
-            aboutMe:
-              "I am brand new to Preschool Patch!  I will update my profile ASAP.",
+            email: newUserData.email,
             enrollment: { submitted: false },
             id: user.uid,
             isLeader: false,
@@ -325,6 +312,9 @@ const App = () => {
 
     } else {
       // we logged in existing
+
+      // TODO: update lastLogin data
+
       handleLoginCheck();
     }
 
@@ -386,6 +376,7 @@ const App = () => {
         // as long as we havent already added them, add them
         if (!found) {
           tempClients.push(newClient)
+          console.log("clientData", tempClients)
           setClientData(tempClients);
         }
       }
@@ -479,6 +470,8 @@ const App = () => {
             myMessages={myMessages && myMessages}
             isLeader={isLeader}
             handleMessageUpdates={handleMessageUpdates}
+            loadingClients={loadingClients}
+            handleMemberSelection={handleMemberSelection}
           />
         );
       case 4:

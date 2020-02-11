@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Checked, Unchecked } from "../images"
 
-const SimpleTable = ({ data, headerData }) => {
+const SimpleTable = ({ data, headerData, handleSelection }) => {
 
     const [childData, setChildData] = useState([]);
 
@@ -14,23 +14,27 @@ const SimpleTable = ({ data, headerData }) => {
     const setNewEntries = () => {
         let childData = [];
         if (data) {
-            console.log(data)
+
             // for each parent in client data...
             data.forEach((parent) => {
 
                 // loop through each child and create a new entry
-                parent.clientData.children.forEach((child) => {
-                    const newEntry = {
-                        name: child.name,
-                        parent: parent.clientData.name,
-                        phone: parent.clientData.phone,
-                        enrollment: child.enrollment,
-                        active: child.status
-                    };
-                    // push this child onto array
-                    childData.push(newEntry);
+                if (parent.clientData.children && parent.clientData.children.length > 0) {
+                    parent.clientData.children.forEach((child) => {
+                        const newEntry = {
+                            name: child.name,
+                            age: child.age,
+                            parent: parent.clientData.name,
+                            phone: parent.clientData.phone,
+                            enrollment: child.enrollment,
+                            active: parent.clientData.enrollment.accepted
+                        };
+                        // push this child onto array
+                        childData.push(newEntry);
 
-                })
+                    })
+                }
+
 
             });
 
@@ -60,10 +64,11 @@ const SimpleTable = ({ data, headerData }) => {
 
 
                 {childData && childData.map((value, index) => (
-                    <tr key={value.name + index} >
+                    <tr key={value.name + index} onClick={() => handleSelection(value)}>
 
                         {/* Now grab the data elements for each column */}
                         {Object.keys(value).map(function (key) {
+
                             return (
 
                                 <td key={key} >
@@ -74,19 +79,7 @@ const SimpleTable = ({ data, headerData }) => {
                                             <img src={value[key] === true ? Checked : Unchecked} alt="checkbox" />
 
                                         </div>
-                                    ) : (
-                                            <>
-                                                {key === 'parent' ? (
-                                                    <div className="Tooltip">
-                                                        <span className="TT_Text">Message Parent</span>
-                                                        <button>{value[key]}</button>
-                                                    </div>
-                                                ) : (
-                                                        value[key]
-                                                    )}
-                                            </>
-
-                                        )}
+                                    ) : (value[key])}
 
                                 </td>
 

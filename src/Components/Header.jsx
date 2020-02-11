@@ -80,57 +80,29 @@ export const Header = ({
                 </div>
               )}
 
+              {/* Not on the Messages page */}
               {!isMessages && (
-                <>
-                  <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
-                    <img className={`${newMessageAlert ? 'filter-pink' : ' filter-darkgreen'}`} src={MessageIcon} alt="message icon" style={{ width: 30, height: 'auto' }} />
-                  </button>
-                  {" | "}
-                </>
+                <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
+                  <img className={`${newMessageAlert ? 'filter-pink' : ' filter-darkgreen'}`} src={MessageIcon} alt="message icon" style={{ width: 30, height: 'auto' }} />
+                </button>
               )}
 
 
-              {/* If we are on MyProfile page, we need to show button to go to client admin */}
+              {/* Not on MyProfile page */}
               {!myProfile && (
-                <>
-                  <div style={{ color: 'white' }}>{isLeader && ("Patch Leader")}
-                  </div>
-
-
-
-                  <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-                    {loggedInUser && loggedInUser.name}
-                  </button>
-                </>
-
+                <div
+                  className="SocialMessageBtn Flex AlignItems JustifyCenter"
+                  key={loggedInUser && loggedInUser.name}
+                  type="button"
+                  onClick={() => pageUpdate(4)} >
+                  <img style={{ width: 50, borderRadius: 50 }} src={loggedInUser && loggedInUser.photoUrl} alt='client pic' />
+                </div>
               )}
 
-              {(isLeader && !isAdmin) && (
-                <div>
-                  {isAdmin ? (
-                    <button className='HeaderButton' onClick={() => pageUpdate(4)}>
-                      {loggedInUser && loggedInUser.name}
-                    </button>
-                  ) : (
-                      <button className='HeaderButton' onClick={() => pageUpdate(5)}>
-                        Client Admin
-                      </button>
-                    )
-                  }
-
-                </div>
-              )
-              }
+              {!isAdmin && <button className='HeaderButton' onClick={() => pageUpdate(5)}>Client Admin</button>}
 
               {/* If we are logged in, always show logout */}
-              <div>
-                <button className='HeaderButton' onClick={LogOut}>Logout</button>
-              </div>
-
-
-
-
-
+              <button className='HeaderButton' onClick={LogOut}>Logout</button>
 
             </>
           )}

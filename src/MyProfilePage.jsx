@@ -101,7 +101,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         enrollment: loggedInUser.enrollment,// like this
         id: userId, // and this
         isLeader: false,
-        messages: loggedInUser.messages && loggedInUser.messages, // and these
+        messages: loggedInUser?.messages, // and these
         name: updatedName,
         phone: updatedPhone,
         zipcode: updatedZipcode,
@@ -188,12 +188,14 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
     let kids = [...updatedChildren];
     // if user selects None, this will remove the child from the list
     if (interest === 'None') {
-      kids = kids.slice(index)
+      kids.splice(index, 1)
     } else if ((interest !== 'Select Service...') && (interest !== 'None')) {
       const thisKid = kids[index];
       thisKid.enrollment = interest;
       kids[index] = thisKid;
     }
+
+    console.log(kids)
     setUpdatedChildren(kids)
   }
 
@@ -207,6 +209,14 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
     }
   }
 
+
+  /* handle conditional rendering */
+
+  const enrolledKids = loggedInUser.enrollment?.accepted;
+  // in case user removed a child by mistake, we'll show the undo
+  const removedChild = enrolledKids && (userData.children.length !== updatedChildren.length);
+  // if the user has removed all of their previously enrolled children
+  const removeEnrollment = enrolledKids && (updatedChildren.length === 0);
 
   return (
     <div>
@@ -353,12 +363,14 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   <div className="CursiveFont LargeFont Buffer PinkFont">My Children</div>
                   <div className="Flex Col AlignItems JustifyCenter SimpleBorder">
 
-                    <div className="PinkFont">
+                    <div className="PinkFont MarginBottom">
                       <div> Assign only the children you want to enroll in classes here. </div>
                       <div> Be sure to verify that your prospective teacher can accomodate your children. </div>
                     </div>
 
-                    {updatedChildren && updatedChildren.map((kid, index) => (
+                    {/* Render out the kids */}
+                    {updatedChildren?.map((kid, index) => (
+                      // User still has children enrolled
                       <KidSection
                         key={kid.name + index.toString()}
                         location={index}
@@ -370,6 +382,26 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                         handleSetChildInterest={handleSetChildInterest}
                       />
                     ))}
+
+                    {removedChild && (
+                      <div className={`Flex Col ${removeEnrollment && 'PinkBorder MarginTop'}`}>
+                        {removeEnrollment && (
+                          <>
+                            <span className="PinkFont MediumFont">You have removed all enrolled children</span>
+                            <span><strong>{`This will effectively delete your current enrollment with ${loggedInUser.enrollment.submittedToName}. `}</strong></span>
+                            <span>If you change your mind later, you will have to re-submit your enrollment request.</span>
+                          </>
+
+                        )}
+
+                        {removedChild && (
+                          <button title='Return your children to their previous state' type="button" onClick={() => setUpdatedChildren(loggedInUser.children)}>Restore</button>
+
+                        )}
+                      </div>
+                    )}
+
+
 
                     {/* Add new Kid Info */}
                     {updatedChildren.length <= 4 ? (
@@ -398,9 +430,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   </div>
                 </div>
               )}
-
-
-
 
               {/* Rates */}
               {isLeader && (
@@ -434,8 +463,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   </div>
                 </div>)}
 
-
-
               <div>
                 <div className="CursiveFont LargeFont Buffer PinkFont">{isLeader ? 'About Me' : 'Important Info about my children'}</div>
                 <EditField
@@ -449,6 +476,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                 />
               </div>
 
+              {/* Update Photo Gallery */}
               {isLeader && (
                 <div>
                   <div className="CursiveFont LargeFont Buffer PinkFont">Home Gallery</div>
@@ -472,8 +500,9 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   />
                 </div>)}
 
+              {/* Photo Gallery */}
               {isLeader && (<>
-                {/* Photo Gallery */}
+
                 <div className="SimpleBorder Buffer WhiteFill">
                   {galleryImages.map((elem, index) => (
                     <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />

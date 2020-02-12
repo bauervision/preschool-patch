@@ -6,12 +6,12 @@ import { Toast } from "./Components";
 import { Ratings, SimpleTable, DetailViewClient } from "./Components";
 
 import { Corner, Logo, Elegant } from "./images";
-
+import { database } from "./config";
 
 export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection }) => {
 
-    const [clientState, setClientState] = useState();
-    const [clientDataState, setClientDataState] = useState();
+    const [clientState, setClientState] = useState([]);
+    const [clientDataState, setClientDataState] = useState([]);
     const [selection, setSelection] = useState(null);
     const [toast, setToast] = useState(false);
 
@@ -20,7 +20,21 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
     useEffect(() => {
         if (loggedInUser) {
-            setClientState(clients)
+
+            let updatedClients = [...clients];
+            // check to make sure that we have an update list of children for each client
+            updatedClients.forEach((client) => {
+                // now check the receiptants array
+                database.ref(`users/${client.clientId}/public/children`).once('value', (snap) => {
+                    const data = snap.val();
+                    if (client.children.length !== data.length) {
+                        // if children has updated
+                        console.log("Children has updated")
+                        client.children = data;
+                    }
+                })
+            })
+            setClientState(updatedClients)
         }
 
     }, [clients, loggedInUser]);
@@ -94,7 +108,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                                 <>
                                     <div className="MarginTop">
                                         {/* Client Table Data */}
-                                        {clientDataState && clientDataState.length > 0 ? (
+                                        {(clientDataState?.length > 0) ? (
                                             <SimpleTable data={clientDataState} headerData={clientHeader} handleSelection={handleRowSelection} />
                                         ) : (
                                                 <div className="SimpleBorder MarginBottom">

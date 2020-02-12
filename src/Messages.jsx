@@ -49,17 +49,17 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     const [activeThreadName, setActiveThreadName] = useState(null); // fromName or toName
     const [activeThread, setActiveThread] = useState([]); // messageData
     const [newMessage, setNewMessage] = useState('');
-    const [sendToNewContact, setSendToNewContact] = useState(false);
+    const [sendToSelectedContact, setSendToSelectedContact] = useState(false);
     const [childrenWarning, setChildrenWarning] = useState(false);
 
     useEffect(() => {
-        setSubmitEnrollment((loggedInUser.enrollment && loggedInUser.enrollment.submitted) || false)
+        setSubmitEnrollment((loggedInUser.enrollment?.submitted) || false)
     }, [loggedInUser, submitEnrollment])
 
     // handle default threadId
     useEffect(() => {
         // if we have a currentSelection, then we came from Profile page
-        if (sendToNewContact) {
+        if (sendToSelectedContact) {
             // use default message if we have no prior messages
             if (!activeMessages) {
                 setActiveThreadId(defaultMessage.messagesId)
@@ -72,25 +72,23 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     // we didnt find an unread message, so load nothing and let the user select one
                     setActiveThreadId(null);
                 }
-
             }
-
-
         } else {
             // we arent selected on a new contact to message, so load up the first unread message
-            if (activeMessages) {
-                const foundUnread = activeMessages.findIndex((elem) => elem.lastMessage.author !== userId);
-                if (foundUnread !== -1) {
-                    setActiveThreadId(activeMessages[foundUnread].messagesId);
-                } else {
-                    // we didnt find an unread message, so load nothing and let the user select one
-                    setActiveThreadId(null);
-                }
+
+            const foundUnread = activeMessages?.findIndex((elem) => elem.lastMessage.author !== userId);
+            if (foundUnread !== -1) {
+                console.log("Found unread")
+                setActiveThreadId(activeMessages[foundUnread].messagesId);
+            } else {
+                console.log("No unread")
+                // we didnt find an unread message, so load nothing and let the user select one
+                setActiveThreadId(null);
             }
 
 
         }
-    }, [sendToNewContact, activeMessages, userId, activeThreadId, currentSelection]);
+    }, [sendToSelectedContact, activeMessages, userId, activeThreadId, currentSelection]);
 
     useEffect(() => {
         console.log("activeThread has changed", activeThread)
@@ -99,7 +97,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
     // handle default thread name
     useEffect(() => {
-        if (sendToNewContact) {
+        if (sendToSelectedContact) {
             setActiveThreadName(currentSelection.name);
         } else {
             // we arent selected on a new contact to message, so load up the first unread message
@@ -115,22 +113,25 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 }
             }
         }
-    }, [currentSelection, activeMessages, sendToNewContact, userId])
+    }, [currentSelection, activeMessages, sendToSelectedContact, userId])
 
     // check to see if we are trying to connect with someone from their profile page
     useEffect(() => {
-        setSendToNewContact(currentSelection && currentSelection.id !== 'none');
+        setSendToSelectedContact(currentSelection?.id !== 'none');
     }, [currentSelection])
 
     // set the active messages data
     useEffect(() => {
-
+        console.log("sendToSelectedContact", sendToSelectedContact)
         // if we want to send a new message to a new contact
-        if (sendToNewContact) {
-
+        if (sendToSelectedContact) {
+            console.log("activeMessages", activeMessages)
             if (activeMessages) {
+
                 // next check to see if that user has messages already
-                const foundSelectionThreadId = activeMessages.findIndex((thread) => (thread.from === currentSelection.id) || (thread.to === currentSelection.id));
+                const foundSelectionThreadId = activeMessages.findIndex((thread) => ((thread.from === currentSelection.clientId) || (thread.to === currentSelection.clientId)));
+
+                console.log("foundSelectionThreadId", foundSelectionThreadId, currentSelection)
                 if (foundSelectionThreadId !== -1) {
                     // we've found the current selection in activeMessages
                     setActiveThreadId(activeMessages[foundSelectionThreadId].messagesId);
@@ -174,7 +175,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             }
         }
 
-    }, [sendToNewContact, activeMessages, userId, activeThreadId, currentSelection, myMessages]);
+    }, [sendToSelectedContact, activeMessages, userId, activeThreadId, currentSelection, myMessages]);
 
 
     const handleNewMessage = () => {
@@ -202,7 +203,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // this is used for sending to the DB only
         let sendToDBMessageId = '';
 
-        if (sendToNewContact) {
+        if (sendToSelectedContact) {
 
             // do we have prior messages?
             if (activeMessages) {
@@ -235,7 +236,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                 } else {
                     // found in activeMessages: this is a contact we selected on from profile page and wanted to re-contact
-                    sendToDBMessageId = activeMessages && activeMessages[foundNewCntact].messagesId; //  just use the id we have
+                    sendToDBMessageId = activeMessages[foundNewCntact]?.messagesId; //  just use the id we have
                 }
             } else {
                 // no prior messages, this is the very first contact
@@ -284,7 +285,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // push to DB
         handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
         // since we've sent a message, this thread is no longer a new contact
-        setSendToNewContact(false);
+        setSendToSelectedContact(false);
         setNewMessage('') // clear out the text box
 
         // finally handle local state update of messages!
@@ -292,7 +293,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
         const updateAllMessages = myMessages && [...myMessages];
 
-        const index = updateAllMessages && updateAllMessages.findIndex((elem) => elem.messagesId === sendToDBMessageId);
+        const index = updateAllMessages?.findIndex((elem) => elem.messagesId === sendToDBMessageId);
 
         if (index !== -1) {
             updateAllMessages[index] = updatedCurrentThread;
@@ -308,7 +309,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         setActiveThreadId(newId);
         setActiveThreadName(newName);
         // if we've clicked on a previous message, obv we no longer are sending to a new contact
-        setSendToNewContact(false);
+        setSendToSelectedContact(false);
     }
 
 
@@ -388,10 +389,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     }
 
     // handle conditional render
-    const showingThread = sendToNewContact || (activeThread && activeThread.length > 0);
+    const showingThread = sendToSelectedContact || (activeThread?.length > 0);
     const showEnrollmentButton = !isLeader && showingThread;
 
-    const myTeacher = loggedInUser.enrollment.accepted && (loggedInUser.enrollment.submittedToName === activeThreadName);
+    const myTeacher = !isLeader && (loggedInUser.enrollment.accepted && (loggedInUser.enrollment.submittedToName === activeThreadName));
 
     const showEnrollmentDetails = (showEnrollmentButton && !loggedInUser.enrollment.accepted) && (myTeacher);
     const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (!myTeacher);
@@ -400,7 +401,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     return (
         <div>
             <div>
-                <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} isLeader={true} isMessages />
+                <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} isLeader={isLeader} isMessages />
 
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Messenger</div>
 
@@ -414,7 +415,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>All Messages
 
                              <div className="OverFlow LightPinkBorder" >
-                                {(activeMessages && activeMessages.length > 0 ? (activeMessages.map((elem) => {
+                                {(activeMessages?.length > 0 ? (activeMessages.map((elem) => {
 
                                     // if the last message isn't from us, then it's from them, so mark it unread
                                     const showAsUnread = elem.lastMessage.author !== userId;
@@ -455,7 +456,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                                     {/* Buttons to switch between clients */}
                                     <div className="Flex AlignItems JustifyCenter">
-                                        {clientData && clientData.map((client) => {
+                                        {clientData?.map((client) => {
 
                                             const message = activeMessages.find((elem) => ((elem.to === client.clientId) || (elem.from === client.clientId)))
 
@@ -498,15 +499,20 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                                     </div>
 
-                                    {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div style={{ marginLeft: 20 }}>
-                                        <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
-                                        <div>You can only enroll with one teacher at a time</div>
-                                    </div>)}
+                                    {!isLeader && (
+                                        <>
+                                            {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div style={{ marginLeft: 20 }}>
+                                                <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
+                                                <div>You can only enroll with one teacher at a time</div>
+                                            </div>)}
 
-                                    {myTeacher &&
-                                        <div className="Padding">
-                                            <div>You are actively enrolled with this teacher!</div>
-                                        </div>}
+                                            {myTeacher &&
+                                                <div className="Padding">
+                                                    <div>You are actively enrolled with this teacher!</div>
+                                                </div>}
+                                        </>
+                                    )}
+
 
 
                                 </div>

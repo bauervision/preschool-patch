@@ -23,8 +23,9 @@ const KidSection = ({
         handleSetChildAge(kidAge, location)
     }
 
-    const handleInterest = () => {
-        handleSetChildInterest(kidInterest, location)
+    const handleInterest = (value) => {
+        setInterest(value)
+        handleSetChildInterest(value, location)
     }
 
     return (
@@ -95,8 +96,7 @@ const KidSection = ({
                     data={["Select Service...", "Full-Time", "Part-Time", "Drop-In", "None"]}
                     name={`Child${location}Interest`}
                     width={130}
-                    onChange={setInterest}
-                    onBlur={handleInterest}
+                    onChange={handleInterest}
                     value={kidInterest}
                 />
 

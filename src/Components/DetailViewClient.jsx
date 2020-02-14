@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from 'moment';
 import { database } from "../config";
 import { Checked, Unchecked } from "../images";
 
 const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleSelection, pageUpdate }) => {
 
+    const [unEnrolling, setUnEnrolling] = useState(false);
     const { clientData: { children, enrollment, email, phone, photoUrl, name, zipcode } } = selection;
 
 
@@ -14,9 +15,14 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
         const userId = selection.clientId;
         const leaderId = enrollment.submittedTo;
 
+        // find this particular client
+        const updateClientData = [...enrollmentData];
+
+        let enrollmentUser = {};
+
         if (accepted) {
             // setup new enrollment value for the user
-            const acceptedEnrollmentUser = {
+            enrollmentUser = {
                 accepted: true, // <-
                 dateAccepted: rightNow,// <-
                 dateSubmitted: enrollment.dateSubmitted,
@@ -26,10 +32,8 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
             }
 
             // push to user's DB
-            database.ref(`users/${userId}/public/enrollment`).set(acceptedEnrollmentUser);
+            database.ref(`users/${userId}/public/enrollment`).set(enrollmentUser);
 
-            // find this particular client
-            const updateClientData = [...enrollmentData];
             const index = updateClientData.findIndex((elem) => elem.clientId === selection.clientId)
 
             // now setup and update our DB
@@ -50,22 +54,42 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
             // finally push the new client to the teacher so they will know about it
             database.ref(`leaders/${leaderId}/public/clients`).set(updateClientData);
 
-            // now pass up to parent for updating state and displaying the toast
-            const updatedSelection = selection;
-            updatedSelection.enrollment = acceptedEnrollmentUser;
-
-            handleEnrollment(true, updateClientData, updatedSelection);
         } else {
             // we have rejected the enrollment
+            // reset users enrollment status
+            enrollmentUser = { submitted: false };
+            database.ref(`users/${userId}/public/enrollment`).set(enrollmentUser);
 
-            handleEnrollment(false);
+            // find this particular client
+            const updateClientData = [...enrollmentData];
+            const index = updateClientData.findIndex((elem) => elem.clientId === selection.clientId)
+            // remove them permanently
+            updateClientData.splice(index, 1);
         }
+
+        // now pass up to parent for updating state and displaying the toast
+        const updatedSelection = selection;
+        updatedSelection.enrollment = enrollmentUser;
+        handleEnrollment(accepted, updateClientData, updatedSelection);
 
     }
 
     // we want to dis-enroll the parent and the children
     const handleRemoval = () => {
-        console.log("Unenroll ", selection)
+        const userId = selection.clientId;
+        const leaderId = enrollment.submittedTo;
+
+        // reset users enrollment status
+        database.ref(`users/${userId}/public/enrollment`).set({ submitted: false });
+
+        // now find this client in our data, and remove them
+        const updateClientData = [...enrollmentData];
+        const index = updateClientData.findIndex((elem) => elem.clientId === selection.clientId)
+        updateClientData.splice(index, 1);
+
+        // finally push the new client to the teacher so they will know about it
+        database.ref(`leaders/${leaderId}/public/clients`).set(updateClientData);
+
     }
 
     const messageClient = () => {
@@ -77,7 +101,7 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
         <div className="Flex Col">
 
             {/* Profile Pic and core data */}
-            <div className="Flex  AlignItems">
+            <div className="Flex JustifyCenter AlignItems">
                 {/* Profile Pic */}
                 <div className="Flex Col JustifyCenter AlignItems Buffer ">
                     <img alt="profile pic" className="AdminPic" src={photoUrl} />
@@ -146,13 +170,31 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
                 {/* Once enrolled, we may want to remove the enrollment */}
                 {enrollment.accepted && (
                     <button
+                        className={`${unEnrolling && 'PinkBorder'}`}
                         title="Remove the enrollment for this parent."
                         type="button"
-                        onClick={handleRemoval}>
-                        Remove Enrollment
+                        onClick={() => setUnEnrolling(!unEnrolling)}>
+                        {`${!unEnrolling ? 'Remove Enrollment' : 'Cancel'}`}
                     </button>
                 )}
             </div>
+
+            {unEnrolling && (
+                <div className="Flex Col JustifyCenter AlignItems">
+                    <span>Unenrolling this parent will completely remove their account from your record.</span>
+                    <span>To re-enroll, the parent will have to re-submit another enrollment request to you.</span>
+                    <span>Please be sure you want to do this.</span>
+
+                    <button
+                        className="HalfSize"
+                        title="Confirm unenrollment for this parent."
+                        type="button"
+                        onClick={handleRemoval}>
+                        I understand, Remove
+                    </button>
+                </div>
+
+            )}
 
         </div >
     );

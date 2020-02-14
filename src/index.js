@@ -19,18 +19,18 @@ import moment from 'moment';
 
 const App = () => {
 
-  const [patchData, setPatchData] = useState([]); // all user data for admin
+  const [patchData, setPatchData] = useState(null); // all user data for admin
   const [currentPage, setPage] = useState(0);
-  const [leaderData, setLeaderData] = useState({});// raw data from DB
-  const [clientData, setClientData] = useState([]);// raw data from DB
-  const [selection, setSelection] = useState({ id: 'none' }); // whose profile are we viewing?
+  const [leaderData, setLeaderData] = useState([]);// raw data from DB
+  const [clientData, setClientData] = useState(null);// raw data from DB
+  const [selection, setSelection] = useState(null); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
   const [userId, setUserId] = useState("");
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
-  const [myMessages, setMyMessages] = useState([]);
+  const [myMessages, setMyMessages] = useState(null);
   const [loadingClients, setLoadingClients] = useState(true);
   /* On Mount, fetch data, check login */
   useEffect(() => {
@@ -50,7 +50,7 @@ const App = () => {
       // if we have clients
       if (loggedInUser.clients) {
         // once state matches DB
-        if (clientData.length === loggedInUser.clients.length) {
+        if (clientData?.length === loggedInUser.clients.length) {
           // turn off the loader
           setLoadingClients(false)
         }
@@ -59,7 +59,7 @@ const App = () => {
         setLoadingClients(false)
       }
     }
-  }, [clientData.length, isLeader, loggedInUser]);
+  }, [clientData, isLeader, loggedInUser]);
 
   // check login status
   const handleLoginCheck = () => {
@@ -185,14 +185,14 @@ const App = () => {
           the messages array, which holds all of the message data specifics */
           const messageEntries = curUser.public.messages;
 
-          if (messageEntries && messageEntries.length > 0) {
-            const hasMessages = (messageEntries && messageEntries.length > 0);
-            const pullMessages = hasMessages && (messageEntries && messageEntries.length !== myMessages.length);
-            if (hasMessages && pullMessages) {
+          if (messageEntries?.length > 0) {
+            const hasMessageEntries = (messageEntries?.length > 0);
 
+            const pullMessages = hasMessageEntries && ((messageEntries?.length !== myMessages?.length) || !myMessages);
+            if (hasMessageEntries && pullMessages) {
               messageEntries.forEach((messageId) => {
                 // check to see if this id is already in our messages
-                const foundId = myMessages.some((elem) => elem.messagesId === messageId);
+                const foundId = myMessages?.some((elem) => elem.messagesId === messageId);
                 if (!foundId) {
                   getMessageData(messageId);
                 }
@@ -386,7 +386,8 @@ const App = () => {
 
   const getMessageData = (messageId) => {
     // what is the current value of myMessages?
-    const tempMessages = myMessages;
+
+    let tempMessages = myMessages || [];
 
     // grab ref to the data
     database.ref(`messages/${messageId}`).on("value", (snapshot) => {
@@ -395,16 +396,15 @@ const App = () => {
         const data = snapshot.val();
 
         // have we already added this particular message set?
-        const found = tempMessages.some((item) => item.messagesId === messageId);
+        const found = tempMessages?.some((item) => item.messagesId === messageId);
         // as long as we havent already added them, add them
         if (!found) {
           // push a new element into the message array
           tempMessages.push(data)
-
         } else {
           // otherwise we have found the messageId,so update state with new value
           // grab where this message id is within myMessages
-          const index = tempMessages.findIndex((elem) => elem.messagesId === messageId);
+          const index = tempMessages?.findIndex((elem) => elem.messagesId === messageId);
           // update it with new data
           tempMessages[index] = data;
 

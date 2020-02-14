@@ -18,27 +18,32 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
     // pull out public data
     const { clients, rating } = loggedInUser && loggedInUser;
 
+    // handle any children updates from our clients: they may have added, or removed some
     useEffect(() => {
         if (loggedInUser) {
 
-            let updatedClients = [...clients];
-            // check to make sure that we have an update list of children for each client
-            updatedClients.forEach((client) => {
-                // now check the receiptants array
-                database.ref(`users/${client.clientId}/public/children`).once('value', (snap) => {
-                    const data = snap.val();
-                    if (client.children.length !== data.length) {
-                        // if children has updated
-                        console.log("Children has updated")
-                        client.children = data;
-                    }
+            if (clients) {
+                let updatedClients = [...clients];
+                // check to make sure that we have an update list of children for each client
+                updatedClients.forEach((client) => {
+                    // now check the receiptants array
+                    database.ref(`users/${client.clientId}/public/children`).once('value', (snap) => {
+                        const data = snap.val();
+                        if (client.children.length !== data.length) {
+                            // if children has updated
+                            console.log("Children has updated")
+                            client.children = data;
+                        }
+                    })
                 })
-            })
-            setClientState(updatedClients)
+                setClientState(updatedClients)
+            }
+
         }
 
     }, [clients, loggedInUser]);
 
+    // store client data right away into state as long as we've logged in
     useEffect(() => {
         if (loggedInUser) {
             setClientDataState(clientData)
@@ -46,14 +51,13 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
     }, [clientData, loggedInUser])
 
-    // basic header entries
-    const clientHeader = ["Student Name", "Age", "Parent Name", "Contact Number", "Enrollment", "Active"];
 
     const handleRowSelection = (memberData) => {
         const selectedClient = clientDataState.find((elem) => elem.clientData.name === memberData.parent)
         setSelection(selectedClient);
     }
 
+    // handle whether we accept or reject an enrollment request
     const handleEnrollment = (accepted, updatedClientData, updatedClient) => {
 
         if (accepted) {
@@ -71,10 +75,8 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
     }
 
-    const handleSelection = (memberData) => {
-        // Pass current selection up to parent in order to render profile page
-        handleMemberSelection(memberData);
-    };
+    // basic header entries for the client table
+    const clientHeader = ["Student Name", "Age", "Parent Name", "Contact Number", "Enrollment", "Active"];
 
     return (
         <div>
@@ -126,7 +128,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                                                     enrollmentData={clientState}
                                                     selection={selection}
                                                     handleEnrollment={handleEnrollment}
-                                                    handleSelection={handleSelection}
+                                                    handleSelection={handleMemberSelection}
                                                     pageUpdate={pageUpdate} />
                                             ) : (
                                                     <div>Make a selection from the table to view specific details about the client</div>

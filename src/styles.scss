@@ -381,6 +381,14 @@ $LIGHTPINK: rgb(255, 112, 146);
     justify-content: flex-end;
   }
 
+  .HalfSize{
+    width: 50%;
+  }
+
+  .PinkLine{
+    border-bottom: solid 1px $PARADISEPINK;
+  }
+
   .NotifyBtn{
     display: flex;
     justify-content: space-around;
@@ -542,7 +550,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   }
 
   .MessageBubble{
-    background-color: $PARADISEPINK;
+    background-color: $LIGHTPINK;
     color: $GHOSTWHITE;
   }
 

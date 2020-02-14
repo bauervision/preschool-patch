@@ -56,93 +56,28 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         setSubmitEnrollment((loggedInUser.enrollment?.submitted) || false)
     }, [loggedInUser, submitEnrollment])
 
-    // handle default threadId
-    useEffect(() => {
-        // if we have a currentSelection, then we came from Profile page
-        if (sendToSelectedContact) {
-            // use default message if we have no prior messages
-            if (!activeMessages) {
-                setActiveThreadId(defaultMessage.messagesId)
-            } else {
-                // otherwise, we do have prior messages so check to see if we have already messaged our selection
-                const foundUnread = activeMessages.findIndex((elem) => ((elem.to === currentSelection.id) || (elem.from === currentSelection.id)));
-                if (foundUnread !== -1) {
-                    setActiveThreadId(activeMessages[foundUnread].messagesId);
-                } else {
-                    // we didnt find an unread message, so load nothing and let the user select one
-                    setActiveThreadId(null);
-                }
-            }
-        } else {
-            // we arent selected on a new contact to message, so load up the first unread message
-
-            const foundUnread = activeMessages?.findIndex((elem) => elem.lastMessage.author !== userId);
-            if (foundUnread !== -1) {
-                console.log("Found unread")
-                setActiveThreadId(activeMessages[foundUnread].messagesId);
-            } else {
-                console.log("No unread")
-                // we didnt find an unread message, so load nothing and let the user select one
-                setActiveThreadId(null);
-            }
-
-
-        }
-    }, [sendToSelectedContact, activeMessages, userId, activeThreadId, currentSelection]);
-
-    useEffect(() => {
-        console.log("activeThread has changed", activeThread)
-    }, [activeThread])
-
-
-    // handle default thread name
-    useEffect(() => {
-        if (sendToSelectedContact) {
-            setActiveThreadName(currentSelection.name);
-        } else {
-            // we arent selected on a new contact to message, so load up the first unread message
-            if (activeMessages) {
-                const foundUnread = activeMessages.findIndex((elem) => elem.lastMessage.author !== userId);
-                if (foundUnread !== -1) {
-                    // if I started the thread, display who i sent it to, otherwise display who it came from
-                    const threadDisplayName = activeMessages[foundUnread].from === userId ? activeMessages[foundUnread].to : activeMessages[foundUnread].from;
-                    setActiveThreadName(threadDisplayName);
-                } else {
-                    // we didnt find an unread message, so load nothing and let the user select one
-                    setActiveThreadName(null);
-                }
-            }
-        }
-    }, [currentSelection, activeMessages, sendToSelectedContact, userId])
-
     // check to see if we are trying to connect with someone from their profile page
     useEffect(() => {
-        setSendToSelectedContact(currentSelection?.id !== 'none');
+        setSendToSelectedContact(currentSelection !== null);
     }, [currentSelection])
 
     // set the active messages data
     useEffect(() => {
-        console.log("sendToSelectedContact", sendToSelectedContact)
+
         // if we want to send a new message to a new contact
         if (sendToSelectedContact) {
-            console.log("activeMessages", activeMessages)
+
             if (activeMessages) {
 
                 // next check to see if that user has messages already
-                const foundSelectionThreadId = activeMessages.findIndex((thread) => ((thread.from === currentSelection.clientId) || (thread.to === currentSelection.clientId)));
-
-                console.log("foundSelectionThreadId", foundSelectionThreadId, currentSelection)
+                const foundSelectionThreadId = activeMessages.findIndex((thread) => thread.messagesId === activeThreadId);
                 if (foundSelectionThreadId !== -1) {
                     // we've found the current selection in activeMessages
                     setActiveThreadId(activeMessages[foundSelectionThreadId].messagesId);
                     setActiveThread(activeMessages[foundSelectionThreadId].messageData);
                     setActiveThreadName(activeMessages[foundSelectionThreadId].from === userId ? activeMessages[foundSelectionThreadId].toName : activeMessages[foundSelectionThreadId].fromName);
-                } else {
-                    // we don't have any prior messages so this is a brand new contact
-                    setActiveThreadId(defaultMessage.messagesId);
-                    setActiveThread(defaultMessage.messageData);
-                    setActiveThreadName(defaultMessage.toName)
                 }
+
             } else {
                 // we don't have any prior messages so this is a brand new contact
                 setActiveThreadId(defaultMessage.messagesId);
@@ -152,7 +87,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
         } else if (activeMessages) {
-            console.log("We have activeMessages", activeMessages)
             // load up whatever message thread we have selected first
             if (activeThreadId) {
 
@@ -161,6 +95,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     setActiveThreadId(activeMessages[foundActiveThreadId].messagesId);
                     setActiveThread(activeMessages[foundActiveThreadId].messageData);
                     setActiveThreadName(activeMessages[foundActiveThreadId].from === userId ? activeMessages[foundActiveThreadId].toName : activeMessages[foundActiveThreadId].fromName);
+                } else {
+                    setActiveThread(activeThreadId)
                 }
 
             } else {
@@ -189,13 +125,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // get and set current active message data
         // this is the message thread we are currently writing in
 
-        let updatedMessages = [];
+        let updatedThread = [];
         // if we have activeMessages, then we'll want to add new message to it
         if (activeThread) {
-            updatedMessages = [...activeThread];
+            updatedThread = [...activeThread];
         }
 
-        updatedMessages.push(newMessageData);
+        updatedThread.push(newMessageData);
 
         // now we need to update the whole myMessages array with the new messageData
         // grab the current active thread
@@ -203,11 +139,15 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // this is used for sending to the DB only
         let sendToDBMessageId = '';
 
+        /* Handle Updating DB with new message data */
+
+        // messaging someone we've selected on from another page
         if (sendToSelectedContact) {
 
             // do we have prior messages?
             if (activeMessages) {
-                const foundNewCntact = activeMessages.findIndex((elem) => (elem.from || elem.to) === currentSelection.id);
+                const foundNewCntact = activeMessages.findIndex((elem) => ((elem.from === currentSelection.id) || (elem.to === currentSelection.id)));
+
                 if (foundNewCntact === -1) { // not found! Then this is a true new contact
                     // we need a new message thread
                     updatedCurrentThread = defaultMessage;
@@ -236,7 +176,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                 } else {
                     // found in activeMessages: this is a contact we selected on from profile page and wanted to re-contact
-                    sendToDBMessageId = activeMessages[foundNewCntact]?.messagesId; //  just use the id we have
+                    sendToDBMessageId = activeMessages[foundNewCntact].messagesId; //  just use the id we have
                 }
             } else {
                 // no prior messages, this is the very first contact
@@ -274,35 +214,35 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         }
 
         // update the messageData array
-        updatedCurrentThread.messageData = updatedMessages;
+        updatedCurrentThread.messageData = updatedThread;
 
         // setup lastMessage object
-        updatedCurrentThread.lastMessage = {
-            date: now,
-            author: userId
-        }
+        updatedCurrentThread.lastMessage = { date: now, author: userId };
 
         // push to DB
         handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
-        // since we've sent a message, this thread is no longer a new contact
-        setSendToSelectedContact(false);
-        setNewMessage('') // clear out the text box
 
-        // finally handle local state update of messages!
+        /* finally handle local state update of messages! */
 
-
-        const updateAllMessages = myMessages && [...myMessages];
-
-        const index = updateAllMessages?.findIndex((elem) => elem.messagesId === sendToDBMessageId);
-
-        if (index !== -1) {
-            updateAllMessages[index] = updatedCurrentThread;
-            setActiveMessages(updateAllMessages)
+        // do we already have activeMessages?
+        if (activeMessages) {
+            const updateAllMessages = [...activeMessages];
+            const index = updateAllMessages.findIndex((elem) => elem.messagesId === sendToDBMessageId);
+            if (index !== -1) {
+                // fully update this thread with all original values, plus updated messageData and lastMessage
+                const updatedThread = { ...updateAllMessages[index], messageData: updatedCurrentThread.messageData, lastMessage: updatedCurrentThread.lastMessage };
+                // now update this particular thread within the entire messages array
+                updateAllMessages[index] = updatedThread;
+                setActiveMessages(updateAllMessages)
+            }
         } else {
-            console.log("index = -1, means that myMessages is emprty and we need state update ")
+            // we don't because this is the very first message being sent
+            setActiveMessages([updatedCurrentThread])
+            setActiveThread(updatedCurrentThread.messageData);
+            setActiveThreadId(updatedCurrentThread.messagesId)
         }
 
-
+        setNewMessage('') // clear out the text box
     }
 
     const switchMessage = (newId, newName) => {
@@ -406,15 +346,17 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Messenger</div>
 
                 {/* Client Data*/}
-                <div className="SeeThru PaddingBottom" >
+                <div className="SeeThru" >
 
                     {/* Message Columns */}
                     <div className="Flex Between Buffer ">
 
                         {/*  Left side Message Notifcations */}
-                        <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>All Messages
+                        <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>
 
-                             <div className="OverFlow LightPinkBorder" >
+                            {activeMessages && (<div>All Messages </div>)}
+
+                            <div className={`OverFlow ${activeMessages && 'LightPinkBorder'} `}>
                                 {(activeMessages?.length > 0 ? (activeMessages.map((elem) => {
 
                                     // if the last message isn't from us, then it's from them, so mark it unread
@@ -480,42 +422,45 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                             {/* Message Data */}
                             <div className="MessageFrame" >
-                                <div className="Flex AlignItems Between">
+                                {activeThread && (
+                                    <div className="Flex AlignItems Between">
 
-                                    <div className="Flex AlignItems">
-                                        {/* Enrollment Button */}
-                                        {(showingThread && showEnrollmentButton) &&
-                                            <button
-                                                type="button" disabled={disableEnrollment}
-                                                title={`${submitEnrollment ?
-                                                    'Revoking Enrollment will remove the request from this teacher' :
-                                                    'Submitting Enrollment will notify the teacher that you have selected her!'}`}
-                                                onClick={handleSubmitEnrollment}>
-                                                {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
-                                            </button>
-                                        }
+                                        <div className="Flex AlignItems">
+                                            {/* Enrollment Button */}
+                                            {(showingThread && showEnrollmentButton) &&
+                                                <button
+                                                    type="button" disabled={disableEnrollment}
+                                                    title={`${submitEnrollment ?
+                                                        'Revoking Enrollment will remove the request from this teacher' :
+                                                        'Submitting Enrollment will notify the teacher that you have selected her!'}`}
+                                                    onClick={handleSubmitEnrollment}>
+                                                    {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
+                                                </button>
+                                            }
 
-                                        <div className="CursiveFont LargeFont PinkFont">{activeThreadName}</div>
+                                            <div className="CursiveFont LargeFont PinkFont Padding">{activeThreadName}</div>
+
+                                        </div>
+
+                                        {!isLeader && (
+                                            <>
+                                                {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div style={{ marginLeft: 20 }}>
+                                                    <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
+                                                    <div>You can only enroll with one teacher at a time</div>
+                                                </div>)}
+
+                                                {myTeacher &&
+                                                    <div className="Padding">
+                                                        <div>You are actively enrolled with this teacher!</div>
+                                                    </div>}
+                                            </>
+                                        )}
+
+
 
                                     </div>
+                                )}
 
-                                    {!isLeader && (
-                                        <>
-                                            {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div style={{ marginLeft: 20 }}>
-                                                <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
-                                                <div>You can only enroll with one teacher at a time</div>
-                                            </div>)}
-
-                                            {myTeacher &&
-                                                <div className="Padding">
-                                                    <div>You are actively enrolled with this teacher!</div>
-                                                </div>}
-                                        </>
-                                    )}
-
-
-
-                                </div>
 
                                 {/* Handle Warnings for Enrollment */}
                                 {showEnrollmentDetails &&
@@ -560,7 +505,25 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                     </>
                                 ) :
                                     // No current selection, and no active messages
-                                    (<div>{!myMessages ? 'Reach out to a Patch Teacher to start a conversation!'
+                                    (<div>{!activeMessages ? (
+                                        <div className="Flex Col JustifyCenter">
+                                            <span className="Buffer"><strong >No conversations found.</strong></span>
+
+                                            {isLeader ? (
+                                                <>
+                                                    <span>In order to generate interest, be sure that you update your profile page,</span>
+                                                    <span>post pictures of your home, and of course set that you are Enrolling!</span>
+
+                                                    <br />
+                                                    <span>You should also share your profile page on different social media pages</span>
+                                                </>
+                                            ) : (
+                                                    <span>Reach out to a local Patch Leader and setup a meet and greet!</span>
+                                                )}
+
+
+                                        </div>
+                                    )
                                         : 'Select a message to view it'}</div>)
                                 }
                             </div>

@@ -168,18 +168,15 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const handleSetChildName = (name, index) => {
     // get kid
     const kids = [...updatedChildren];
-    const thisKid = kids[index];
-    // update their data
-    thisKid.name = name;
+    const thisKid = { ...kids[index], name: name };
     kids[index] = thisKid;
     // update state
     setUpdatedChildren(kids)
   }
 
-  const handleSetChildAge = (age, index) => {
+  const handleSetBirthYear = (year, index) => {
     const kids = [...updatedChildren];
-    const thisKid = kids[index];
-    thisKid.age = Number(age);
+    const thisKid = { ...kids[index], year: Number(year) };
     kids[index] = thisKid;
     setUpdatedChildren(kids)
   }
@@ -190,18 +187,32 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
     if (interest === 'None') {
       kids.splice(index, 1)
     } else if ((interest !== 'Select Service...') && (interest !== 'None')) {
-      const thisKid = kids[index];
-      thisKid.enrollment = interest;
+      const thisKid = { ...kids[index], enrollment: interest };
       kids[index] = thisKid;
     }
+    setUpdatedChildren(kids)
+  }
 
-    console.log(kids)
+  const handleSetBirthDay = (day, index) => {
+    const kids = [...updatedChildren];
+    const thisKid = { ...kids[index], day: Number(day) };
+    kids[index] = thisKid;
+    setUpdatedChildren(kids)
+  }
+
+  const handleSetBirthMonth = (month, index) => {
+    let kids = [...updatedChildren];
+    // if user selects None, this will remove the child from the list
+    if (month !== 'Select Month...') {
+      const thisKid = { ...kids[index], month: month };
+      kids[index] = thisKid;
+    }
     setUpdatedChildren(kids)
   }
 
   const addNewChildInfo = (e) => {
     e.preventDefault();
-    const newKid = { name: '', age: '', enrollment: '' }
+    const newKid = { name: '', year: '', enrollment: '', month: '', day: '' }
     const updatedInfo = updatedChildren;
     if (updatedInfo.length <= 4) {
       updatedInfo.push(newKid)
@@ -375,11 +386,16 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                         key={kid.name + index.toString()}
                         location={index}
                         name={kid.name}
-                        age={kid.age}
+                        year={kid.year}
+                        month={kid.month}
+                        day={kid.day}
                         interest={kid.enrollment}
-                        handleSetChildAge={handleSetChildAge}
                         handleSetChildName={handleSetChildName}
                         handleSetChildInterest={handleSetChildInterest}
+                        handleSetBirthYear={handleSetBirthYear}
+                        handleSetBirthMonth={handleSetBirthMonth}
+                        handleSetBirthDay={handleSetBirthDay}
+
                       />
                     ))}
 

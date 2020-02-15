@@ -59,7 +59,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
     // handle whether we accept or reject an enrollment request
     const handleEnrollment = (accepted, updatedClientData, updatedClient) => {
-
+        console.log(selection, updatedClient)
         if (accepted) {
             // update state
             setClientDataState(updatedClientData)
@@ -77,6 +77,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
     // basic header entries for the client table
     const clientHeader = ["Student Name", "Age", "Parent Name", "Contact Number", "Enrollment", "Active"];
+
 
     return (
         <div>

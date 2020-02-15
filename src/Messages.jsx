@@ -61,6 +61,64 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         setSendToSelectedContact(currentSelection !== null);
     }, [currentSelection])
 
+    // handle default threadId
+    useEffect(() => {
+        // if we have a currentSelection, then we came from Profile page
+        if (sendToSelectedContact) {
+            // use default message if we have no prior messages
+            if (!activeMessages) {
+                setActiveThreadId(defaultMessage.messagesId)
+            } else {
+                // otherwise, we do have prior messages so check to see if we have already messaged our selection
+                const foundUnread = activeMessages.findIndex((elem) => ((elem.to === currentSelection.id) || (elem.from === currentSelection.id)));
+                if (foundUnread !== -1) {
+                    setActiveThreadId(activeMessages[foundUnread].messagesId);
+                } else {
+                    // we didnt find an unread message, so load nothing and let the user select one
+                    setActiveThreadId(null);
+                }
+
+            }
+
+
+        } else {
+            // we arent selected on a new contact to message, so load up the first unread message
+            if (activeMessages) {
+                const foundUnread = activeMessages.findIndex((elem) => elem.lastMessage.author !== userId);
+                if (foundUnread !== -1) {
+                    setActiveThreadId(activeMessages[foundUnread].messagesId);
+                } else {
+                    // we didnt find an unread message, so load nothing and let the user select one
+                    setActiveThreadId(null);
+                }
+            }
+
+
+        }
+    }, [activeMessages, userId, activeThreadId, currentSelection, sendToSelectedContact]);
+
+
+
+    // handle default thread name
+    useEffect(() => {
+        if (sendToSelectedContact) {
+            setActiveThreadName(currentSelection.name);
+        } else {
+            // we arent selected on a new contact to message, so load up the first unread message
+            if (activeMessages) {
+                const foundUnread = activeMessages.findIndex((elem) => elem.lastMessage.author !== userId);
+                if (foundUnread !== -1) {
+                    // if I started the thread, display who i sent it to, otherwise display who it came from
+                    const threadDisplayName = activeMessages[foundUnread].from === userId ? activeMessages[foundUnread].to : activeMessages[foundUnread].from;
+                    setActiveThreadName(threadDisplayName);
+                } else {
+                    // we didnt find an unread message, so load nothing and let the user select one
+                    setActiveThreadName(null);
+                }
+            }
+        }
+    }, [currentSelection, activeMessages, userId, sendToSelectedContact])
+
     // set the active messages data
     useEffect(() => {
 
@@ -68,16 +126,19 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         if (sendToSelectedContact) {
 
             if (activeMessages) {
-
                 // next check to see if that user has messages already
-                const foundSelectionThreadId = activeMessages.findIndex((thread) => thread.messagesId === activeThreadId);
+                const foundSelectionThreadId = activeMessages.findIndex((thread) => (thread.from === currentSelection.id) || (thread.to === currentSelection.id));
                 if (foundSelectionThreadId !== -1) {
                     // we've found the current selection in activeMessages
                     setActiveThreadId(activeMessages[foundSelectionThreadId].messagesId);
                     setActiveThread(activeMessages[foundSelectionThreadId].messageData);
                     setActiveThreadName(activeMessages[foundSelectionThreadId].from === userId ? activeMessages[foundSelectionThreadId].toName : activeMessages[foundSelectionThreadId].fromName);
+                } else {
+                    // we don't have any prior messages so this is a brand new contact
+                    setActiveThreadId(defaultMessage.messagesId);
+                    setActiveThread(defaultMessage.messageData);
+                    setActiveThreadName(defaultMessage.toName)
                 }
-
             } else {
                 // we don't have any prior messages so this is a brand new contact
                 setActiveThreadId(defaultMessage.messagesId);
@@ -87,6 +148,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
         } else if (activeMessages) {
+            console.log("We have activeMessages", activeMessages)
             // load up whatever message thread we have selected first
             if (activeThreadId) {
 
@@ -95,8 +157,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     setActiveThreadId(activeMessages[foundActiveThreadId].messagesId);
                     setActiveThread(activeMessages[foundActiveThreadId].messageData);
                     setActiveThreadName(activeMessages[foundActiveThreadId].from === userId ? activeMessages[foundActiveThreadId].toName : activeMessages[foundActiveThreadId].fromName);
-                } else {
-                    setActiveThread(activeThreadId)
                 }
 
             } else {
@@ -261,82 +321,82 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             setChildrenWarning(true)
         } else {
             setSubmitEnrollment(!submitEnrollment);
-        }
-
-        // now hit DB with updates
-        const submittedToId = activeMessages[0].fromName === activeThreadName ? activeMessages[0].from : activeMessages[0].to;
-
-        // first setup our enrollment status, if we're enrolling versus revoking
-        const enrollment = !stateEnrollment ? {
-            accepted: false,
-            dateSubmitted: now,
-            submitted: true,
-            submittedTo: submittedToId,
-            submittedToName: activeThreadName
-        } : { submitted: false };
-
-        database.ref(`users/${userId}/public/enrollment`).set(enrollment);
-
-        // set our info into the teachers client data
-
-        // first setup our enrollment status as long the user hasnt revoked it
-        const clientData = {
-            accepted: false,
-            active: false,
-            children: loggedInUser.children || [],
-            dateSubmitted: now,
-            clientId: userId,
-            joinedOn: 'NA',
-            submitted: true,
-            name: loggedInUser.name,
-            photoUrl: loggedInUser.photoUrl
-        };
-
-        let clientList = [];
-        // grab teachers client list, so we can append of create it
-        database.ref(`leaders/${submittedToId}/public/clients`).once('value', (snap) => {
-            clientList = snap.val();
-            // if we have a list, then we need to adjust it
-            if (clientList) {
-                // see if client list current has this client
-                const index = clientList.findIndex((elem) => elem.name === loggedInUser.name);
 
 
-                // we want to enroll
-                if (!stateEnrollment) {
-                    // we didnt find this client already
-                    if (index === -1) {
-                        clientList.push(clientData);
+            // now hit DB with updates
+            const submittedToId = activeMessages[0].fromName === activeThreadName ? activeMessages[0].from : activeMessages[0].to;
+
+            // first setup our enrollment status, if we're enrolling versus revoking
+            const enrollment = !stateEnrollment ? {
+                accepted: false,
+                dateSubmitted: now,
+                submitted: true,
+                submittedTo: submittedToId,
+                submittedToName: activeThreadName
+            } : { submitted: false };
+
+            database.ref(`users/${userId}/public/enrollment`).set(enrollment);
+
+            // set our info into the teachers client data
+
+            // first setup our enrollment status as long the user hasnt revoked it
+            const clientData = {
+                accepted: false,
+                active: false,
+                children: loggedInUser.children || [],
+                dateSubmitted: now,
+                clientId: userId,
+                joinedOn: 'NA',
+                submitted: true,
+                name: loggedInUser.name,
+                photoUrl: loggedInUser.photoUrl
+            };
+
+            let clientList = [];
+            // grab teachers client list, so we can append of create it
+            database.ref(`leaders/${submittedToId}/public/clients`).once('value', (snap) => {
+                clientList = snap.val();
+                // if we have a list, then we need to adjust it
+                if (clientList) {
+                    // see if client list current has this client
+                    const index = clientList.findIndex((elem) => elem.name === loggedInUser.name);
+
+
+                    // we want to enroll
+                    if (!stateEnrollment) {
+                        // we didnt find this client already
+                        if (index === -1) {
+                            clientList.push(clientData);
+                        }
+                    } else {
+
+                        // we want to revoke enrollment, make sure we've found this client
+                        if (index !== -1) {
+                            clientList.splice(index, 1);
+                        }
                     }
+
                 } else {
-
-                    // we want to revoke enrollment, make sure we've found this client
-                    if (index !== -1) {
-                        clientList.splice(index, 1);
-                    }
+                    // otherwise, teacher has no clients yet, we need to set it as an array with its first element
+                    clientList = [clientData]
                 }
 
-            } else {
-                // otherwise, teacher has no clients yet, we need to set it as an array with its first element
-                clientList = [clientData]
-            }
-
-            // finally push the new client to the teacher so they will know about it
-            database.ref(`leaders/${submittedToId}/public/clients`).set(clientList);
-        });
+                // finally push the new client to the teacher so they will know about it
+                database.ref(`leaders/${submittedToId}/public/clients`).set(clientList);
+            });
 
 
+        }
     }
 
     // handle conditional render
     const showingThread = sendToSelectedContact || (activeThread?.length > 0);
     const showEnrollmentButton = !isLeader && showingThread;
 
-    const myTeacher = !isLeader && (loggedInUser.enrollment.accepted && (loggedInUser.enrollment.submittedToName === activeThreadName));
+    const myTeacher = !isLeader && (loggedInUser.enrollment.submitted && (loggedInUser.enrollment.submittedToName === activeThreadName));
 
     const showEnrollmentDetails = (showEnrollmentButton && !loggedInUser.enrollment.accepted) && (myTeacher);
     const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (!myTeacher);
-
 
     return (
         <div>
@@ -401,19 +461,24 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                         {clientData?.map((client) => {
 
                                             const message = activeMessages.find((elem) => ((elem.to === client.clientId) || (elem.from === client.clientId)))
+                                            if (client.accepted) {
+                                                return (
 
-                                            return (
-                                                <div
-                                                    className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeThreadId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
-                                                    key={client.clientData.name}
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setActiveThreadId(message.messagesId);
-                                                        setActiveThreadName(client.clientData.name)
-                                                    }} >
-                                                    <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
-                                                </div>
-                                            )
+                                                    <div
+                                                        className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeThreadId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
+                                                        key={client.clientData.name}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setActiveThreadId(message.messagesId);
+                                                            setActiveThreadName(client.clientData.name)
+                                                        }} >
+                                                        <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
+                                                    </div>
+
+
+                                                )
+                                            }
+
                                         })}
                                     </div>
 
@@ -449,8 +514,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                                     <div>You can only enroll with one teacher at a time</div>
                                                 </div>)}
 
-                                                {myTeacher &&
-                                                    <div className="Padding">
+                                                {(loggedInUser.enrollment.accepted && myTeacher) &&
+                                                    < div className="Padding">
                                                         <div>You are actively enrolled with this teacher!</div>
                                                     </div>}
                                             </>
@@ -464,7 +529,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                                 {/* Handle Warnings for Enrollment */}
                                 {showEnrollmentDetails &&
-                                    <div>She has been notified of your choice andy you will receive an email when she has accepted your enrollment</div>}
+                                    <div>She has been notified of your choice and you will receive an email when she has accepted your enrollment</div>}
 
 
                                 {childrenWarning && (<div className="PinkBorder">
@@ -540,6 +605,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             </div>
 
             <Footer />
-        </div>
+        </div >
     );
 };

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Checked, Unchecked } from "../images"
+import React, { useEffect } from 'react';
+
 
 const AdminTable = ({ data, headerData, handleSelection }) => {
 

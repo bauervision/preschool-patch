@@ -18,36 +18,20 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
         // find this particular client
         const updateClientData = [...enrollmentData];
 
-        let enrollmentUser = {};
+        let selectionEnrollment = {};
 
         if (accepted) {
             // setup new enrollment value for the user
-            enrollmentUser = {
-                accepted: true, // <-
-                dateAccepted: rightNow,// <-
-                dateSubmitted: enrollment.dateSubmitted,
-                submitted: true,// <-
-                submittedTo: enrollment.submittedTo,
-                submittedToName: enrollment.submittedToName
-            }
+            selectionEnrollment = { ...enrollment, accepted: true, dateAccepted: rightNow, submitted: true }
 
             // push to user's DB
-            database.ref(`users/${userId}/public/enrollment`).set(enrollmentUser);
+            database.ref(`users/${userId}/public/enrollment`).set(selectionEnrollment);
 
             const index = updateClientData.findIndex((elem) => elem.clientId === selection.clientId)
 
             // now setup and update our DB
-            const acceptedClientData = {
-                accepted: true, // set new data
-                active: true, // <-
-                children: updateClientData[index].children,
-                clientId: updateClientData[index].clientId,
-                dateSubmitted: updateClientData[index].dateSubmitted,
-                joinedOn: rightNow, // <-
-                name: updateClientData[index].name,
-                photoUrl: updateClientData[index].photoUrl,
-                submitted: updateClientData[index].submitted
-            }
+            const acceptedClientData = { ...updateClientData[index], accepted: true, active: true, joinedOn: rightNow }
+
             // update
             updateClientData[index] = acceptedClientData;
 
@@ -57,10 +41,10 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
         } else {
             // we have rejected the enrollment
             // reset users enrollment status
-            enrollmentUser = { submitted: false };
-            database.ref(`users/${userId}/public/enrollment`).set(enrollmentUser);
+            selectionEnrollment = { submitted: false };
+            database.ref(`users/${userId}/public/enrollment`).set(selectionEnrollment);
 
-            // find this particular client
+            // find this particular client from the leader
             const updateClientData = [...enrollmentData];
             const index = updateClientData.findIndex((elem) => elem.clientId === selection.clientId)
             // remove them permanently
@@ -68,8 +52,10 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
         }
 
         // now pass up to parent for updating state and displaying the toast
-        const updatedSelection = selection;
-        updatedSelection.enrollment = enrollmentUser;
+        // first update the clientData.enrollment
+        const updatedEnrollment = { ...selection.clientData, enrollment: selectionEnrollment }
+        // then update the selection object with the new clientData
+        const updatedSelection = { ...selection, clientData: updatedEnrollment };
         handleEnrollment(accepted, updateClientData, updatedSelection);
 
     }
@@ -95,6 +81,13 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
     const messageClient = () => {
         handleSelection(selection);
         pageUpdate(6)
+    }
+
+
+    const getChildAge = (year, month, day) => {
+        const momentBirthday = moment(`${year.toString()}-${month}-${day.toString()}`);
+        return moment().diff(momentBirthday, 'years', false);
+
     }
 
     return (
@@ -131,14 +124,18 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
 
             {/* Show all children enrolled */}
             <div>
-                <span className="CursiveFont MediumFont">{!enrollment.accepted ? 'Wants to Enroll the Following:' : 'Enrolled Children'} </span>
-                {children.map((child) => (
-                    <div key={child.name} className="textMargin Padding">
-                        <span className="profileText Padding">Name:  <strong>{child.name}</strong>  </span>
-                        <span className="profileText Padding"> Age: <strong>{child.age}</strong></span>
-                        <span className="profileText Padding">{child.enrollment} </span>
-                    </div>
-                ))}
+                <span className="CursiveFont LargeFont">{!enrollment.accepted ? 'Wants to Enroll the Following:' : 'Enrolled Children'} </span>
+                {children.map((child) => {
+                    const childAge = getChildAge(child.year, child.month, child.day);
+                    return (
+                        <div key={child.name} className="textMargin Padding">
+                            <span className="profileText Padding">Name:  <strong>{child.name}</strong>  </span>
+                            <span className="profileText Padding"> Age: <strong>{childAge}</strong></span>
+                            <span className="profileText Padding"> Birthday: <strong>{child.month}{' '}{child.day}</strong></span>
+                            <span className="profileText Padding">{child.enrollment} </span>
+                        </div>
+                    )
+                })}
             </div>
 
             {/* Accept Client*/}

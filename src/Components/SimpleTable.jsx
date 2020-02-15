@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import moment from 'moment'
 import { Checked, Unchecked } from "../images"
 
 const SimpleTable = ({ data, headerData, handleSelection }) => {
@@ -10,20 +11,26 @@ const SimpleTable = ({ data, headerData, handleSelection }) => {
         // eslint-disable-next-line
     }, [data]);
 
+    const getChildAge = (year, month, day) => {
+        const momentBirthday = moment(`${year.toString()}-${month}-${day.toString()}`);
+        return moment().diff(momentBirthday, 'years', false);
+
+    }
+
     // grab current data and format table data
     const setNewEntries = () => {
         let childData = [];
         if (data) {
-
             // for each parent in client data...
             data.forEach((parent) => {
 
                 // loop through each child and create a new entry
-                if (parent.clientData.children && parent.clientData.children.length > 0) {
+                if (parent.clientData?.children.length > 0) {
                     parent.clientData.children.forEach((child) => {
+                        const childAge = getChildAge(child.year, child.month, child.day);
                         const newEntry = {
                             name: child.name,
-                            age: child.age,
+                            age: childAge,
                             parent: parent.clientData.name,
                             phone: parent.clientData.phone,
                             enrollment: child.enrollment,

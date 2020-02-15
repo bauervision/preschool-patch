@@ -369,16 +369,24 @@ const App = () => {
           clientId,
           clientData: data.public
         }
-        // what is the current value of clientData?
-        const tempClients = clientData;
-        // have we already added this particular client?
-        const found = tempClients.some((item) => item.clientId === clientId);
-        // as long as we havent already added them, add them
-        if (!found) {
-          tempClients.push(newClient)
-          console.log("clientData", tempClients)
-          setClientData(tempClients);
+
+        // do we have current clientData?
+        if (clientData) {
+          // what is the current value of clientData?
+          const tempClients = clientData;
+          // have we already added this particular client?
+          const found = tempClients.some((item) => item.clientId === clientId);
+          // as long as we havent already added them, add them
+          if (!found) {
+            tempClients.push(newClient)
+            console.log("clientData", tempClients)
+            setClientData(tempClients);
+          }
+        } else {
+          // we dont, which means this is our first
+          setClientData([newClient])
         }
+
       }
     });
   };
@@ -420,9 +428,9 @@ const App = () => {
   /* Page Router */
   const onPage = (page) => {
 
-    // if (selection && (page !== 6 || page !== 3)) {
-    //   setSelection(null)
-    // }
+    if (selection && ((page !== 6) && (page !== 3))) {
+      setSelection(null)
+    }
 
     // reset window scroll position with each page change
     window.scrollTo(0, 0);

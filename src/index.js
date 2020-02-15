@@ -25,24 +25,20 @@ const App = () => {
   const [clientData, setClientData] = useState(null);// raw data from DB
   const [selection, setSelection] = useState(null); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState(null);
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
   const [myMessages, setMyMessages] = useState(null);
   const [loadingClients, setLoadingClients] = useState(true);
-  /* On Mount, fetch data, check login */
-  useEffect(() => {
-    handleLoginCheck();
-    // eslint-disable-next-line
-  }, [loggedInUser]);
 
 
-  /* On Mount, fetch ALL leader data */
+
+  /* On Mount, fetch ALL leader data, this is for the public viewing of teachers */
   useEffect(() => {
     getLeaderData();
-  }, [isLeader]);
+  }, []);
 
   /* Handle Loading Client Data */
   useEffect(() => {
@@ -59,12 +55,14 @@ const App = () => {
         setLoadingClients(false)
       }
     }
-  }, [clientData, isLeader, loggedInUser]);
+  }, [clientData, loggedInUser]);
 
   // check login status
   const handleLoginCheck = () => {
-    // console.log('handleLoginCheck')
+
     f.auth().onAuthStateChanged((user) => {
+
+      console.log('handleLoginCheck ->', user)
       if (user) {
         // make sure we arent already logged in
         if (!loggedInUser) {
@@ -80,7 +78,33 @@ const App = () => {
         handleLogOut();
       }
     });
+
+
   };
+
+  /* On Mount, fetch data, check login */
+  useEffect(() => {
+    console.log("loggedInUser has changed", loggedInUser)
+    handleLoginCheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loggedInUser]);
+
+
+  const fetchMessages = (messageEntries) => {
+    if (messageEntries?.length > 0) {
+
+      const pullMessages = ((messageEntries.length !== myMessages?.length) || !myMessages);
+      if (pullMessages) {
+        messageEntries.forEach((messageId) => {
+          // check to see if this id is already in our messages
+          const foundId = myMessages?.some((elem) => elem.messagesId === messageId);
+          if (!foundId) {
+            getMessageData(messageId);
+          }
+        })
+      }
+    }
+  }
 
   const getUserData = (user) => {
     // setuserId right away
@@ -166,43 +190,49 @@ const App = () => {
 
     // if we aren't an admin, then handle users and leaders
     if (!admin) {
-      const leader = Object.keys(leaderData).find((elem) => elem === user.uid);
 
-      if (leader) {
-        setIsLeader(true);
-      }
+      let leader = false;
 
-      database.ref(`${leader ? 'leaders' : 'users'}/${user.uid}`).on("value", (snapshot) => {
+      // first let's find out if the user is a leader
+      database.ref(`leaders/${user.uid}`).on("value", (snapshot) => {
+        // if we found the user then snapshot will be valid
         if (snapshot.val()) {
+          leader = true;
           const curUser = snapshot.val();
-
           setLoggedInUser(curUser.public);
-
-          // regardless of whether the user is a teacher,a parent
-          // we need to get the message data
+          setIsLeader(true);
+          console.log(curUser.public)
 
           /* curUser.public.messages is an array of ids which point to
           the messages array, which holds all of the message data specifics */
           const messageEntries = curUser.public.messages;
+          fetchMessages(messageEntries)
 
-          if (messageEntries?.length > 0) {
-            const hasMessageEntries = (messageEntries?.length > 0);
-
-            const pullMessages = hasMessageEntries && ((messageEntries?.length !== myMessages?.length) || !myMessages);
-            if (hasMessageEntries && pullMessages) {
-              messageEntries.forEach((messageId) => {
-                // check to see if this id is already in our messages
-                const foundId = myMessages?.some((elem) => elem.messagesId === messageId);
-                if (!foundId) {
-                  getMessageData(messageId);
-                }
-              })
-            }
+          if (curUser.public.clients?.length > 0) {
+            const clientEntries = curUser.public.clients;
+            clientEntries.forEach((client) => {
+              getClientData(client.clientId);
+            })
           }
+          setPage(5); // leader has logged in, skip to client admin
 
+        }
 
-          // if we logged in a leader, check to see if we have any clients
-          if (leader) {
+      })
+
+      if (!leader) {
+        // the user wasnt a leader, so pull users
+        database.ref(`users/${user.uid}`).on("value", (snapshot) => {
+          if (snapshot.val()) {
+            const curUser = snapshot.val();
+            setLoggedInUser(curUser.public);
+            console.log(curUser.public)
+
+            /* curUser.public.messages is an array of ids which point to
+            the messages array, which holds all of the message data specifics */
+            const messageEntries = curUser.public.messages;
+            fetchMessages(messageEntries)
+
             if (curUser.public.clients && curUser.public.clients.length > 0) {
               const clientEntries = curUser.public.clients;
               clientEntries.forEach((client) => {
@@ -210,10 +240,10 @@ const App = () => {
               })
             }
             setPage(5); // leader has logged in, skip to client admin
-          }
-        }
-      });
 
+          }
+        })
+      }
     }
   }
 
@@ -231,7 +261,7 @@ const App = () => {
   };
 
   const handleLogin = (user, newUserData, isLeader) => {
-
+    console.log("handleLogin", user, newUserData, isLeader)
     // if we logged in a new user
     if (newUserData) {
       // create new user data with what we do know about the user, as well as some defaults
@@ -303,28 +333,16 @@ const App = () => {
       // make sure we check to see if we are storing a leader, or simply a user in doing so
       database
         .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
-        .set(newUser)
-        .then(() => {
-          setLoggedInUser(newUser);
-          handleLoginCheck();
-        });
-
-
-    } else {
-      // we logged in existing
-
-      // TODO: update lastLogin data
-
-      handleLoginCheck();
+        .set(newUser).then(() => setLoggedInUser(newUser));
     }
 
   };
 
   const handleLogOut = () => {
     setLoggedInUser(null);
-    setUserId(null);
+    setUserId('');
     setIsLeader(false);
-    // setMyMessages(null);
+    setMyMessages(null);
     setSelection(null);
     updateSuccess(true, "Logged Out")
   }
@@ -373,7 +391,7 @@ const App = () => {
         // do we have current clientData?
         if (clientData) {
           // what is the current value of clientData?
-          const tempClients = clientData;
+          const tempClients = [...clientData];
           // have we already added this particular client?
           const found = tempClients.some((item) => item.clientId === clientId);
           // as long as we havent already added them, add them

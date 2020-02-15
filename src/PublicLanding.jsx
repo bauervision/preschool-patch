@@ -30,11 +30,14 @@ export const PublicLanding = ({
   /* On Mount, fetch data, check login */
   useEffect(() => {
     // incoming data is an obj, so lets convert it to a useable array
-    const leadersArray = Object.entries(leaderData);
-    let newData = [];
-    leadersArray.forEach((elem) => { newData.push(elem[1].public) })
-    // setLeaderData(newData);
-    setFilteredData(newData);
+    if (leaderData) {
+      const leadersArray = Object.entries(leaderData);
+      let newData = [];
+      leadersArray.forEach((elem) => { newData.push(elem[1].public) })
+      // setLeaderData(newData);
+      setFilteredData(newData);
+    }
+
 
   }, [leaderData]);
 

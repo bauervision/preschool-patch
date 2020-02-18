@@ -1,85 +1,77 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import { Header } from "./Components/Header";
-import { Footer } from "./Components/Footer";
-import { Toast } from "./Components";
-import { Ratings, SimpleTable, DetailViewClient } from "./Components";
+import { Header } from './Components/Header';
+import { Footer } from './Components/Footer';
+import { Toast, Ratings, SimpleTable, DetailViewClient } from './Components';
 
-import { Corner, Logo, Elegant } from "./images";
-import { database } from "./config";
+
+import { Corner, Logo, Elegant } from './images';
+import { database } from './config';
 
 export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection, userId }) => {
+  const [clientState, setClientState] = useState([]);
+  const [clientDataState, setClientDataState] = useState([]);
+  const [selection, setSelection] = useState(null);
+  const [toast, setToast] = useState(false);
 
-    const [clientState, setClientState] = useState([]);
-    const [clientDataState, setClientDataState] = useState([]);
-    const [selection, setSelection] = useState(null);
-    const [toast, setToast] = useState(false);
+  // pull out public data
+  const { clients, rating } = loggedInUser && loggedInUser;
 
-    // pull out public data
-    const { clients, rating } = loggedInUser && loggedInUser;
-
-    // handle any children updates from our clients: they may have added, or removed some
-    useEffect(() => {
-        if (loggedInUser) {
-
-            if (clients) {
-                let updatedClients = [...clients];
-                // check to make sure that we have an update list of children for each client
-                updatedClients.forEach((client) => {
-                    // now check the receiptants array
-                    database.ref(`users/${client.clientId}/public/children`).once('value', (snap) => {
-                        const data = snap.val();
-                        if (client.children.length !== data.length) {
-                            // if children has updated
-                            console.log("Children has updated")
-                            client.children = data;
-                        }
-                    })
-                })
-                setClientState(updatedClients)
+  // handle any children updates from our clients: they may have added, or removed some
+  useEffect(() => {
+    if (loggedInUser) {
+      if (clients) {
+        const updatedClients = [...clients];
+        // check to make sure that we have an update list of children for each client
+        updatedClients.forEach((client) => {
+          // now check the receiptants array
+          database.ref(`users/${client.clientId}/public/children`).once('value', (snap) => {
+            const data = snap.val();
+            if (client.children.length !== data.length) {
+              // if children has updated
+              client.children = data;
             }
-
-        }
-
-    }, [clients, loggedInUser]);
-
-    // store client data right away into state as long as we've logged in
-    useEffect(() => {
-        if (loggedInUser) {
-            setClientDataState(clientData)
-        }
-
-    }, [clientData, loggedInUser])
-
-
-    const handleRowSelection = (memberData) => {
-        const selectedClient = clientDataState.find((elem) => elem.clientData.name === memberData.parent)
-        setSelection(selectedClient);
+          });
+        });
+        setClientState(updatedClients);
+      }
     }
+  }, [clients, loggedInUser]);
 
-    // handle whether we accept or reject an enrollment request
-    const handleEnrollment = (accepted, updatedClientData, updatedClient) => {
-        console.log(selection, updatedClient)
-        if (accepted) {
-            // update state
-            setClientDataState(updatedClientData)
-            setClientState(updatedClient);
-            setToast({ value: true, message: 'Congrats! You have a new Client!' });
-            setTimeout(() => setToast({ value: false, message: '' }), 3000);
-        } else {
-            setClientDataState(updatedClientData)
-            setClientState(updatedClient);
-            setToast({ value: true, message: 'Please email a reason to the parent' });
-            setTimeout(() => setToast({ value: false, message: '' }), 4000);
-        }
-
+  // store client data right away into state as long as we've logged in
+  useEffect(() => {
+    if (loggedInUser) {
+      setClientDataState(clientData);
     }
-
-    // basic header entries for the client table
-    const clientHeader = ["Student Name", "Age", "Parent Name", "Contact Number", "Enrollment", "Active"];
+  }, [clientData, loggedInUser]);
 
 
-    return (
+  const handleRowSelection = (memberData) => {
+    const selectedClient = clientDataState.find((elem) => elem.clientData.name === memberData.parent);
+    setSelection(selectedClient);
+  };
+
+  // handle whether we accept or reject an enrollment request
+  const handleEnrollment = (accepted, updatedClientData, updatedClient) => {
+    if (accepted) {
+      // update state
+      setClientDataState(updatedClientData);
+      setClientState(updatedClient);
+      setToast({ value: true, message: 'Congrats! You have a new Client!' });
+      setTimeout(() => setToast({ value: false, message: '' }), 3000);
+    } else {
+      setClientDataState(updatedClientData);
+      setClientState(updatedClient);
+      setToast({ value: true, message: 'Please email a reason to the parent' });
+      setTimeout(() => setToast({ value: false, message: '' }), 4000);
+    }
+  };
+
+  // basic header entries for the client table
+  const clientHeader = ['Student Name', 'Age', 'Parent Name', 'Contact Number', 'Enrollment', 'Active'];
+
+
+  return (
         <div>
             <div>
                 <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} userId={userId} />
@@ -90,7 +82,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                 <div
                     className="Flex AlignItems SeeThru "
                     style={{
-                        justifyContent: "space-evenly",
+                      justifyContent: 'space-evenly',
 
                     }}
                 >
@@ -108,7 +100,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                                 <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
                             </div>
                         ) : (
-                                <>
+                          <>
                                     <div className="MarginTop">
                                         {/* Client Table Data */}
                                         {(clientDataState?.length > 0) ? (
@@ -118,7 +110,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                                                     <div className="PinkFont CursiveFont LargeFont">Sorry, no clients yet!</div>
                                                     <p>{"As soon as a parent selects you as their child's teacher, you will see them show up here."}</p>
                                                 </div>
-                                            )}
+                                        )}
 
                                     </div>
 
@@ -133,19 +125,16 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                                                     pageUpdate={pageUpdate} />
                                             ) : (
                                                     <div>Make a selection from the table to view specific details about the client</div>
-                                                )}
+                                            )}
 
                                         </div>
                                     )}
 
-                                </>
-                            )}
-
-
+                          </>
+                        )}
 
 
                     </div>
-
 
 
                 </div>
@@ -162,5 +151,5 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
             <Toast showToast={toast.value} message={toast.message} />
         </div>
-    );
+  );
 };

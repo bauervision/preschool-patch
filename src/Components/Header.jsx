@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import { Home, MessageIcon } from "../images";
+import { Home, MessageIcon } from '../images';
 
-import { SignUserOut } from "../helpers/auth";
+import { SignUserOut } from '../helpers/auth';
 
 export const Header = ({
   pageUpdate,
@@ -17,18 +17,13 @@ export const Header = ({
   myMessages,
   userId
 }) => {
-
   const [newMessageAlert, setNewMessageAlert] = useState(false);
-
-
 
   useEffect(() => {
     if (myMessages?.length > 0) {
       const foundUnread = myMessages.some((elem) => elem.lastMessage.author !== userId);
-      console.log("foundUnread", foundUnread, myMessages)
-      setNewMessageAlert(foundUnread)
+      setNewMessageAlert(foundUnread);
     }
-
   }, [myMessages, userId]);
 
   const LogOut = () => {
@@ -70,8 +65,8 @@ export const Header = ({
           </>
 
         ) : (
-            // we are now logged in
-            <>
+        // we are now logged in
+          <>
               {/* Only show this button if we arent a leader, and not on the create page */}
               {(!isCreate && !isLeader) && (
                 <div>
@@ -105,8 +100,8 @@ export const Header = ({
               {/* If we are logged in, always show logout */}
               <button className='HeaderButton' onClick={LogOut}>Logout</button>
 
-            </>
-          )}
+          </>
+        )}
 
 
       </div >

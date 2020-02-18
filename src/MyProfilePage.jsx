@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { EditField, SimpleImage, KidSection, PatchLogo } from "./Components";
-import { Header } from "./Components/Header";
-import { Footer } from "./Components/Footer";
-import { Toast } from "./Components";
+import { EditField, SimpleImage, KidSection, PatchLogo, Toast } from './Components';
+import { Header } from './Components/Header';
+import { Footer } from './Components/Footer';
 
-import { f, storage, database } from "./config";
 
-import { Coloring, Kids, Table, Working } from "./images/photos";
+import { f, storage, database } from './config';
+
+import { Coloring, Kids, Table, Working } from './images/photos';
 import { Add, Elegant } from './images';
+
 const galleryImages = [Coloring, Kids, Table, Working];
 
 export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, launchToast, userId }) => {
-
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
   let userData = {};
 
@@ -30,7 +30,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       photoUrl: loggedInUser.photoUrl,
       phone: loggedInUser.phone,
       zipcode: loggedInUser.zipcode
-    }
+    };
   } else {
     // basic user
     userData = {
@@ -40,9 +40,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       zipcode: loggedInUser.zipcode,
       children: loggedInUser.children,
       photoUrl: loggedInUser.photoUrl,
-    }
+    };
   }
-
 
 
   const [updatedAboutMe, setAboutMe] = useState(userData.aboutMe || 'Looking forward to the first day of Preschool Patch!!');
@@ -61,7 +60,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [updatedPhotoUrl, setPhotoUrl] = useState(userData.photoUrl);
   const [updatedPhone, setUpdatedPhone] = useState(userData.phone);
   const [updatedZipcode, setUpdatedZipcode] = useState(userData.zipcode);
-
 
 
   const handleDataUpdate = (e) => {
@@ -98,48 +96,46 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         aboutMe: updatedAboutMe,
         children: updatedChildren,
         photoUrl: updatedPhotoUrl,
-        enrollment: loggedInUser.enrollment,// like this
+        enrollment: loggedInUser.enrollment, // like this
         id: userId, // and this
         isLeader: false,
         messages: loggedInUser?.messages, // and these
         name: updatedName,
         phone: updatedPhone,
         zipcode: updatedZipcode,
-      }
-
+      };
     }
-    console.log((updatedData))
+
     // now that we have updated data, push it up to our database
     database
       .ref(`${isLeader ? 'leaders' : 'users'}/${userId}/public`)
       .set(updatedData)
       .then(() => {
-        updateSuccess(true, "Save Successful!")
-
+        updateSuccess(true, 'Save Successful!');
       });
   };
 
   // TODO update gallery images
   const handleGalleryUpdate = (files) => {
-    console.log(files)
-  }
+    console.log(files);
+  };
 
   const handleGalleryFeatureUpdate = (string) => {
     const featureArray = string.split(',');
-    setGalleryFeatures(featureArray)
-  }
+    setGalleryFeatures(featureArray);
+  };
 
   // let's push up the new profile pic into storage, and then save the download url
   const handleProfilePicUpdate = (file) => {
     // userId will be a part of the file path so grab it first
-    const userId = f.auth().currentUser.uid;
+    const UID = f.auth().currentUser.uid;
 
     const uploadTask = storage
-      .ref(`public/${userId}/profilePic/${file.name}`)
+      .ref(`public/${UID}/profilePic/${file.name}`)
       .put(file);
 
     uploadTask.on(
-      "state_changed",
+      'state_changed',
       (snapshot) => {
         // progress
         const progress = Math.round(
@@ -155,7 +151,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       () => {
         // complete
         storage
-          .ref(`public/${userId}/profilePic/`)
+          .ref(`public/${UID}/profilePic/`)
           .child(file.name)
           .getDownloadURL()
           .then((url) => {
@@ -168,57 +164,57 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const handleSetChildName = (name, index) => {
     // get kid
     const kids = [...updatedChildren];
-    const thisKid = { ...kids[index], name: name };
+    const thisKid = { ...kids[index], name };
     kids[index] = thisKid;
     // update state
-    setUpdatedChildren(kids)
-  }
+    setUpdatedChildren(kids);
+  };
 
   const handleSetBirthYear = (year, index) => {
     const kids = [...updatedChildren];
     const thisKid = { ...kids[index], year: Number(year) };
     kids[index] = thisKid;
-    setUpdatedChildren(kids)
-  }
+    setUpdatedChildren(kids);
+  };
 
   const handleSetChildInterest = (interest, index) => {
-    let kids = [...updatedChildren];
+    const kids = [...updatedChildren];
     // if user selects None, this will remove the child from the list
     if (interest === 'None') {
-      kids.splice(index, 1)
+      kids.splice(index, 1);
     } else if ((interest !== 'Select Service...') && (interest !== 'None')) {
       const thisKid = { ...kids[index], enrollment: interest };
       kids[index] = thisKid;
     }
-    setUpdatedChildren(kids)
-  }
+    setUpdatedChildren(kids);
+  };
 
   const handleSetBirthDay = (day, index) => {
     const kids = [...updatedChildren];
     const thisKid = { ...kids[index], day: Number(day) };
     kids[index] = thisKid;
-    setUpdatedChildren(kids)
-  }
+    setUpdatedChildren(kids);
+  };
 
   const handleSetBirthMonth = (month, index) => {
-    let kids = [...updatedChildren];
+    const kids = [...updatedChildren];
     // if user selects None, this will remove the child from the list
     if (month !== 'Select Month...') {
-      const thisKid = { ...kids[index], month: month };
+      const thisKid = { ...kids[index], month };
       kids[index] = thisKid;
     }
-    setUpdatedChildren(kids)
-  }
+    setUpdatedChildren(kids);
+  };
 
   const addNewChildInfo = (e) => {
     e.preventDefault();
-    const newKid = { name: '', year: '', enrollment: '', month: '', day: '' }
+    const newKid = { name: '', year: '', enrollment: '', month: '', day: '' };
     const updatedInfo = updatedChildren;
     if (updatedInfo.length <= 4) {
-      updatedInfo.push(newKid)
-      setUpdatedChildren([...updatedInfo])
+      updatedInfo.push(newKid);
+      setUpdatedChildren([...updatedInfo]);
     }
-  }
+  };
 
 
   /* handle conditional rendering */
@@ -240,12 +236,12 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         <div
           className="Flex Row WhiteFill"
           style={{
-            justifyContent: "space-evenly",
+            justifyContent: 'space-evenly',
             margin: 20,
             marginRight: 40,
-            border: "solid",
+            border: 'solid',
             borderWidth: 1,
-            borderColor: "green",
+            borderColor: 'green',
             borderRadius: 50,
             padding: 30
           }}
@@ -260,7 +256,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                     margin: 30,
                     borderRadius: 25,
                     width: 200,
-                    height: "auto"
+                    height: 'auto'
                   }}
                   src={updatedPhotoUrl}
                 />
@@ -418,7 +414,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                     )}
 
 
-
                     {/* Add new Kid Info */}
                     {updatedChildren.length <= 4 ? (
                       <>
@@ -427,16 +422,16 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                           <img src={Add} alt="Add new child info" />
                         </button>
 
-                        {updatedChildren.length > 0 &&
-                          <div >
+                        {updatedChildren.length > 0
+                          && <div >
                             <div> Set Enrollment Level to None to remove a child from the list </div>
 
                           </div>
                         }
                       </>
-                    ) :
+                    )
                       // Once we hit our kid limit, disable adding more
-                      (
+                      : (
                         <div className="PinkFont">
                           5 is the max for any single Preschool Patch!
                         </div>
@@ -521,7 +516,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
 
                 <div className="SimpleBorder Buffer WhiteFill">
                   {galleryImages.map((elem, index) => (
-                    <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />
+                    <SimpleImage key={`gallery${index}`} image={elem} alt={`gallery${index}`} />
                   ))}
 
                 </div>

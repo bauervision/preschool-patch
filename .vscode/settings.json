@@ -1,4 +1,21 @@
 {
-    "editor.formatOnSave": true,
-    "javascript.validate.enable": false
+    "editor.formatOnSave": false,
+    "javascript.format.enable": false,
+    "eslint.alwaysShowStatus": true,
+    "eslint.options": {
+        "extensions": [
+            ".html",
+            ".js",
+            ".scss",
+            ".css",
+            ".jsx"
+        ]
+    },
+    "eslint.validate": [
+		"javascript",
+		"javascriptreact",
+	],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }

@@ -1,5 +1,7 @@
 module.exports = {
   extends: [
+    "airbnb-base",
+    "airbnb-recommended",
     "eslint:recommended",
     "plugin:react/recommended"
   ],

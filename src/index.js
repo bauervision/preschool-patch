@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 
 
@@ -30,21 +30,29 @@ const App = () => {
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
-  const [myMessages, setMyMessages] = useState(null);
+  const [myMessages, setMyMessages] = useState([]);
   const [loadingClients, setLoadingClients] = useState(true);
 
 
 
   /* On Mount, fetch ALL leader data, this is for the public viewing of teachers */
   useEffect(() => {
-    getLeaderData();
+    handleLoginCheck();
+    if (leaderData.length === 0) {
+      getLeaderData();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Handle Loading Client Data */
   useEffect(() => {
     if (loggedInUser) {
+
+      setIsLeader(loggedInUser.isLeader);
+
       // if we have clients
-      if (loggedInUser.clients) {
+      if (loggedInUser.isLeader && loggedInUser.clients) {
         // once state matches DB
         if (clientData?.length === loggedInUser.clients.length) {
           // turn off the loader
@@ -54,15 +62,15 @@ const App = () => {
         // we dont have any clients, so turn off the loader
         setLoadingClients(false)
       }
+
     }
-  }, [clientData, loggedInUser]);
+  }, [clientData, isLeader, loggedInUser]);
 
   // check login status
   const handleLoginCheck = () => {
 
     f.auth().onAuthStateChanged((user) => {
 
-      console.log('handleLoginCheck ->', user)
       if (user) {
         // make sure we arent already logged in
         if (!loggedInUser) {
@@ -78,31 +86,19 @@ const App = () => {
         handleLogOut();
       }
     });
-
-
   };
 
-  /* On Mount, fetch data, check login */
-  useEffect(() => {
-    console.log("loggedInUser has changed", loggedInUser)
-    handleLoginCheck();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loggedInUser]);
+  // /* On Mount, fetch data, check login */
+  // useEffect(() => {
+  //   console.log("loggedInUser has changed", loggedInUser)
+  //   handleLoginCheck();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loggedInUser]);
 
 
   const fetchMessages = (messageEntries) => {
     if (messageEntries?.length > 0) {
-
-      const pullMessages = ((messageEntries.length !== myMessages?.length) || !myMessages);
-      if (pullMessages) {
-        messageEntries.forEach((messageId) => {
-          // check to see if this id is already in our messages
-          const foundId = myMessages?.some((elem) => elem.messagesId === messageId);
-          if (!foundId) {
-            getMessageData(messageId);
-          }
-        })
-      }
+      messageEntries.forEach((messageId) => getMessageData(messageId));
     }
   }
 
@@ -123,21 +119,14 @@ const App = () => {
 
           // get our messages
           const messageEntries = adminUser.public.messages;
-          const hasMessages = (messageEntries && messageEntries.length > 0);
-          const pullMessages = messageEntries.length !== myMessages.length;
-
-          if (hasMessages && pullMessages) {
-
-            messageEntries.forEach((messageId) => {
-              getMessageData(messageId);
-            })
-          }
+          fetchMessages(messageEntries);
 
           // now get all patch user data
           let data = {
             table: [],
             all: []
           };
+
           // first get the leaders
           database.ref('leaders').on("value", (snapshot) => {
             if (snapshot.val()) {
@@ -200,8 +189,6 @@ const App = () => {
           leader = true;
           const curUser = snapshot.val();
           setLoggedInUser(curUser.public);
-          setIsLeader(true);
-          console.log(curUser.public)
 
           /* curUser.public.messages is an array of ids which point to
           the messages array, which holds all of the message data specifics */
@@ -226,20 +213,13 @@ const App = () => {
           if (snapshot.val()) {
             const curUser = snapshot.val();
             setLoggedInUser(curUser.public);
-            console.log(curUser.public)
 
             /* curUser.public.messages is an array of ids which point to
             the messages array, which holds all of the message data specifics */
             const messageEntries = curUser.public.messages;
             fetchMessages(messageEntries)
 
-            if (curUser.public.clients && curUser.public.clients.length > 0) {
-              const clientEntries = curUser.public.clients;
-              clientEntries.forEach((client) => {
-                getClientData(client.clientId);
-              })
-            }
-            setPage(5); // leader has logged in, skip to client admin
+            // TODO, eventually move user directly to teacher's page
 
           }
         })
@@ -261,79 +241,79 @@ const App = () => {
   };
 
   const handleLogin = (user, newUserData, isLeader) => {
-    console.log("handleLogin", user, newUserData, isLeader)
-    // if we logged in a new user
-    if (newUserData) {
-      // create new user data with what we do know about the user, as well as some defaults
-      let newUser = {};
-      if (isLeader) {
-        newUser = {
-          private: {
-            joined: user.metadata.creationTime,
-            lastLogin: user.metadata.lastSignInTime
-          },
-          public: {
-            aboutMe:
-              "I am brand new to Preschool Patch!  I will update my profile ASAP.",
-            age: newUserData.age,
-            assisted: false,
-            available: true,
-            email: newUserData.email,
-            bgCheckWilling: newUserData.backgroundCheck,
-            bgCheckComplete: false,
-            experience: newUserData.experience,
-            gallery: {
-              description: "My home is ready for preschool learning!",
-              features: ["Warm and Inviting", "Fenced in backyard"],
-              files: []
-            },
-            id: user.uid,
-            infants: newUserData.infants,
-            isLeader: true,
-            kidTotal: 0,
-            messages: ["None"],
-            name: newUserData.displayName,
-            phone: newUserData.phoneNumber,
-            photoUrl: newUserData.photoUrl,
-            rating: 0,
-            rates: {
-              ft: 35,
-              pt: 45,
-              di: 60
-            },
-            zipcode: newUserData.zipcode
-          }
-        };
 
-        setIsLeader(true);
+    if (!loggedInUser) {
+      // if we logged in a new user
+      if (newUserData) {
+        // create new user data with what we do know about the user, as well as some defaults
+        let newUser = {};
+        if (isLeader) {
+          newUser = {
+            private: {
+              joined: user.metadata.creationTime,
+              lastLogin: user.metadata.lastSignInTime
+            },
+            public: {
+              aboutMe:
+                "I am brand new to Preschool Patch!  I will update my profile ASAP.",
+              age: newUserData.age,
+              available: true,
+              email: newUserData.email,
+              bgCheckWilling: newUserData.backgroundCheck,
+              bgCheckComplete: false,
+              experience: newUserData.experience,
+              gallery: {
+                description: "My home is ready for preschool learning!",
+                features: ["Warm and Inviting", "Fenced in backyard"],
+                files: []
+              },
+              id: user.uid,
+              infants: newUserData.infants,
+              isLeader: true,
+              kidTotal: 0,
+              name: newUserData.displayName,
+              phone: newUserData.phoneNumber,
+              photoUrl: newUserData.photoUrl,
+              rating: 0,
+              rates: {
+                ft: 35,
+                pt: 45,
+                di: 60
+              },
+              zipcode: newUserData.zipcode
+            }
+          };
+        } else {
+          newUser = {
+            private: {
+              joined: user.metadata.creationTime,
+              lastLogin: user.metadata.lastSignInTime
+            },
+            public: {
+              email: newUserData.email,
+              enrollment: { submitted: false },
+              id: user.uid,
+              isLeader: false,
+              children: newUserData.children,
+              name: newUserData.name,
+              zipcode: newUserData.zipcode,
+              photoUrl: newUserData.photoUrl,
+              phone: newUserData.phone,
+            }
+          };
 
+        }
+
+        // now that we have some essential data in place, store this user into the database
+        // make sure we check to see if we are storing a leader, or simply a user in doing so
+        database
+          .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
+          .set(newUser).then(() => setLoggedInUser(newUser));
       } else {
-        newUser = {
-          private: {
-            joined: user.metadata.creationTime,
-            lastLogin: user.metadata.lastSignInTime
-          },
-          public: {
-            email: newUserData.email,
-            enrollment: { submitted: false },
-            id: user.uid,
-            isLeader: false,
-            children: newUserData.children,
-            messages: ["None"],
-            name: newUserData.name,
-            zipcode: newUserData.zipcode,
-            photoUrl: newUserData.photoUrl,
-            phone: newUserData.phone,
-          }
-        };
-
+        setLoggedInUser(user);
       }
-
-      // now that we have some essential data in place, store this user into the database
-      // make sure we check to see if we are storing a leader, or simply a user in doing so
-      database
-        .ref(`${isLeader ? "leaders" : "users"}/${user.uid}`)
-        .set(newUser).then(() => setLoggedInUser(newUser));
+      // regardless of who logged in...
+      handleLoginCheck();
     }
 
   };
@@ -397,7 +377,6 @@ const App = () => {
           // as long as we havent already added them, add them
           if (!found) {
             tempClients.push(newClient)
-            console.log("clientData", tempClients)
             setClientData(tempClients);
           }
         } else {
@@ -435,7 +414,6 @@ const App = () => {
           tempMessages[index] = data;
 
         }
-
         tempMessages.sort((a, b) => moment(b.lastMessage.date).diff(a.lastMessage.date))
         setMyMessages(tempMessages);
       }

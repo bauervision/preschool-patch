@@ -8,7 +8,7 @@ import { Ratings, SimpleTable, DetailViewClient } from "./Components";
 import { Corner, Logo, Elegant } from "./images";
 import { database } from "./config";
 
-export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection }) => {
+export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection, userId }) => {
 
     const [clientState, setClientState] = useState([]);
     const [clientDataState, setClientDataState] = useState([]);
@@ -82,7 +82,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
     return (
         <div>
             <div>
-                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} />
+                <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} userId={userId} />
 
                 <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Client Admin</div>
 

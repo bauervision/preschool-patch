@@ -148,7 +148,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
         } else if (activeMessages) {
-            console.log("We have activeMessages", activeMessages)
             // load up whatever message thread we have selected first
             if (activeThreadId) {
 
@@ -199,7 +198,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         // this is used for sending to the DB only
         let sendToDBMessageId = '';
 
-        /* Handle Updating DB with new message data */
+        /* Handle Updating DB with new message ids */
 
         // messaging someone we've selected on from another page
         if (sendToSelectedContact) {

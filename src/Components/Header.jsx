@@ -23,8 +23,9 @@ export const Header = ({
 
 
   useEffect(() => {
-    if (myMessages && myMessages.length > 0) {
+    if (myMessages?.length > 0) {
       const foundUnread = myMessages.some((elem) => elem.lastMessage.author !== userId);
+      console.log("foundUnread", foundUnread, myMessages)
       setNewMessageAlert(foundUnread)
     }
 

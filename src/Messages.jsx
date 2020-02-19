@@ -51,24 +51,23 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const [sendToSelectedContact, setSendToSelectedContact] = useState(false);
   const [childrenWarning, setChildrenWarning] = useState(false);
 
+  // handle scrolling to last message
   const messagesRef = useRef(null);
-  const messageBoxRef = useRef(null);
-
 
   const scrollToBottom = () => {
     messagesRef.current.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
-      inline: 'start'
     });
   };
 
   useEffect(() => {
-    if (activeThread.length > 5) {
+    if (activeThread.length > 4) { // 4 will need to be adjusted if the message window size updates
       scrollToBottom();
     }
-  }, [activeThread.length, activeThreadId]);
+  }, [activeThread.length]);
 
+  // handle when we submit enrollments
   useEffect(() => {
     setSubmitEnrollment((loggedInUser.enrollment?.submitted) || false);
   }, [loggedInUser, submitEnrollment]);
@@ -171,127 +170,130 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
   const handleNewMessage = () => {
-    const newMessageData = {
-      author: userId,
-      message: newMessage,
-      date: now,
-    };
+    if (newMessage !== '') {
+      const newMessageData = {
+        author: userId,
+        message: newMessage,
+        date: now,
+      };
 
-    // get and set current active message data
-    // this is the message thread we are currently writing in
+      // get and set current active message data
+      // this is the message thread we are currently writing in
 
-    let updatedThread = [];
-    // if we have activeMessages, then we'll want to add new message to it
-    if (activeThread) {
-      updatedThread = [...activeThread];
-    }
+      let updatedThread = [];
+      // if we have activeMessages, then we'll want to add new message to it
+      if (activeThread) {
+        updatedThread = [...activeThread];
+      }
 
-    updatedThread.push(newMessageData);
+      updatedThread.push(newMessageData);
 
-    // now we need to update the whole myMessages array with the new messageData
-    // grab the current active thread
-    let updatedCurrentThread = {};
-    // this is used for sending to the DB only
-    let sendToDBMessageId = '';
+      // now we need to update the whole myMessages array with the new messageData
+      // grab the current active thread
+      let updatedCurrentThread = {};
+      // this is used for sending to the DB only
+      let sendToDBMessageId = '';
 
-    /* Handle Updating DB with new message ids */
+      /* Handle Updating DB with new message ids */
 
-    // messaging someone we've selected on from another page
-    if (sendToSelectedContact) {
+      // messaging someone we've selected on from another page
+      if (sendToSelectedContact) {
       // do we have prior messages?
-      if (activeMessages) {
-        const foundNewCntact = activeMessages.findIndex((elem) => ((elem.from === currentSelection.id) || (elem.to === currentSelection.id)));
+        if (activeMessages) {
+          const foundNewCntact = activeMessages.findIndex((elem) => ((elem.from === currentSelection.id) || (elem.to === currentSelection.id)));
 
-        if (foundNewCntact === -1) { // not found! Then this is a true new contact
+          if (foundNewCntact === -1) { // not found! Then this is a true new contact
           // we need a new message thread
+            updatedCurrentThread = defaultMessage;
+            sendToDBMessageId = UUID();
+            updatedCurrentThread.messagesId = sendToDBMessageId;
+
+            // add to the messages array
+            const updatedMessagesArray = loggedInUser.messages || [];
+            updatedMessagesArray.push(sendToDBMessageId);
+            database.ref(`users/${userId}/public/messages`).set(updatedMessagesArray);
+
+            // now check the receiptants array
+            database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).once('value', (snap) => {
+              const data = snap.val();
+              // if not null, then they already have messages, so append to them
+              if (data) {
+                const updateData = data;
+                updateData.push(sendToDBMessageId);
+                database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updateData);
+              } else {
+              // otherwise, this is the receipiants first message as well, so create the array
+                database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set([sendToDBMessageId]);
+              }
+            });
+          } else {
+          // found in activeMessages: this is a contact we selected on from profile page and wanted to re-contact
+            updatedCurrentThread = activeMessages[foundNewCntact];
+            sendToDBMessageId = activeMessages[foundNewCntact].messagesId; //  just use the id we have
+          }
+        } else {
+        // no prior messages, this is the very first contact
+        // we need a new message thread
           updatedCurrentThread = defaultMessage;
+          // and a fresh ID
           sendToDBMessageId = UUID();
           updatedCurrentThread.messagesId = sendToDBMessageId;
 
-          // add to the messages array
-          const updatedMessagesArray = loggedInUser.messages || [];
-          updatedMessagesArray.push(sendToDBMessageId);
-          database.ref(`users/${userId}/public/messages`).set(updatedMessagesArray);
+          // handle setting new message array for future contacts
+          database.ref(`users/${userId}/public/messages`).set([sendToDBMessageId]);
 
           // now check the receiptants array
           database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).once('value', (snap) => {
             const data = snap.val();
             // if not null, then they already have messages, so append to them
             if (data) {
-              const updateData = data;
-              updateData.push(sendToDBMessageId);
-              database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updateData);
+              const updatedMessagesArray = data;
+              updatedMessagesArray.push(sendToDBMessageId);
+              database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updatedMessagesArray);
             } else {
-              // otherwise, this is the receipiants first message as well, so create the array
+            // otherwise, this is the receipiants first message as well, so create the array
               database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set([sendToDBMessageId]);
             }
           });
-        } else {
-          // found in activeMessages: this is a contact we selected on from profile page and wanted to re-contact
-          sendToDBMessageId = activeMessages[foundNewCntact].messagesId; //  just use the id we have
+        }
+      } else if (activeMessages.length > 0) {
+      // messaging someone we've already connected with via messenger alone
+        const found = activeMessages.findIndex((elem) => (elem.messagesId === activeThreadId));
+        updatedCurrentThread = activeMessages[found]; // since we have valid myMessages
+        sendToDBMessageId = updatedCurrentThread.messagesId; // just use the id we have
+      }
+
+      // update the messageData array
+      updatedCurrentThread.messageData = updatedThread;
+
+      // setup lastMessage object
+      updatedCurrentThread.lastMessage = { date: now, author: userId };
+      console.log(updatedCurrentThread);
+      // push to DB
+      handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
+
+      /* finally handle local state update of messages! */
+
+      // do we already have activeMessages?
+      if (activeMessages) {
+        const updateAllMessages = [...activeMessages];
+        const index = updateAllMessages.findIndex((elem) => elem.messagesId === sendToDBMessageId);
+        if (index !== -1) {
+        // fully update this thread with all original values, plus updated messageData and lastMessage
+          const threadUpdate = { ...updateAllMessages[index], messageData: updatedCurrentThread.messageData, lastMessage: updatedCurrentThread.lastMessage };
+          // now update this particular thread within the entire messages array
+          updateAllMessages[index] = threadUpdate;
+          setActiveMessages(updateAllMessages);
         }
       } else {
-        // no prior messages, this is the very first contact
-        // we need a new message thread
-        updatedCurrentThread = defaultMessage;
-        // and a fresh ID
-        sendToDBMessageId = UUID();
-        updatedCurrentThread.messagesId = sendToDBMessageId;
-
-        // handle setting new message array for future contacts
-        database.ref(`users/${userId}/public/messages`).set([sendToDBMessageId]);
-
-        // now check the receiptants array
-        database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).once('value', (snap) => {
-          const data = snap.val();
-          // if not null, then they already have messages, so append to them
-          if (data) {
-            const updatedMessagesArray = data;
-            updatedMessagesArray.push(sendToDBMessageId);
-            database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updatedMessagesArray);
-          } else {
-            // otherwise, this is the receipiants first message as well, so create the array
-            database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set([sendToDBMessageId]);
-          }
-        });
-      }
-    } else if (activeMessages.length > 0) {
-      // messaging someone we've already connected with via messenger alone
-      const found = activeMessages.findIndex((elem) => (elem.messagesId === activeThreadId));
-      updatedCurrentThread = activeMessages[found]; // since we have valid myMessages
-      sendToDBMessageId = updatedCurrentThread.messagesId; // just use the id we have
-    }
-
-    // update the messageData array
-    updatedCurrentThread.messageData = updatedThread;
-
-    // setup lastMessage object
-    updatedCurrentThread.lastMessage = { date: now, author: userId };
-
-    // push to DB
-    handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
-
-    /* finally handle local state update of messages! */
-
-    // do we already have activeMessages?
-    if (activeMessages) {
-      const updateAllMessages = [...activeMessages];
-      const index = updateAllMessages.findIndex((elem) => elem.messagesId === sendToDBMessageId);
-      if (index !== -1) {
-        // fully update this thread with all original values, plus updated messageData and lastMessage
-        const threadUpdate = { ...updateAllMessages[index], messageData: updatedCurrentThread.messageData, lastMessage: updatedCurrentThread.lastMessage };
-        // now update this particular thread within the entire messages array
-        updateAllMessages[index] = threadUpdate;
-        setActiveMessages(updateAllMessages);
-      }
-    } else {
       // we don't because this is the very first message being sent
-      setActiveMessages([updatedCurrentThread]);
-      setActiveThread(updatedCurrentThread.messageData);
-      setActiveThreadId(updatedCurrentThread.messagesId);
-    }
+        setActiveMessages([updatedCurrentThread]);
+        setActiveThread(updatedCurrentThread.messageData);
+        setActiveThreadId(updatedCurrentThread.messagesId);
+      }
 
-    setNewMessage(''); // clear out the text box
+      setNewMessage(''); // clear out the text box
+    }
   };
 
   const switchMessage = (newId, newName) => {
@@ -518,7 +520,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                 {/* Actual messages */}
                                 {showingThread ? (
                                   <>
-                                        <div id="messageCentral" style={{ height: 500, overflowY: 'scroll' }} ref={messageBoxRef}>
+                                        <div style={{ height: 400, overflowY: 'scroll' }}>
                                             {/* Display all the messages if any */}
                                             {activeThread.map((elem, index) => <SingleMessage
                                                     key={index.toString()}
@@ -527,8 +529,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                                 />
 
                                             )}
-                                            messageRef!
-                                           <div ref={messagesRef}/>
+                                            <div ref={messagesRef}/>
                                         </div>
                                         <EditField
                                             isTextArea
@@ -544,7 +545,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                                         <button
                                             type="button"
-                                            onClick={handleNewMessage} >Send
+                                            onClick={handleNewMessage} >Send New Message
                                              </button>
 
                                   </>

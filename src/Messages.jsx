@@ -25,13 +25,6 @@ const defaultMessage = {
 };
 
 export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates, currentSelection }) => {
-  const messagesEndRef = useRef(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(scrollToBottom, [myMessages]);
-
   const now = moment().toDate().getTime();
   // mount setup default message
   useEffect(() => {
@@ -57,6 +50,24 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const [newMessage, setNewMessage] = useState('');
   const [sendToSelectedContact, setSendToSelectedContact] = useState(false);
   const [childrenWarning, setChildrenWarning] = useState(false);
+
+  const messagesRef = useRef(null);
+  const messageBoxRef = useRef(null);
+
+
+  const scrollToBottom = () => {
+    messagesRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start'
+    });
+  };
+
+  useEffect(() => {
+    if (activeThread.length > 5) {
+      scrollToBottom();
+    }
+  }, [activeThread.length, activeThreadId]);
 
   useEffect(() => {
     setSubmitEnrollment((loggedInUser.enrollment?.submitted) || false);
@@ -507,7 +518,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                 {/* Actual messages */}
                                 {showingThread ? (
                                   <>
-                                        <div className="OverFlow " style={{ height: 500 }}>
+                                        <div id="messageCentral" style={{ height: 500, overflowY: 'scroll' }} ref={messageBoxRef}>
                                             {/* Display all the messages if any */}
                                             {activeThread.map((elem, index) => <SingleMessage
                                                     key={index.toString()}
@@ -516,7 +527,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                                 />
 
                                             )}
-                                            <div ref={messagesEndRef} />
+                                            messageRef!
+                                           <div ref={messagesRef}/>
                                         </div>
                                         <EditField
                                             isTextArea

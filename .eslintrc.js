@@ -28,7 +28,7 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "import/no-named-default": "off",
     "import/prefer-default-export": 0,
-    //"indent": [2, 2, { "SwitchCase": 1 }],
+     "indent": [2, 2, { "SwitchCase": 1 }],
     "key-spacing": ["error", { mode: "minimum" }],
     "linebreak-style": [0, "error", "windows"],
     "max-len": 0,

@@ -19,5 +19,6 @@ export { default as Elegant } from './elegant.png';
 export { default as Corner } from './corner.png';
 export { default as Add } from './add.png';
 export { default as MessageIcon } from './messages.png';
-export { default as Enrolled } from './enrolledHome.png';
+export { default as Enrolled } from './leaf.png';
 export { default as Submitted } from './submitted.png';
+export { default as Like } from './like.png';

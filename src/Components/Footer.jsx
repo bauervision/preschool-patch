@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { FacebookIcon, InstagramIcon } from "../images";
+import { FacebookIcon, InstagramIcon } from '../images';
 
 export const Footer = () => {
   return (
@@ -22,18 +22,14 @@ export const Footer = () => {
         <div className="PreFooter_Social">
           <button
             className="Social"
-            onClick={() =>
-              (window.location.href =
-                "https://www.facebook.com/preschoolpatchchesapeake/")
+            onClick={() => (window.location.href = 'https://www.facebook.com/preschoolpatchchesapeake/')
             }
           >
             <img src={FacebookIcon} alt="facebook icon" />
           </button>
           <button
             className="Social"
-            onClick={() =>
-              (window.location.href =
-                "https://www.instagram.com/preschoolpatch/")
+            onClick={() => (window.location.href = 'https://www.instagram.com/preschoolpatch/')
             }
           >
             <img src={InstagramIcon} alt="instagram icon" />

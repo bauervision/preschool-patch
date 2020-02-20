@@ -1,3 +1,5 @@
+@import "~react-image-gallery/styles/scss/image-gallery.scss";
+
 $MALACHITE: #20bf55;
 $PATCHGREEN: #0b8e51;
 $DARKIMPERIALBLUE: #0b4f6c;
@@ -67,6 +69,12 @@ $LIGHTPINK: rgb(255, 112, 146);
     border: solid 1px rgba(0, 220, 0, 0.4);
     border-radius: 20px;
     padding: 30px;
+  }
+
+  .SimpleBorderSmall {
+    border: solid 1px rgba(0, 220, 0, 0.4);
+    border-radius: 20px;
+    padding: 5px;
   }
 
   .MessageClientHeader{
@@ -249,11 +257,36 @@ $LIGHTPINK: rgb(255, 112, 146);
     border-color: none !important;
   }
 
+  .SocialActionBtn {
+    border: none;
+    margin: 0px 10px;
+    padding: 3px;
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+    color: $PATCHGREEN;
+    &:hover{
+      background-color: transparent !important;
+      transform: scale(1.1);
+    }
+  }
   
   .SocialMessageBtn {
     border: solid;
     border-width: 2px;
     margin: 0px 30px;
+    background-color: transparent;
+    border-radius: 60px;
+    transition: all 0.3s ease-in-out;
+
+    &:hover{
+      transform: scale(1.1);
+    }
+  }
+
+  .SocialMessageBtnHeader {
+    border: solid;
+    border-width: 2px;
+    margin: 0px 10px;
     background-color: transparent;
     border-radius: 60px;
     transition: all 0.3s ease-in-out;
@@ -318,78 +351,45 @@ $LIGHTPINK: rgb(255, 112, 146);
   }
 
   .CursiveFont { font-family: "Dancing Script", cursive; }
-
   .profileText { color: $PATCHGREEN; }
-
   .textMargin { margin: 5px; }
-
   .TextLeft{ text-align: left; }
-
   .TextRight{ text-align: right; }
-
   .BoxShadow { box-shadow: 10px 10px 20px lightslategray; }
-
   .LightShadow { box-shadow: 10px 10px 40px $GHOSTWHITE; }
-
   .InnerShadow { box-shadow: inset 7px 7px 30px rgba(0, 220, 0, 0.2); }
-
   .InnerShadowWhite { box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1); }
-
   .Margins{ margin: 50px; }
-
   .MarginTopSmall{ margin-top: 10px; }
   .MarginHSmall{ margin-right: 10px; margin-left: 10px; }
   .MarginTop{ margin-top: 50px; }
   .MarginBottom{ margin-bottom: 50px; }
-
+  .PaddingLite{ padding: 5px; }
   .Padding{ padding: 20px; }
-
   .PaddingBoost{ padding: 60px; }
-
   .PaddingTop{ padding-top: 20px; }
-  
   .PaddingBottom{ padding-bottom: 20px; }
-
   .Flex { display: flex; }
-
-  .Evenly{
-    justify-content: space-evenly;
-  }
-
-  .Between{
-    justify-content: space-between;
-  }
-
-  .JustifyCenter {
-    justify-content: center;
-  }
-  .AlignItems {
-    align-items: center;
-  }
-
-  .Row {
-    flex-direction: row;
-  }
-
-  .Col {
-    flex-direction: column;
-  }
-
-  .JustifyStart {
-    justify-content: flex-start;
-  }
-
-  .JustifyEnd {
-    justify-content: flex-end;
-  }
-
-  .HalfSize{
-    width: 50%;
-  }
-
-  .PinkLine{
-    border-bottom: solid 1px $PARADISEPINK;
-  }
+  .Evenly{ justify-content: space-evenly; }
+  .Between{ justify-content: space-between; }
+  .JustifyCenter { justify-content: center; }
+  .AlignItems { align-items: center; }
+  .Row { flex-direction: row; }
+  .Col { flex-direction: column; }
+  .JustifyStart { justify-content: flex-start; }
+  .JustifyEnd { justify-content: flex-end; }
+  .HalfSize{ width: 50%; }
+  .ThreeQuarters{ width: 73%; }
+  .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
+  
+  .ImgFrame{
+    width: 60px;
+    height: auto;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 5px;
+}
 
   .NotifyBtn{
     display: flex;
@@ -645,6 +645,10 @@ $LIGHTPINK: rgb(255, 112, 146);
     filter: invert(100%) ; //invert black to white
   }
 
+  .filter-grey{
+    filter: invert(50%) ; //invert black to white
+  }
+
   .filter-green{
     filter: invert(50%) sepia(93%) saturate(6585%) hue-rotate(145deg) brightness(95%) contrast(91%);
   }
@@ -680,17 +684,20 @@ $LIGHTPINK: rgb(255, 112, 146);
     }
   }
 
+  .RegButton {
+    transform:scale(0.5)
+    
+  }
+
   button {
-    background-color: $PARADISEPINK;
+    background-color: transparent;
     color: $GHOSTWHITE;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    border: solid;
+    margin: 5px;
+    padding: 5px;
     transition: all 0.5s;
 
     &:hover {
-      background-color: $MALACHITE;
+      
       transform: scale(1.05);
     }
     &:disabled{

@@ -13,6 +13,7 @@ import { MyProfilePage } from './MyProfilePage';
 import { ClientAdmin } from './ClientAdmin';
 import { Messages } from './Messages';
 import { Admin } from './Admin';
+import { TeacherSocialPage } from './TeacherSocialPage';
 
 import { f, database } from './config';
 
@@ -270,7 +271,10 @@ const App = () => {
             const messageEntries = curUser.public.messages;
             fetchMessages(messageEntries);
 
-            // TODO, eventually move user directly to teacher's page
+            // check to see if this user is enrolled
+            if (curUser.public.enrollment?.accepted) {
+              setPage(8); // jump to teacher's social page
+            }
           }
         });
       }
@@ -411,6 +415,20 @@ const App = () => {
     window.scrollTo(0, 0);
 
     switch (page) {
+      case 8:
+        return (
+          <TeacherSocialPage
+            pageUpdate={handlePageUpdate}
+            loggedInUser={loggedInUser}
+            handleLogOut={handleLogOut}
+            updateSuccess={updateSuccess}
+            clientData={clientData && clientData}
+            userId={userId}
+            myMessages={myMessages && myMessages}
+            isLeader={isLeader}
+
+          />
+        );
       case 7:
         return (
           <Admin

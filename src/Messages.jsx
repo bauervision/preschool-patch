@@ -268,7 +268,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
       // setup lastMessage object
       updatedCurrentThread.lastMessage = { date: now, author: userId };
-      console.log(updatedCurrentThread);
       // push to DB
       handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
 
@@ -380,6 +379,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const showEnrollmentDetails = (showEnrollmentButton && !loggedInUser.enrollment.accepted) && (myTeacher);
   const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (!myTeacher);
 
+  const messageWindowHeight = isLeader ? 350 : 400;
+
   return (
         <div>
             <div>
@@ -406,6 +407,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                   // we need to determine if this is our message thread, or someone elses
                                   const messageFromName = (elem.from === userId) ? elem.toName : elem.fromName;
                                   const messageFromUrl = (elem.from === userId) ? elem.toUrl : elem.fromUrl;
+                                  const messageFromID = (elem.from === userId) ? elem.to : elem.from;
+
+                                  // handle enrollment submissions
+                                  const submittedTo = !isLeader && loggedInUser.enrollment.submittedTo;
+                                  const submittedEnrollmentTo = submittedTo === messageFromID;
+                                  const accepted = !isLeader && submittedEnrollmentTo && (loggedInUser.enrollment.accepted || false);
+
 
                                   return (
                                         <MessageNotification
@@ -416,6 +424,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                             activeId={elem.messagesId}
                                             switchMessage={switchMessage}
                                             showAsUnread={showAsUnread}
+                                            submitted={submittedEnrollmentTo && !accepted}
+                                            accepted={accepted}
                                         />
                                   );
                                 }
@@ -520,7 +530,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                                 {/* Actual messages */}
                                 {showingThread ? (
                                   <>
-                                        <div style={{ height: 400, overflowY: 'scroll' }}>
+                                        <div style={{ height: messageWindowHeight, overflowY: 'scroll' }}>
                                             {/* Display all the messages if any */}
                                             {activeThread.map((elem, index) => <SingleMessage
                                                     key={index.toString()}

@@ -453,10 +453,21 @@ $LIGHTPINK: rgb(255, 112, 146);
       filter: invert(100%) ;
     }
 
+    &:hover #submitted{
+      filter: invert(100%) ;
+    }
+
+    &:hover #enrolled{
+      filter: invert(100%) ;
+    }
+
     & .Alert{
       filter: invert(100%) ;
     }
 
+    & #submitted{
+      filter: invert(100%) ;
+    }
     p{
       font-size: 12pt;
       font-family: "Raleway", sans-serif;

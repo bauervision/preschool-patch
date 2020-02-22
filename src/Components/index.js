@@ -17,3 +17,4 @@ export { default as DetailViewAdmin } from './DetailViewAdmin';
 export { default as DetailViewClient } from './DetailViewClient';
 export { default as SocialPost } from './SocialPost';
 export { default as SingleComment } from './SingleComment';
+export { default as NewPost } from './NewPost';

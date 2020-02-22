@@ -1,0 +1,165 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  .jcenter {
+    justify-content: center;
+  }
+  
+  .align {
+    align-items: center;
+  }
+  
+  .grid {
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+  
+  .margin-small {
+    margin: 10px;
+  }
+  .padding-small {
+    padding: 5px;
+  }
+  .border {
+    border: solid 1px grey;
+  }
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  .fullWidth {
+    width: 100%;
+  }
+  
+  /* The Modal (background) */
+  .modal {
+    position: fixed;
+    z-index: 1;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 1000px;
+  }
+  
+  .whiteFont {
+    color: white;
+  }
+  .absolute {
+    position: absolute;
+  }
+  .top {
+    top: 2.5%;
+  }
+
+  .margin-bottom{
+      margin-bottom: 20px;;
+  }
+  
+  .download {
+    color: rgba(255, 255, 255, 0.5);
+    right: 10%;
+  }
+  .download:hover {
+    color: white;
+  }
+  /* The Close Button */
+  .close {
+    top: 10px;
+    right: 25px;
+    font-size: 35px;
+    font-weight: bold;
+  }
+  .cursor {
+    cursor: pointer;
+  }
+  .close:hover,
+  .close:focus {
+    color: #999;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  /* Next & previous buttons */
+  .prev,
+  .next {
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    user-select: none;
+    border: none;
+  }
+  .prev {
+    left: 0;
+    border-radius: 0 20px 20px 0;
+  }
+  /* Position the "next button" to the right */
+  .next {
+    right: 0;
+    border-radius: 20px 0 0 20px;
+  }
+  
+  /* On hover, add a black background color with a little bit see-through */
+  .prev:hover,
+  .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .numbertext {
+    font-size: 12px;
+    padding: 20px;
+  }
+
+  .thumbContainer {
+    max-width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .thumbnail {
+    width: 25%;
+    height: 100%;
+    opacity: 0.8;
+    transition: ease-in-out 0.4s all;
+    min-width: 100%;
+    vertical-align: bottom;
+  }
+  
+  .thumbnail:hover {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  
+  .slide { border-radius: 20px; }
+  
+  .thumbRow{ flex-grow: 1; }
+
+  .vh-20 { width: 20vh;}
+  .vh-30 {width: 30vh;}
+  .vh-40 {width: 40vh;}
+  

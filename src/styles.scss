@@ -1,5 +1,3 @@
-@import "~react-image-gallery/styles/scss/image-gallery.scss";
-
 $MALACHITE: #20bf55;
 $PATCHGREEN: #0b8e51;
 $DARKIMPERIALBLUE: #0b4f6c;
@@ -134,7 +132,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   .Header {
     background-color: $PATCHGREEN;
     position: fixed;
-    z-index: 2;
+    z-index: 1;
     top: 0;
     right: 0;
     justify-content: space-between;
@@ -360,6 +358,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   .InnerShadow { box-shadow: inset 7px 7px 30px rgba(0, 220, 0, 0.2); }
   .InnerShadowWhite { box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1); }
   .Margins{ margin: 50px; }
+  .MarginSmall{ margin: 20px; }
   .MarginTopSmall{ margin-top: 10px; }
   .MarginHSmall{ margin-right: 10px; margin-left: 10px; }
   .MarginTop{ margin-top: 50px; }
@@ -379,7 +378,8 @@ $LIGHTPINK: rgb(255, 112, 146);
   .JustifyStart { justify-content: flex-start; }
   .JustifyEnd { justify-content: flex-end; }
   .HalfSize{ width: 50%; }
-  .ThreeQuarters{ width: 73%; }
+  .Quarter{ width: 25%; }
+  .ThreeQuarters{ width: 75%; }
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
   
   .ImgFrame{
@@ -390,6 +390,22 @@ $LIGHTPINK: rgb(255, 112, 146);
     border-bottom-right-radius: 50%;
     border-bottom-left-radius: 5px;
 }
+
+.ImgFrameReversed{
+  width: 120px;
+  height: auto;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 15%;
+  border-bottom-right-radius: 15%;
+  border-bottom-left-radius: 50%;
+}
+
+  .ImgFrameCircle{
+    width: 60px;
+    height: auto;
+    border-radius: 50%;
+    
+  }
 
   .NotifyBtn{
     display: flex;
@@ -690,14 +706,15 @@ $LIGHTPINK: rgb(255, 112, 146);
   }
 
   button {
-    background-color: transparent;
+    background-color: $PARADISEPINK;
     color: $GHOSTWHITE;
     margin: 5px;
-    padding: 5px;
+    padding: 15px;
     transition: all 0.5s;
+    border-radius: 10px;
+    border: none;
 
     &:hover {
-      
       transform: scale(1.05);
     }
     &:disabled{

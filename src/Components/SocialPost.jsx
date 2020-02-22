@@ -1,15 +1,16 @@
-import React, { useState, Children } from 'react';
-import ImageGallery from 'react-image-gallery';
+import React, { useState } from 'react';
 import moment from 'moment';
+import LightBox from './LightBox';
 
 import SingleComment from './SingleComment';
 import { Like } from '../images';
-import { Coloring, Kids } from '../images/photos';
 
-const SocialPost = ({ data, userId, loggedInUser }) => {
+
+const SocialPost = ({ post, userId, loggedInUser }) => {
   const [like, setLike] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const { photoUrl, name } = loggedInUser;
+
   // const myMessage = data.author === userId;
 
   // const time = moment(data.date).fromNow();
@@ -32,14 +33,14 @@ const SocialPost = ({ data, userId, loggedInUser }) => {
       </div>
 
       {/* Pictures if any */}
-      <div className="Flex JustifyCenter AlignItems">
-        <ImageGallery
-          items={[{ original: Coloring }, { original: Kids }]}
-          showThumbnails={false}
-          showPlayButton={false}
-
-
-        />
+      <div className="margin-bottom">
+        {post.images?.map((images, index) => (
+          <LightBox
+            key={index.toString()}
+            images={images}
+          />
+        )
+        )}
 
       </div>
 

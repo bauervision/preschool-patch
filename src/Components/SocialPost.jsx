@@ -10,16 +10,16 @@ const SocialPost = ({ post, userId, loggedInUser }) => {
   const [like, setLike] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const { photoUrl, name } = loggedInUser;
+  const { text, images, date } = post;
 
   // const myMessage = data.author === userId;
 
-  // const time = moment(data.date).fromNow();
   return (
     <div className={'LightPinkBorder PaddingLite ThreeQuarters MarginBottom'} >
       {/* Post Author and date */}
       <div className="Flex AlignItems">
         <div className="CursiveFont PinkFont MediumFont">{name}</div>
-        <div className="" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>a few minutes ago</div>
+        <div className="" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>{moment(date).fromNow()}</div>
       </div>
 
       {/* Post Data */}
@@ -28,20 +28,15 @@ const SocialPost = ({ post, userId, loggedInUser }) => {
         <img alt="profile pic" className="ImgFrame" src={photoUrl} />
         {/* Post Message */}
         <div style={{ fontSize: 20, padding: 8 }}>
-            Updated pics from today! The kids are having a brilliant time at Preschool Patch! Now, onto lunch, rest time and more games!
+          {text}
         </div>
       </div>
 
       {/* Pictures if any */}
       <div className="margin-bottom">
-        {post.images?.map((images, index) => (
-          <LightBox
-            key={index.toString()}
-            images={images}
-          />
-        )
-        )}
-
+        <LightBox
+          images={images}
+        />
       </div>
 
       {/* Like or Comment Area */}

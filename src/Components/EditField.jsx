@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Checked, Unchecked } from "../images";
+import { Checked, Unchecked } from '../images';
 
 const EditField = ({
   title,
@@ -16,8 +16,6 @@ const EditField = ({
   multiple,
   small
 }) => {
-
-
   return (
     <div
       className="Flex Col JustifyCenter"
@@ -27,7 +25,7 @@ const EditField = ({
         marginRight: isCheck ? 40 : 0
       }}
     >
-      <div style={{ textAlign: (isTextArea || isFile) ? "center" : "left" }}>
+      <div style={{ textAlign: (isTextArea || isFile) ? 'center' : 'left' }}>
         <label htmlFor={forLabel} className="InputTextLabel">
           {title}:
         </label>
@@ -39,11 +37,11 @@ const EditField = ({
         {isTextArea && (
           <textarea
             name={forLabel}
-            rows={small ? "2" : "8"}
+            rows={small ? '2' : '8'}
             // cols={!isMessage ? "70" : '120'}
             onChange={(e) => onChange(e.target.value)}
             value={value}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
 
           />
         )}
@@ -67,8 +65,8 @@ const EditField = ({
             onChange={(e) => onChange(multiple ? e.target.files : e.target.files[0])}
           />
         )}
-        {(!isInput && !isTextArea && !isFile && !isCheck) &&
-          <input
+        {(!isInput && !isTextArea && !isFile && !isCheck)
+          && <input
             className="InputStyle Buffer"
             placeholder={placeholder}
             type={type}

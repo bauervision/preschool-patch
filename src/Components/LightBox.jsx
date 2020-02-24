@@ -57,6 +57,7 @@ const LightBox = ({ images }) => {
     </>
   );
 
+  console.log(images);
   return (
     <>
       <div className="flex jcenter">

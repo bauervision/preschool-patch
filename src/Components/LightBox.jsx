@@ -7,11 +7,11 @@ const LightBox = ({ images }) => {
 
   // handle looping of image viewing
   useEffect(() => {
-    if (slideIndex > images.length - 1) {
+    if (slideIndex > images?.length - 1) {
       setSlideIndex(0);
     }
     if (slideIndex < 0) {
-      setSlideIndex(images.length - 1);
+      setSlideIndex(images?.length - 1);
     }
   }, [slideIndex, images]);
 
@@ -32,7 +32,7 @@ const LightBox = ({ images }) => {
 
   // simple Thumbnail component for lightbox
   const Thumbnail = ({ image, index }) => (
-    <div className={`thumbRow  ${images.length <= 4 ? (images.length === 1 ? 'ch-40' : 'vh-30') : 'vh-20'}`}>
+    <div className={`thumbRow  ${images?.length <= 4 ? (images?.length === 1 ? 'vh-40' : 'vh-30') : 'vh-20'}`}>
       <img
         className="thumbnail "
         src={image}
@@ -57,13 +57,13 @@ const LightBox = ({ images }) => {
     </>
   );
 
-  console.log(images);
+
   return (
     <>
       <div className="flex jcenter">
         {/* Render out the images */}
         <div className="thumbContainer">
-          {images.map((elem, index) => (
+          {images?.map((elem, index) => (
             <Thumbnail
               key={index.toString()}
               image={elem.image}

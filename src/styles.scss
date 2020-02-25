@@ -211,10 +211,39 @@ $LIGHTPINK: rgb(255, 112, 146);
     background-color: $PARADISEPINK;
     color:$GHOSTWHITE;
   }
+  .LightPinkFill{
+    background-color: $LIGHTPINK;
+    color:$GHOSTWHITE;
+  }
 
   .PinkFont{ color:$PARADISEPINK; }
 
   .WhiteFont{ color: $GHOSTWHITE; }
+
+  .UploadImageContainer{
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    // justify-content: center;
+   
+  
+    //flex-wrap: wrap;
+  }
+ 
+  .UploadImageRow{
+    flex-grow: 1;
+    width: 5vh;
+  }
+
+  .UploadImage{
+    object-fit: contain;
+    width: 40%;
+    min-width: 100%;
+    vertical-align: bottom;
+  }
 
   .Image{
     width: 256px;
@@ -380,6 +409,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   .HalfSize{ width: 50%; }
   .Quarter{ width: 25%; }
   .ThreeQuarters{ width: 75%; }
+  .FullSize{ width: 100%; }
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
   
   .ImgFrame{
@@ -621,9 +651,13 @@ $LIGHTPINK: rgb(255, 112, 146);
 
   textarea {
     font-family: "Raleway", sans-serif;
-    padding: 20px;
     border-radius: 10px;
     font-size: 12pt;
+    width: 100%;
+    padding: 10px;
+    min-height: 40px;
+    resize: none;
+    
   }
 
 

@@ -32,6 +32,9 @@ const App = () => {
   const [kidTotal, setKidTotal] = useState([{ name: "Child's name", age: 2 }]);
   const [myMessages, setMyMessages] = useState([]);
   const [loadingClients, setLoadingClients] = useState(true);
+  const [loadingSocial, setLoadingSocial] = useState(true);
+  const [socialPosts, setSocialPosts] = useState(null);
+  const [socialPostId, setSocialPostId] = useState(null);
 
 
   /* Handle Loading Client Data */
@@ -52,6 +55,26 @@ const App = () => {
       }
     }
   }, [clientData, isLeader, loggedInUser]);
+
+  /* Handle Loading Social Data */
+  useEffect(() => {
+    if (loggedInUser) {
+      // if not a leader, see if they have been accepted
+      const enrolled = !isLeader && (loggedInUser.enrollment.accepted || false);
+
+      if (isLeader || enrolled) {
+        // once state matches DB
+        if (!socialPosts) {
+          // turn off the loader
+          setLoadingSocial(false);
+        }
+      } else {
+        // we dont have access to social feed
+        setLoadingSocial(false);
+      }
+    }
+  }, [isLeader, loggedInUser, socialPosts]);
+
 
   const getMessageData = (messageId) => {
     // what is the current value of myMessages?
@@ -95,6 +118,27 @@ const App = () => {
     // push to DB
     database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
   };
+
+  const fetchSocialActivity = (id) => {
+    // grab ref to the data
+    database.ref(`social/${id}`).on('value', (snapshot) => {
+      if (snapshot.val()) {
+        // grab the data
+        const data = snapshot.val();
+        data.sort((a, b) => moment(b.date).diff(a.date));
+        setSocialPosts(data);
+      }
+    });
+  };
+
+  const handlePostUpdates = (posts) => {
+    console.log(posts);
+
+    // push update to DB
+    database.ref(`social/${socialPostId}`).set(posts);
+    setSocialPosts(posts);// simply update state which will trigger the re-render on social page
+  };
+
 
   const handlePageUpdate = (page) => setPage(page);
 
@@ -243,6 +287,7 @@ const App = () => {
           leader = true;
           const curUser = snapshot.val();
           setLoggedInUser(curUser.public);
+          setSocialPostId(user.uid);// social postID will always be the leaders ID
 
           /* curUser.public.messages is an array of ids which point to
           the messages array, which holds all of the message data specifics */
@@ -255,6 +300,8 @@ const App = () => {
               getClientData(client.clientId);
             });
           }
+
+          fetchSocialActivity(user.uid);
           setPage(5); // leader has logged in, skip to client admin
         }
       });
@@ -273,6 +320,9 @@ const App = () => {
 
             // check to see if this user is enrolled
             if (curUser.public.enrollment?.accepted) {
+              // grab social feed which is the ID of the leader we're enrolled with
+              setSocialPostId(curUser.public.enrollment.submittedTo);// social postID will always be the leaders ID
+              fetchSocialActivity(curUser.public.enrollment.submittedTo);
               setPage(8); // jump to teacher's social page
             }
           }
@@ -426,6 +476,9 @@ const App = () => {
             userId={userId}
             myMessages={myMessages && myMessages}
             isLeader={isLeader}
+            loadingSocial={loadingSocial}
+            socialPosts={socialPosts}
+            handlePostUpdates={handlePostUpdates}
 
           />
         );

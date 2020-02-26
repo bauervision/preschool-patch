@@ -22,3 +22,4 @@ export { default as MessageIcon } from './messages.png';
 export { default as Enrolled } from './leaf.png';
 export { default as Submitted } from './submitted.png';
 export { default as Like } from './like.png';
+export { default as Download } from './download.png';

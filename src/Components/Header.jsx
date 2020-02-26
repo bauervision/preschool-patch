@@ -31,7 +31,8 @@ export const Header = ({
     pageUpdate(0);
   };
 
-  const currentlyEnrolled = (!isLeader && loggedInUser?.enrollment?.accepted) || false;
+  // if we aren't a leader, check to see if we're enrolled, if we are a leader, show our social page link
+  const currentlyEnrolled = (!isLeader ? (loggedInUser?.enrollment?.accepted || false) : true);
 
   return (
     <header className="Header LightShadow">

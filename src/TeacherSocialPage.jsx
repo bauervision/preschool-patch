@@ -9,17 +9,12 @@ import { Logo, Elegant } from './images';
 
 export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, loadingSocial, socialPosts }) => {
   const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
-  let thisPatchName = '';
-  if (!isLeader && loggedInUser) {
-    thisPatchName = loggedInUser.enrollment.patchName;
-  } else {
-    thisPatchName = loggedInUser.patchName;
-  }
+  // grab the patch name of our patch based on if we're the leader or not
+  const thisPatchName = !loggedInUser.isLeader ? loggedInUser.enrollment.patchName : loggedInUser.patchName;
 
 
   /* Handle local state post updating  */
   useEffect(() => {
-    console.log('socialPosts have changed', socialPosts);
     // if incoming social posts have changed, re-set state
     if (socialPosts?.length > 0) { socialPosts.sort((a, b) => moment(b.date).diff(a.date)); }
     setUpdatedPosts(socialPosts);
@@ -27,8 +22,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
 
   const handleNewPost = (post) => {
     // if we have posts already update them otherwise start a new array
-    const update = updatedPosts?.length > 0 ? [...updatedPosts, post] : [];
-    console.log('teacherSocialPage', update);
+    const update = updatedPosts?.length > 0 ? [...updatedPosts, post] : [post];
     // push to parent
     handlePostUpdates(update);
   };
@@ -56,7 +50,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
             </div>
             {/* Render out the posts in this account */}
             {updatedPosts?.length > 0 ? updatedPosts.map((post) => <SocialPost key={post.date} post={post} loggedInUser={loggedInUser}/>)
-              : (<div className="Buffer SimpleBorder">No Posts yet! Say something!</div>)}
+              : (<div className="Buffer PaddingBoost FullSize PinkBorder" style={{ padding: 60 }}>No Posts yet! Show something awesome about your preschool!!</div>)}
 
           </div>
         </div>

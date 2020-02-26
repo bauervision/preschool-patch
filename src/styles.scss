@@ -99,6 +99,7 @@ $LIGHTPINK: rgb(255, 112, 146);
     padding-left: 5px;
   }
 
+  .TestBorder{border: solid 1px grey}
   .CheckBox {
     border: none;
     background-color: transparent;
@@ -227,22 +228,34 @@ $LIGHTPINK: rgb(255, 112, 146);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    // justify-content: center;
-   
-  
-    //flex-wrap: wrap;
   }
  
   .UploadImageRow{
     flex-grow: 1;
     width: 5vh;
+    position: relative;
+    &:hover .RemoveUpload{ opacity: 1}
   }
 
   .UploadImage{
+    transition: .5s ease;
     object-fit: contain;
     width: 40%;
     min-width: 100%;
     vertical-align: bottom;
+    opacity: 1;
+  }
+
+  .RemoveUpload{
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 2em;
+    color: $PARADISEPINK;
   }
 
   .Image{
@@ -377,6 +390,7 @@ $LIGHTPINK: rgb(255, 112, 146);
       transition: width 1s;
   }
 
+  .Raleway { font-family: "Raleway", sans-serif; }
   .CursiveFont { font-family: "Dancing Script", cursive; }
   .profileText { color: $PATCHGREEN; }
   .textMargin { margin: 5px; }
@@ -402,6 +416,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   .Between{ justify-content: space-between; }
   .JustifyCenter { justify-content: center; }
   .AlignItems { align-items: center; }
+  .AlignStart { align-content: start; }
   .Row { flex-direction: row; }
   .Col { flex-direction: column; }
   .JustifyStart { justify-content: flex-start; }

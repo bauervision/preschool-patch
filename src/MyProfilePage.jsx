@@ -27,6 +27,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       infants: loggedInUser.infants,
       kidTotal: loggedInUser.kidTotal,
       name: loggedInUser.name,
+      patchName: loggedInUser.patchName,
       photoUrl: loggedInUser.photoUrl,
       phone: loggedInUser.phone,
       zipcode: loggedInUser.zipcode
@@ -48,6 +49,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [updatedAge, setAge] = useState(userData.age);
   const [updatedAvailable, setAvailable] = useState(userData.available);
   const [updatedExperience, setExperience] = useState(userData.experience);
+  const [updatedPatchName, setPatchName] = useState(userData.patchName);
   const [updatedGalleryDesription, setGalleryDescription] = useState(userData.gallery && userData.gallery.description);
   const [updatedGalleryFeatures, setGalleryFeatures] = useState(userData.gallery && userData.gallery.features);
   const [updatedFTRates, setFTRates] = useState(userData.rates && userData.rates.ft);
@@ -87,6 +89,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         infants: updatedInfants,
         kidTotal: updatedKidTotal,
         name: updatedName,
+        patchName: updatedPatchName,
         photoUrl: updatedPhotoUrl,
 
       };
@@ -275,22 +278,32 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                 {isLeader && (<div>
 
                   <div className="Flex Row AlignItems JustifyCenter ">
-                    <EditField
-                      isCheck
-                      title="Currently Enrolling"
-                      type="checkbox"
-                      forLabel="Enrolling"
-                      onChange={() => setAvailable(!updatedAvailable)}
-                      value={updatedAvailable}
-                    />
+                    <div>
+                      <EditField
+                        isCheck
+                        title="Currently Enrolling"
+                        type="checkbox"
+                        forLabel="Enrolling"
+                        onChange={() => setAvailable(!updatedAvailable)}
+                        value={updatedAvailable}
+                      />
 
+                      <EditField
+                        isCheck
+                        title="Accepting Infants?"
+                        type="checkbox"
+                        forLabel="assisted"
+                        onChange={() => setInfants(!updatedInfants)}
+                        value={updatedInfants}
+                      />
+                    </div>
                     <EditField
-                      isCheck
-                      title="Accepting Infants?"
-                      type="checkbox"
-                      forLabel="assisted"
-                      onChange={() => setInfants(!updatedInfants)}
-                      value={updatedInfants}
+                      title="Patch Name"
+                      placeholder={updatedPatchName || 'Enter a Patch Name!'}
+                      type="text"
+                      forLabel="PatchName"
+                      onChange={setPatchName}
+                      value={updatedPatchName}
                     />
                   </div>
                 </div>)}

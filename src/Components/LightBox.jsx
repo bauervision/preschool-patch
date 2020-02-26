@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LightBox.css';
+import { Download } from '../images';
 
 const LightBox = ({ images }) => {
   const [modal, setModal] = useState(false);
@@ -43,17 +44,9 @@ const LightBox = ({ images }) => {
   );
 
   // Component that opens in the lightbox
-  const FullsizeSlide = ({ index, length, image, caption, isShown }) => (
+  const FullsizeSlide = ({ image, isShown }) => (
     <>
-      {isShown && (
-        <div>
-          <div className="numbertext whiteFont absolute">
-            {index}/{length}
-          </div>
-          <img src={image} className="fullWidth slide" alt="gallery" />
-          <div className="whiteFont">{caption}</div>
-        </div>
-      )}
+      {isShown && <img src={image} className="slide" alt="gallery"/>}
     </>
   );
 
@@ -78,8 +71,9 @@ const LightBox = ({ images }) => {
           <div
             className="cursor absolute top download"
             onClick={() => alert('Downloaded!')}
+            title="Download this image"
           >
-            Download
+            <img className="filter-white" src={Download} alt="download icon" />
           </div>
           <span
             className="close cursor whiteFont absolute"
@@ -89,23 +83,28 @@ const LightBox = ({ images }) => {
           </span>
           <div className="modal-content">
             {/* FullSize images */}
-            {images.map((elem, index) => (
-              <FullsizeSlide
-                key={index.toString()}
-                index={index + 1}
-                length={images.length}
-                image={elem.image}
-                isShown={slideIndex === index}
-                caption={elem.caption}
-              />
-            ))}
+            <div >
 
-            <button className="prev" onClick={() => slideDirection(-1)}>
+              {images.map((elem, index) => (
+                <FullsizeSlide
+                  key={index.toString()}
+                  image={elem.image}
+                  isShown={slideIndex === index}
+                />
+              ))}
+
+            </div>
+            {images.length > 1 && (
+              <>
+                <button className="prev" onClick={() => slideDirection(-1)}>
               &#10094;
-            </button>
-            <button className="next" onClick={() => slideDirection(1)}>
+                </button>
+                <button className="next" onClick={() => slideDirection(1)}>
               &#10095;
-            </button>
+                </button>
+              </>
+            )}
+
           </div>
         </div>
       )}

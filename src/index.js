@@ -131,7 +131,7 @@ const App = () => {
   };
 
   const handlePostUpdates = (posts) => {
-    console.log('index', posts.images);
+    console.log('index->', posts);
     // push update to DB and update state which will trigger the re-render on social page
     database.ref(`social/${socialPostId}`).set(posts).then(() => setSocialPosts(posts));
   };

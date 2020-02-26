@@ -6,6 +6,7 @@ import { storage } from '../config';
 const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
   const [newText, setNewText] = useState(null);
   const [newFiles, setNewFiles] = useState(null);
+  const [imageUrlArray, setImageUrlArray] = useState([]);
 
   const textref = useRef(null);
   const filesref = useRef(null);
@@ -13,60 +14,51 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
   const { photoUrl, name } = loggedInUser;
   const now = moment().toDate().getTime();
 
-  const handleSubmitPost = () => {
-    // files will be in a File List array, so convert them first to a normal array
-    const imageUrlArray = [];
 
-    // as long as we actually select files
-    if (newFiles) {
-      const imageArray = Array.from(newFiles);
+  const uploadImageAsPromise = (file) => {
+    const update = [...imageUrlArray];
+    const storageRef = storage.ref(`public/${userId}/images/${file.name}`);
 
-      // upload each to storage
-      imageArray.forEach((file) => {
-        const uploadTask = storage
-          .ref(`public/${userId}/images/${file.name}`)
-          .put(file);
+    return new Promise(((resolve, reject) => {
+      // Upload file
+      const task = storageRef.put(file);
+      // TODO Update progress bar
+      task.on('state_changed',
+        (snapshot) => { },
+        (err) => { reject(err); },
+        () => {
+          // complete
+          storage
+            .ref(`public/${userId}/images/`)
+            .child(file.name)
+            .getDownloadURL()
+            .then((url) => {
+              const newImage = {
+                image: url
+              };
+              update.push(newImage);
+              console.log('=>', update);
+              setImageUrlArray(update);
+              resolve(task);
+            });
+        }
+      );
+    })).then(() => {
+      console.log('then', update, imageUrlArray);
+      return update;
+    });
+  };
 
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            // progress
-            const progress = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            console.log(progress);
-            // setUploadProgress(progress);
-          },
-          (error) => {
-            // error
-            console.log(error);
-          },
-          () => {
-            // complete
-            storage
-              .ref(`public/${userId}/images/`)
-              .child(file.name)
-              .getDownloadURL()
-              .then((url) => {
-                const newImage = {
-                  image: url
-                };
-                imageUrlArray.push(newImage);
-              });
-          }
-        );
-      });
-    }
-
+  const finalizePost = (imageArray) => {
     const newPost = {
       author: { name, id: userId, photoUrl },
       date: now,
       text: newText,
-      images: imageUrlArray,
+      images: imageArray || null,
       likes: [], // start out with an empty array
       comments: [], // and empty comments
     };
-
+    console.log('finalizing post', newPost);
     handleNewPost(newPost);
     // handle clean up
     setNewText(null);
@@ -75,7 +67,22 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
     filesref.current.value = null;
   };
 
-  console.log(newFiles);
+
+  const handleSubmitPost = async () => {
+    // files will be in a File List array, so convert them first to a normal array
+    // as long as we actually select files
+    if (newFiles) {
+      // upload each to storage with promises
+      const data = await Promise.all(Array.from(newFiles).map(uploadImageAsPromise));
+      const merged = [].concat(...data);
+
+      finalizePost(merged);
+    } else {
+      finalizePost();
+    }
+  };
+
+
   return (
     <div className="Flex Col  AlignItems ThreeQuarters FullSize " >
 
@@ -91,8 +98,6 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
             rows='2'
             cols='80'
             onChange={(e) => setNewText(e.target.value)}
-            res
-
           />
           <div className="Flex Col JustifyCenter">
 
@@ -114,7 +119,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
             && <div className="UploadImageContainer">
               { Array.from(newFiles).map((file) => (
                 <div key={file.name} className="UploadImageRow">
-                  <img className="UploadImage"src={URL.createObjectURL(file)} />
+                  <img className="UploadImage"src={URL.createObjectURL(file)} alt="thumbnail"/>
                 </div>))}
             </div>
             }

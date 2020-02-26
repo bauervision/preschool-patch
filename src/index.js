@@ -60,7 +60,7 @@ const App = () => {
   useEffect(() => {
     if (loggedInUser) {
       // if not a leader, see if they have been accepted
-      const enrolled = !isLeader && (loggedInUser.enrollment.accepted || false);
+      const enrolled = (!isLeader && loggedInUser.enrollment?.accepted) || false;
 
       if (isLeader || enrolled) {
         // once state matches DB
@@ -125,18 +125,15 @@ const App = () => {
       if (snapshot.val()) {
         // grab the data
         const data = snapshot.val();
-        data.sort((a, b) => moment(b.date).diff(a.date));
         setSocialPosts(data);
       }
     });
   };
 
   const handlePostUpdates = (posts) => {
-    console.log(posts);
-
-    // push update to DB
-    database.ref(`social/${socialPostId}`).set(posts);
-    setSocialPosts(posts);// simply update state which will trigger the re-render on social page
+    console.log('index', posts.images);
+    // push update to DB and update state which will trigger the re-render on social page
+    database.ref(`social/${socialPostId}`).set(posts).then(() => setSocialPosts(posts));
   };
 
 
@@ -271,7 +268,7 @@ const App = () => {
 
 
           setPatchData(data);
-          setPage(7);
+          setPage(7); // go to admin
         }
       }
     });
@@ -294,6 +291,7 @@ const App = () => {
           const messageEntries = curUser.public.messages;
           fetchMessages(messageEntries);
 
+          const unAcceptedClient = false;
           if (curUser.public.clients?.length > 0) {
             const clientEntries = curUser.public.clients;
             clientEntries.forEach((client) => {
@@ -302,7 +300,13 @@ const App = () => {
           }
 
           fetchSocialActivity(user.uid);
-          setPage(5); // leader has logged in, skip to client admin
+          // if leader has new client requests go to client admin first
+          if (unAcceptedClient) {
+            setPage(5); // leader has logged in, skip to client admin
+          } else {
+            // otherwise go to social page
+            setPage(8); // leader has logged in, skip to client admin
+          }
         }
       });
 
@@ -324,6 +328,8 @@ const App = () => {
               setSocialPostId(curUser.public.enrollment.submittedTo);// social postID will always be the leaders ID
               fetchSocialActivity(curUser.public.enrollment.submittedTo);
               setPage(8); // jump to teacher's social page
+            } else {
+
             }
           }
         });

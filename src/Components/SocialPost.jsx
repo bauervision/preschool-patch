@@ -9,8 +9,8 @@ import { Like } from '../images';
 const SocialPost = ({ post, userId, loggedInUser }) => {
   const [like, setLike] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const { photoUrl, name } = loggedInUser;
-  const { text, images, date } = post;
+  const { author: { photoUrl, name }, text, images, date } = post;
+
 
   // const myMessage = data.author === userId;
 

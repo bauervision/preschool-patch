@@ -31,6 +31,7 @@ export const Header = ({
     pageUpdate(0);
   };
 
+  const currentlyEnrolled = (!isLeader && loggedInUser?.enrollment?.accepted) || false;
 
   return (
     <header className="Header LightShadow">
@@ -69,7 +70,7 @@ export const Header = ({
           <>
 
             {/* Show Teachers Social page Icon, if we're not already there */}
-            {(!isSocial && (loggedInUser.enrollment.accepted || false)) && (
+            {(!isSocial && currentlyEnrolled) && (
               <div>
                 <img
                   src={Enrolled}

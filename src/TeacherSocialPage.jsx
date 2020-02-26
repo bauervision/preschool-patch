@@ -9,19 +9,26 @@ import { Logo, Elegant } from './images';
 
 export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, loadingSocial, socialPosts }) => {
   const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
+  let thisPatchName = '';
+  if (!isLeader && loggedInUser) {
+    thisPatchName = loggedInUser.enrollment.patchName;
+  } else {
+    thisPatchName = loggedInUser.patchName;
+  }
 
-  const { enrollment: { patchName } } = loggedInUser;
 
   /* Handle local state post updating  */
   useEffect(() => {
+    console.log('socialPosts have changed', socialPosts);
     // if incoming social posts have changed, re-set state
+    if (socialPosts?.length > 0) { socialPosts.sort((a, b) => moment(b.date).diff(a.date)); }
     setUpdatedPosts(socialPosts);
   }, [socialPosts]);
 
   const handleNewPost = (post) => {
     // if we have posts already update them otherwise start a new array
-    const update = updatedPosts?.length > 0 ? [...updatedPosts] : [];
-    update.push(post);
+    const update = updatedPosts?.length > 0 ? [...updatedPosts, post] : [];
+    console.log('teacherSocialPage', update);
     // push to parent
     handlePostUpdates(update);
   };
@@ -39,7 +46,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
 
           {/* Page Title */}
           <div className="Flex Col JustifyCenter AlignItems">
-            <div className="CursiveFont SuperFont PinkFont MarginBottom">{patchName}</div>
+            <div className="CursiveFont SuperFont PinkFont MarginBottom">{thisPatchName}</div>
 
             <div className="SimpleBorder MarginBottom" >
 
@@ -48,7 +55,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
 
             </div>
             {/* Render out the posts in this account */}
-            {updatedPosts?.length > 0 ? updatedPosts.map((post) => <SocialPost key={post.id} post={post} loggedInUser={loggedInUser}/>)
+            {updatedPosts?.length > 0 ? updatedPosts.map((post) => <SocialPost key={post.date} post={post} loggedInUser={loggedInUser}/>)
               : (<div className="Buffer SimpleBorder">No Posts yet! Say something!</div>)}
 
           </div>

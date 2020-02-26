@@ -232,7 +232,7 @@ $LIGHTPINK: rgb(255, 112, 146);
  
   .UploadImageRow{
     flex-grow: 1;
-    width: 5vh;
+    width: 9vh;
     position: relative;
     &:hover .RemoveUpload{ opacity: 1}
   }
@@ -338,6 +338,14 @@ $LIGHTPINK: rgb(255, 112, 146);
 
   .SocialMessageBtn_UnActive { border-color: $MALACHITE; box-shadow: 1px 1px 10px $PATCHGREEN;}
   .SocialMessageBtn_Active { border-color: $GHOSTWHITE; box-shadow: 1px 1px 10px $GHOSTWHITE}
+
+  .SocialMessage{
+    font-family: "Raleway", sans-serif;
+    color: $PARADISEPINK;
+    border-bottom: solid 1px rgb(250, 177, 173);
+    
+    padding: 8;
+  }
 
   .Add {
     background-color: transparent;

@@ -105,6 +105,8 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
       const updatedThumbs = [...thumbArray];
       updatedThumbs.splice(index, 1);
       setThumbArray(updatedThumbs);
+
+      console.log(textref.current.value);
     };
 
     return (
@@ -161,7 +163,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
             { newFiles
             && <div className="UploadImageContainer">
               { thumbArray.map((file, index) => (
-                <HoverableThumbnail key={file} file={file.thumb} index={index}/>))}
+                <HoverableThumbnail key={index.toString()} file={file.thumb} index={index}/>))}
             </div>
             }
 

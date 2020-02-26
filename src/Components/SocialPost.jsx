@@ -15,7 +15,7 @@ const SocialPost = ({ post, userId, loggedInUser }) => {
   // const myMessage = data.author === userId;
 
   return (
-    <div className={'LightPinkBorder PaddingLite FullSize MarginBottom'} >
+    <div className={'LightPinkBorder Padding FullSize MarginBottom SeeThru BoxShadow'} >
       {/* Post Author and date */}
       <div className="Flex AlignItems">
         <div className="CursiveFont PinkFont MediumFont">{name}</div>
@@ -23,11 +23,11 @@ const SocialPost = ({ post, userId, loggedInUser }) => {
       </div>
 
       {/* Post Data */}
-      <div className="Flex AlignItems Buffer">
+      <div className="Flex AlignItems Buffer  SocialMessage">
         {/* Author Pic */}
         <img alt="profile pic" className="ImgFrame" src={photoUrl} />
         {/* Post Message */}
-        <div className="FullSize TextCenter PinkFont Raleway" style={{ fontSize: 20, padding: 8, borderWidth: 1, borderBottom: 'solid' }}>
+        <div className="FullSize TextCenter" >
           {text}
         </div>
       </div>

@@ -28,17 +28,17 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
   };
 
   const handleSocialPostUpdating = (updatedPost, deleted, index) => {
+    const update = [...updatedPosts];
     if (deleted) {
       // we want to delete a comment entirely
-      const update = [...updatedPosts];
       update.splice(index, 1);
-      setUpdatedPosts(update);
     } else {
       // we're just updating the post
-      const update = [...updatedPosts];
       update[index] = updatedPost;
-      setUpdatedPosts(update);
     }
+    setUpdatedPosts(update);
+    // now push to DB
+    handlePostUpdates(update);
   };
 
   return (

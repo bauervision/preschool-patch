@@ -20,9 +20,9 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
 
   const textref = useRef(null);
 
-  const handlePostUpdate = () => {
+  const handlePostUpdate = (commentUpdate) => {
     // send up the whole updated social post
-    const updatedPost = { ...post, text: editText, comments: updatedComments };
+    const updatedPost = { ...post, text: editText, comments: commentUpdate };
     updatePost(updatedPost, deleted, index);
   };
 
@@ -32,7 +32,7 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
     const update = [...updatedComments, comment];
     setUpdatedComments(update);
     // since we've added a new comment, we want to make sure this gets out to the DB
-    handlePostUpdate();
+    handlePostUpdate(update);
   };
 
   const myMessage = post.author.id === userId;
@@ -61,6 +61,9 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
     }
   };
 
+  // handle conditional comment string
+  const commentPlurality = updatedComments.length > 1 ? 'comments' : 'comment';
+  const commentStatus = updatedComments.length > 0 ? `(${updatedComments.length} ${commentPlurality})` : 'No Comments yet';
 
   return (
     <div className={'LightPinkBorder MaxSocial MinSocial MarginBottom SeeThru BoxShadow'} >
@@ -155,6 +158,10 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
         <button className='SocialActionBtn' type="button" onClick={() => setShowComments(!showComments)}>
           {`${showComments ? 'Hide Comments' : 'Comment'}`}
         </button>
+
+        {/* Only show this if we're not already looking at the comments' */}
+        {!showComments
+        && <div style={{ fontSize: 14, color: 'grey' }}>{commentStatus}</div>}
       </div>
 
 

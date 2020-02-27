@@ -468,7 +468,7 @@ const App = () => {
     }
 
     // reset window scroll position with each page change
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
 
     switch (page) {
       case 8:

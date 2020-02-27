@@ -343,7 +343,6 @@ $LIGHTPINK: rgb(255, 112, 146);
     font-family: "Raleway", sans-serif;
     color: $PARADISEPINK;
     border-bottom: solid 1px rgb(250, 177, 173);
-    
     padding: 8;
   }
 
@@ -414,11 +413,13 @@ $LIGHTPINK: rgb(255, 112, 146);
   .MarginHSmall{ margin-right: 10px; margin-left: 10px; }
   .MarginTop{ margin-top: 50px; }
   .MarginBottom{ margin-bottom: 50px; }
+  .MarginBottomSocial{ margin-bottom: 10px; }
   .PaddingLite{ padding: 5px; }
   .Padding{ padding: 20px; }
   .PaddingBoost{ padding: 60px; }
   .PaddingTop{ padding-top: 20px; }
   .PaddingBottom{ padding-bottom: 20px; }
+  .PaddingHSmall{ padding: 10px 20px; }
   .Flex { display: flex; }
   .Evenly{ justify-content: space-evenly; }
   .Between{ justify-content: space-between; }
@@ -434,6 +435,7 @@ $LIGHTPINK: rgb(255, 112, 146);
   .ThreeQuarters{ width: 75%; }
   .FullSize{ width: 100%; }
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
+  .MaxSocial{ max-width: 1000px; }
   
   .ImgFrame{
     width: 60px;

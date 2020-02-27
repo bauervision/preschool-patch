@@ -23,3 +23,5 @@ export { default as Enrolled } from './leaf.png';
 export { default as Submitted } from './submitted.png';
 export { default as Like } from './like.png';
 export { default as Download } from './download.png';
+export { default as Accept } from './accept.png';
+export { default as Cancel } from './cancel.png';

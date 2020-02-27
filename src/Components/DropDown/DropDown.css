@@ -1,0 +1,114 @@
+:root {
+  --patchGreen: #0b8e51;
+  --pink: #FF4C76;
+  --lightPink:rgb(255, 159, 181);
+}
+
+.dropbtn {
+  background-color: var(--pink);
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* If we want rounded dropdown */
+.dropbtn-round {
+  border-radius: 10px;
+}
+.dropbtn-round :hover {
+  border-radius: 20px 20px 0 0;
+}
+
+.dropdown,
+.click-drop {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none; /* <-- Keep hidden for now*/
+  
+  position: absolute;
+  background-color:  var(--pink);
+  z-index: 1;
+}
+
+.dropdown-content-click {
+  position: absolute;
+  background-color: var(--pink);
+  z-index: 1;
+}
+
+.dropdown-content-round {
+  border-radius: 20px;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: transparent;
+  font-size: 1.2em;
+}
+
+.dropbtn-clicked {
+  background-color: #3a5c66;
+  font-size: 1.2em;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn-clicked-round {
+  border-radius: 20px 20px 0 0;
+}
+.dropdown:hover .dropbtn-round {
+  border-radius: 20px 20px 0 0;
+}
+
+.dropdown-content-item {
+  color:white;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+/* Round that last item if we want the whole thing rounded*/
+.dropdown-content-item-round:first-child {
+  border-radius: 20px 20px 0 0;
+}
+
+.dropdown-content-item-round:last-child {
+  border-radius: 0 0 20px 20px;
+}
+
+/* If we wanted alternating colors */
+.alternate:nth-child(even) {
+  background-color: #9db2be;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content-item:hover {
+  background-color:var(--lightPink);
+}
+
+.transparent {
+  background-color: transparent;
+}
+/* Images are solid black, so these filters allow us 
+to tweak the source image without needing new resources */
+.filter-white {
+  filter: invert(100%);
+}
+
+.filter-grey {
+  filter: invert(30%);
+}

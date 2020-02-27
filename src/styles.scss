@@ -217,6 +217,11 @@ $LIGHTPINK: rgb(255, 112, 146);
     color:$GHOSTWHITE;
   }
 
+  .SuperLightPinkFill{
+    background-color: rgb(248, 200, 211);
+    color:$GHOSTWHITE;
+  }
+
   .PinkFont{ color:$PARADISEPINK; }
 
   .WhiteFont{ color: $GHOSTWHITE; }
@@ -436,7 +441,17 @@ $LIGHTPINK: rgb(255, 112, 146);
   .FullSize{ width: 100%; }
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
   .MaxSocial{ max-width: 1000px; }
-  
+  .MinSocial{ min-width: 1000px; }
+
+  .transparent{ 
+    background-color: transparent; 
+    filter: invert(45%) sepia(25%) saturate(5592%) hue-rotate(319deg) brightness(102%) contrast(101%);
+    &:hover{
+      filter: invert(50%) sepia(93%) saturate(6585%) hue-rotate(145deg) brightness(95%) contrast(91%);
+    }
+  }
+
+
   .ImgFrame{
     width: 60px;
     height: auto;
@@ -674,6 +689,11 @@ $LIGHTPINK: rgb(255, 112, 146);
   
 }
 
+.SocialPostHeader{
+  border-radius: 5px 5px 0 0;
+  color:white;
+}
+
   textarea {
     font-family: "Raleway", sans-serif;
     border-radius: 10px;
@@ -711,7 +731,7 @@ $LIGHTPINK: rgb(255, 112, 146);
 
 
   // Color Filters for tweaking image colors
-  // best if original image is black
+  // based on original image being black!
   .filter-pink{
     filter: invert(45%) sepia(25%) saturate(5592%) hue-rotate(319deg) brightness(102%) contrast(101%);
   }

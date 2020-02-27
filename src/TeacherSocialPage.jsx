@@ -27,6 +27,20 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
     handlePostUpdates(update);
   };
 
+  const handleSocialPostUpdating = (updatedPost, deleted, index) => {
+    if (deleted) {
+      // we want to delete a comment entirely
+      const update = [...updatedPosts];
+      update.splice(index, 1);
+      setUpdatedPosts(update);
+    } else {
+      // we're just updating the post
+      const update = [...updatedPosts];
+      update[index] = updatedPost;
+      setUpdatedPosts(update);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -49,7 +63,14 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
 
             </div>
             {/* Render out the posts in this account */}
-            {updatedPosts?.length > 0 ? updatedPosts.map((post) => <SocialPost key={post.date} post={post} loggedInUser={loggedInUser} userId={userId}/>)
+            {updatedPosts?.length > 0 ? updatedPosts.map((post, index) => <SocialPost
+              key={post.date}
+              index={index}
+              post={post}
+              loggedInUser={loggedInUser}
+              userId={userId}
+              updatePost={handleSocialPostUpdating}
+            />)
               : (<div className="Buffer PaddingBoost FullSize PinkBorder" style={{ padding: 60 }}>No Posts yet! Show something awesome about your preschool!!</div>)}
 
           </div>

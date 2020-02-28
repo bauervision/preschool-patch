@@ -1,34 +1,34 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { Header } from "./Components/Header";
-import { Footer } from "./Components/Footer";
+import { Header } from './Components/Header';
+import { Footer } from './Components/Footer';
 
 // Components
-import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection } from "./Components";
+import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection } from './Components';
 
 // import { SignUp } from "./SignUp";
-import { RegisterUser, LoginUserEmailPassword } from "./helpers/auth";
-import { Add, Elegant } from "./images";
+import { RegisterUser, LoginUserEmailPassword } from './helpers/auth';
+import { Add, Elegant } from './images';
 
 export const Login = ({ pageUpdate, handleLogin }) => {
   // handle local state
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
   const [loginError, setLoginError] = useState(null);
-  const [email, setEmailLogin] = useState("");
-  const [password, setPasswordLogin] = useState("");
-  const [name, setNameLogin] = useState("");
-  const [phone, setPhoneLogin] = useState("");
-  const [zipcode, setZipcodeLogin] = useState("");
+  const [email, setEmailLogin] = useState('');
+  const [password, setPasswordLogin] = useState('');
+  const [name, setNameLogin] = useState('');
+  const [phone, setPhoneLogin] = useState('');
+  const [zipcode, setZipcodeLogin] = useState('');
   const [userType, setUserType] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordType, setPasswordType] = useState("password");
+  const [passwordType, setPasswordType] = useState('password');
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
   const [kidTotal, setKidTotal] = useState([]);
 
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
-    let status = await LoginUserEmailPassword(email, password);
+    const status = await LoginUserEmailPassword(email, password);
 
     // if we didn't get a user back, then there was an error
     if (!status.user) {
@@ -37,7 +37,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     } else {
       // otherwise we had a successful login
       handleLogin(status.user);
-      pageUpdate(0)
+      pageUpdate(0);
     }
   };
 
@@ -57,12 +57,12 @@ export const Login = ({ pageUpdate, handleLogin }) => {
       zipcode,
       children: kidTotal,
       photoUrl:
-        "https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490"
+        'https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490'
 
     };
 
 
-    let status = await RegisterUser(email, password);
+    const status = await RegisterUser(email, password);
 
     if (!status.user) {
       const errorMessage = status.error.message;
@@ -73,67 +73,65 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     }
   };
 
-  const setEmail = (email) => {
-    const error = validEmailRegex.test(email) ? "" : "Email is not valid!";
+  const setEmail = (e) => {
+    const error = validEmailRegex.test(e) ? '' : 'Email is not valid!';
     setEmailError(error);
-    setEmailLogin(email);
+    setEmailLogin(e);
   };
 
-  const setPassword = (password) => {
-    const error = password.length < 6;
+  const setPassword = (pw) => {
+    const error = pw.length < 6;
     setPasswordError(error);
-    setPasswordLogin(password);
+    setPasswordLogin(pw);
   };
 
   const handlePasswordVisibility = () => {
-    setPasswordType(!showPassword ? "text" : "password");
+    setPasswordType(!showPassword ? 'text' : 'password');
     setShowPassword(!showPassword);
   };
 
-  const handleUserTypeSwitch = (userType) => {
-    setUserType(userType);
+  const handleUserTypeSwitch = (ut) => {
+    setUserType(ut);
     setLoginError(null);
   };
 
-  const handleSetChildName = (name, index) => {
+  const handleSetChildName = (n, index) => {
     // get kid
     const kids = [...kidTotal];
     const thisKid = kids[index];
     // update their data
-    thisKid.name = name;
+    thisKid.name = n;
     kids[index] = thisKid;
 
     // update state
-    setKidTotal(kids)
-
-  }
+    setKidTotal(kids);
+  };
 
   const handleSetChildAge = (age, index) => {
     const kids = [...kidTotal];
     const thisKid = kids[index];
     thisKid.age = Number(age);
     kids[index] = thisKid;
-    setKidTotal(kids)
-  }
+    setKidTotal(kids);
+  };
 
   const addNewChildInfo = (e) => {
     e.preventDefault();
-    const newKid = { name: '', age: '', enrollment: '' }
+    const newKid = { name: '', age: '', enrollment: '' };
     const updatedInfo = [...kidTotal];
     if (updatedInfo.length <= 4) {
-      updatedInfo.push(newKid)
-      setKidTotal([...updatedInfo])
+      updatedInfo.push(newKid);
+      setKidTotal([...updatedInfo]);
     }
-
-  }
+  };
 
   const handleSetChildInterest = (interest, index) => {
     const kids = [...kidTotal];
     const thisKid = kids[index];
     thisKid.enrollment = interest;
     kids[index] = thisKid;
-    setKidTotal(kids)
-  }
+    setKidTotal(kids);
+  };
 
   return (
     <div >
@@ -172,14 +170,13 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                         <button
                           type="button" onClick={() => setChoice(1)}>
                           Are you a Parent?
-                     </button>
+                        </button>
 
                         <button type="button" onClick={() => pageUpdate(2)}>
                           Do you want to be a Teacher?
-                    </button>
+                        </button>
 
                       </div>
-
 
 
                     </div>
@@ -193,7 +190,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                           <p>
                             This will create your basic account so you can search and submit
                             requests to local Patch Leaders.
-                         </p>
+                          </p>
 
                           <div className="Flex Col LoginForm BoxShadow">
 
@@ -255,9 +252,9 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                                   <img src={Add} alt="Add new child info" />
                                 </button>
 
-                              ) :
+                              )
                                 // Once we hit our kid limit, disable adding more
-                                (
+                                : (
                                   <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
                                 )}
 
@@ -276,12 +273,12 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                             {emailError || passwordError ? (
                               <div className="FakeButton">
                                 Enter Valid Email and Password
-                            </div>
+                              </div>
                             ) : (
-                                <button type="submit" className="RegisterButton">
+                              <button type="submit" className="RegisterButton">
                                   Register
                               </button>
-                              )}
+                            )}
                           </div>
                           {loginError && <Error errorMessage={loginError} />}
 
@@ -290,7 +287,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                             <p>
                               Note; Once your account has been created, you will be able to update your account
                               and add details concerning any children you are looking to enroll.
-                         </p>
+                            </p>
                           </div>
                         </div>
                       </form>
@@ -298,41 +295,41 @@ export const Login = ({ pageUpdate, handleLogin }) => {
 
                   </>
                 ) : (
-                    // Existing User
-                    <form onSubmit={handleSubmitLogin}>
-                      <div className="Flex Col JustifyCenter AlignItems">
-                        <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
-                        <div className="Flex Col LoginForm BoxShadow">
-                          <BasicInput
-                            title="Email"
-                            type="email"
-                            forLabel="email"
-                            onChange={setEmail}
-                            value={email}
-                          />
+                // Existing User
+                  <form onSubmit={handleSubmitLogin}>
+                    <div className="Flex Col JustifyCenter AlignItems">
+                      <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
+                      <div className="Flex Col LoginForm BoxShadow">
+                        <BasicInput
+                          title="Email"
+                          type="email"
+                          forLabel="email"
+                          onChange={setEmail}
+                          value={email}
+                        />
 
-                          <PasswordInput
-                            handlePasswordVisibility={handlePasswordVisibility}
-                            setPassword={setPassword}
-                            password={password}
-                            passwordType={passwordType}
-                            passwordError={passwordError}
-                          />
+                        <PasswordInput
+                          handlePasswordVisibility={handlePasswordVisibility}
+                          setPassword={setPassword}
+                          password={password}
+                          passwordType={passwordType}
+                          passwordError={passwordError}
+                        />
 
-                          {emailError || passwordError ? (
-                            <div className="FakeButton">
+                        {emailError || passwordError ? (
+                          <div className="FakeButton">
                               Enter Valid Email and Password
-                        </div>
-                          ) : (
-                              <button type="submit">Login</button>
-                            )}
-                        </div>
-                        {loginError && (
-                          <div className="LoginError">{loginError}</div>
+                          </div>
+                        ) : (
+                          <button type="submit">Login</button>
                         )}
                       </div>
-                    </form>
-                  )}
+                      {loginError && (
+                        <div className="LoginError">{loginError}</div>
+                      )}
+                    </div>
+                  </form>
+                )}
               </>
             )}
           </div>

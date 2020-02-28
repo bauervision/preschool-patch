@@ -304,29 +304,39 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
   const handleSubmitEnrollment = () => {
-    const stateEnrollment = submitEnrollment;
+    const enrolling = !submitEnrollment;
     // make sure user has children assigned first
     if (!loggedInUser.children) {
       setChildrenWarning(true);
     } else {
-      setSubmitEnrollment(!submitEnrollment);
+      setSubmitEnrollment(enrolling);
 
       // now hit DB with updates
       const submittedToId = activeMessages[0].fromName === activeThreadName ? activeMessages[0].from : activeMessages[0].to;
 
+      let patchName = '';
+      // we need to query the DB to pull the patchName from the leader
+      database.ref(`leaders/${submittedToId}/public/`).on('value', (snapshot) => {
+        // if we found the user then snapshot will be valid
+        if (snapshot.val()) {
+          const data = snapshot.val();
+          patchName = data.patchName;
+        }
+      });
+
       // first setup our enrollment status, if we're enrolling versus revoking
-      const enrollment = !stateEnrollment ? {
+      const enrollment = enrolling ? {
         accepted: false,
         dateSubmitted: now,
         submitted: true,
         submittedTo: submittedToId,
-        submittedToName: activeThreadName
+        submittedToName: activeThreadName,
+        patchName
       } : { submitted: false };
 
       database.ref(`users/${userId}/public/enrollment`).set(enrollment);
 
       // set our info into the teachers client data
-
       // first setup our enrollment status as long the user hasnt revoked it
       const enrollmentStatus = {
         accepted: false,
@@ -351,7 +361,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
           // we want to enroll
-          if (!stateEnrollment) {
+          if (enrolling) {
             // we didnt find this client already
             if (index === -1) {
               clientList.push(enrollmentStatus);
@@ -364,8 +374,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
           clientList = [enrollmentStatus];
         }
 
-        // finally push the new client to the teacher so they will know about it
+        // push the new client to the teacher so they will know about it
         database.ref(`leaders/${submittedToId}/public/clients`).set(clientList);
+
+        // finally send parent back to home page
+        if (!enrolling) {
+          // IF they were actively enrolled
+          if (loggedInUser.enrollment.accepted || false) {
+            pageUpdate(0);
+          }
+        }
       });
     }
   };
@@ -483,14 +501,14 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     <div className="Flex AlignItems">
                       {/* Enrollment Button */}
                       {(showingThread && showEnrollmentButton)
-                                                && <button
-                                                  type="button" disabled={disableEnrollment}
-                                                  title={`${submitEnrollment
-                                                    ? 'Revoking Enrollment will remove the request from this teacher'
-                                                    : 'Submitting Enrollment will notify the teacher that you have selected her!'}`}
-                                                  onClick={handleSubmitEnrollment}>
-                                                  {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
-                                                </button>
+                        && <button
+                          type="button" disabled={disableEnrollment}
+                          title={`${submitEnrollment
+                            ? 'Revoking Enrollment will remove the request from this teacher'
+                            : 'Submitting Enrollment will notify the teacher that you have selected her!'}`}
+                          onClick={handleSubmitEnrollment}>
+                          {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
+                        </button>
                       }
 
                       <div className="CursiveFont LargeFont PinkFont Padding">{activeThreadName}</div>
@@ -499,18 +517,17 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                     {!isLeader && (
                       <>
-                        {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div style={{ marginLeft: 20 }}>
-                          <div>{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
-                          <div>You can only enroll with one teacher at a time</div>
+                        {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div className="PinkBorder" style={{ marginRight: 20 }}>
+                          <div className="SmallFont">{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
+                          <div className="SmallFont">You can only enroll with one teacher at a time</div>
                         </div>)}
 
                         {(loggedInUser.enrollment.accepted && myTeacher)
-                                                    && < div className="Padding">
-                                                      <div>You are actively enrolled with this teacher!</div>
-                                                    </div>}
+                           && < div className="Padding">
+                             <div className="SmallFont">You are actively enrolled with this teacher!</div>
+                           </div>}
                       </>
                     )}
-
 
                   </div>
                 )}

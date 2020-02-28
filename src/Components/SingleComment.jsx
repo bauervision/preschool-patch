@@ -18,7 +18,7 @@ const SingleComment = ({ comment }) => {
         <div className="Col">
 
           <div
-            className="SuperLightPinkFill PaddingHSmall MarginHSmall TextLeft RoundBorder"
+            className="LightPinkFill PaddingHSmall MarginHSmall TextLeft RoundBorder"
             style={{ fontSize: 16 }}
           >{comment.text}</div>
 

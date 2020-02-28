@@ -112,6 +112,8 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
         {/* Only if this is our message can we edit it */}
         {myMessage
         && <div className="cursor" >
+
+          {/* If we are currently editing or trying to delete, dont show the dropdown icon */}
           {(!edit && !deleted) ? (
             <DropDown
               data={[{ name: 'Edit', method: setEdit }, { name: 'Delete', method: setDeleted }]}
@@ -122,7 +124,7 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
           ) : (
             <>
 
-              {/* If we're editing show these buttons */}
+              {/* If we're editing or deleting show these buttons */}
               <div className="Flex">
                 {deleted && <div >Delete the Post?</div>}
                 <button title={deleted ? 'Remove the post' : 'Submit Edit'} className="transparent" type='button' onClick={() => handleFinalEdit(true)}><img src={Accept} alt="accept change"/></button>
@@ -135,13 +137,13 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
         </div>
         }
 
+        {/* If we're deleting, who cares about seeing the date */}
         {!deleted
         && <div style={{ fontSize: 14, color: 'grey' }}>{moment(date).fromNow()}</div>
 
         }
-
-
       </div>
+
       {/* Pictures if any */}
       <div className="margin-bottom">
         <LightBox
@@ -170,14 +172,19 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
         ? (<>
           {updatedComments.length > 0
             ? (
-              <div className="SimpleBorderSmall Flex AlignItems ">
+              <div className="SimpleBorderSmall Flex AlignItems Buffer">
                 <div className="Flex Col FullSize">
                   {updatedComments.map((comment) => <SingleComment key={comment.date} comment={comment}/>)}
                   <NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>
                 </div>
               </div>
             )
-            : (<NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>)}
+            : (
+              <div className="SimpleBorderSmall Flex AlignItems Buffer">
+                <div className="Flex Col FullSize">
+                  <NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>
+                </div>
+              </div>)}
         </>) : (
           <div className="Flex JustifyCenter">
             <img src={DecorFlat} alt="decorative" className='filter-green' style={{ width: 200, height: 'auto' }} />

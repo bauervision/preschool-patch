@@ -131,7 +131,6 @@ const App = () => {
   };
 
   const handlePostUpdates = (posts) => {
-    console.log('index->', posts);
     // push update to DB and update state which will trigger the re-render on social page
     database.ref(`social/${socialPostId}`).set(posts).then(() => setSocialPosts(posts));
   };
@@ -328,8 +327,6 @@ const App = () => {
               setSocialPostId(curUser.public.enrollment.submittedTo);// social postID will always be the leaders ID
               fetchSocialActivity(curUser.public.enrollment.submittedTo);
               setPage(8); // jump to teacher's social page
-            } else {
-
             }
           }
         });
@@ -387,6 +384,7 @@ const App = () => {
               isLeader: true,
               kidTotal: 0,
               name: newUserData.displayName,
+              patchName: 'My Preschool Patch',
               phone: newUserData.phoneNumber,
               photoUrl: newUserData.photoUrl,
               rating: 0,
@@ -423,8 +421,6 @@ const App = () => {
         database
           .ref(`${isaLeader ? 'leaders' : 'users'}/${user.uid}`)
           .set(newUser).then(() => setLoggedInUser(newUser));
-      } else {
-        setLoggedInUser(user);
       }
       // regardless of who logged in...
       handleLoginCheck();

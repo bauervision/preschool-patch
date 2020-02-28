@@ -275,12 +275,10 @@ $LIGHTPINK: rgb(255, 112, 146);
 
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
+  .SmallFont { font-size: 10pt; }
   .MediumFont { font-size: 20pt; }
-
   .LargeFont { font-size: 28pt; }
-
   .SuperFont { font-size: 34pt; }
-
   .RedicFont{ font-size: 60pt; }
 
   .Logo {
@@ -568,30 +566,25 @@ $LIGHTPINK: rgb(255, 112, 146);
     img{
       width: 30%;
       height: auto;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 50%;
-      border-bottom-right-radius: 50%;
-      border-bottom-left-radius: 5px;
-
+      border-radius: 5px 50% 50% 5px;
     }
     
   }
 
   .Tab{
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 30px 30px 0 0;
     margin-bottom: 0;
     margin-left: 60px;
     margin-right: 60px;
   }
 
   .TabBottom{
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-radius: 0 0 30px 30px;
+  }
+
+  .TabSocial{
+    border-radius: 30px;
+    margin: 0 60px;
   }
 
   .Buffer {

@@ -68,15 +68,12 @@ export const PublicLanding = ({
     if (checked) {
       const update = filteredData.filter((elem) => elem.infants === true);
       setFilteredData(update);
+    } else if (filterAvail) {
+      const update = leaderData.filter((elem) => elem.available === true);
+      setFilteredData(update);
     } else {
-      // we're not filtering infants, but we still might be filtering avail
-      if (filterAvail) {
-        const update = leaderData.filter((elem) => elem.available === true);
-        setFilteredData(update);
-      } else {
-        // no filters so
-        setFilteredData(leaderData);
-      }
+      // no filters so
+      setFilteredData(leaderData);
     }
   };
 

@@ -4,14 +4,13 @@ import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { SocialPost, NewPost } from './Components';
 
-import { Logo, Elegant } from './images';
+import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
 
 
-export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, loadingSocial, socialPosts }) => {
+export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts }) => {
   const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
   // grab the patch name of our patch based on if we're the leader or not
-  const thisPatchName = !loggedInUser.isLeader ? loggedInUser.enrollment.patchName : loggedInUser.patchName;
-
+  const thisPatchName = loggedInUser.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName;
 
   /* Handle local state post updating  */
   useEffect(() => {
@@ -50,11 +49,18 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>
 
         {/* Page Data*/}
-        <div className="Flex AlignItems SeeThru Evenly">
+        <div className="Flex AlignItems SeeThru Evenly TabSocial">
 
           {/* Page Title */}
           <div className="Flex Col JustifyCenter AlignItems">
-            <div className="CursiveFont SuperFont PinkFont MarginBottom">{thisPatchName}</div>
+
+
+            <div className="Flex AlignItems Buffer">
+              <img src={MiniFlower} alt="flower left" style={{ height: 100, width: 'auto' }} />
+              <div className="CursiveFont SuperFont PinkFont ">{thisPatchName}</div>
+              <img src={MiniFlowerFlip} alt="flower right" style={{ height: 100, width: 'auto' }} />
+            </div>
+
 
             <div className="SimpleBorder MarginBottom" >
 

@@ -9,8 +9,13 @@ import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
 
 export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts }) => {
   const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
+  const [thisPatchName, setThisPatchName] = useState(null);
+
   // grab the patch name of our patch based on if we're the leader or not
-  const thisPatchName = loggedInUser.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName;
+  useEffect(() => {
+    const patchName = loggedInUser?.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName;
+    setThisPatchName(patchName);
+  }, [loggedInUser]);
 
   /* Handle local state post updating  */
   useEffect(() => {

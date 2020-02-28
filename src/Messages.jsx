@@ -28,6 +28,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const now = moment().toDate().getTime();
   // mount setup default message
   useEffect(() => {
+    console.log(currentSelection);
     defaultMessage.from = userId;
     defaultMessage.fromName = loggedInUser.name;
     defaultMessage.fromUrl = loggedInUser.photoUrl;
@@ -214,16 +215,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             database.ref(`users/${userId}/public/messages`).set(updatedMessagesArray);
 
             // now check the receiptants array
-            database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).once('value', (snap) => {
+            database.ref(`leaders/${currentSelection.id}/public/messages`).once('value', (snap) => {
               const data = snap.val();
               // if not null, then they already have messages, so append to them
               if (data) {
                 const updateData = data;
                 updateData.push(sendToDBMessageId);
-                database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set(updateData);
+                database.ref(`leaders/${currentSelection.id}/public/messages`).set(updateData);
               } else {
               // otherwise, this is the receipiants first message as well, so create the array
-                database.ref(`leaders/${updatedCurrentThread.to}/public/messages`).set([sendToDBMessageId]);
+                database.ref(`leaders/${currentSelection.id}/public/messages`).set([sendToDBMessageId]);
               }
             });
           } else {

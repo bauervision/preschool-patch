@@ -115,6 +115,7 @@ const App = () => {
 
 
   const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
+    console.log(activeMessagesID, updatedCurrentMessages);
     // push to DB
     database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
   };

@@ -86,12 +86,15 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
           pt: updatedPTRates,
           di: updatedDIRates
         },
+        isLeader: true,
         infants: updatedInfants,
         kidTotal: updatedKidTotal,
+        messages: loggedInUser?.messages,
         name: updatedName,
         patchName: updatedPatchName,
+        phone: updatedPhone,
         photoUrl: updatedPhotoUrl,
-
+        zipcode: updatedZipcode,
       };
     } else {
       updatedData = {

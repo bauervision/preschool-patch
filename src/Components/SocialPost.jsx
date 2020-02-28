@@ -9,9 +9,11 @@ import { Accept, Cancel, Like, DecorFlat, Edit } from '../images';
 
 
 const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
-  const [like, setLike] = useState(false);
+  // default like to whether our name is found within the likes array
+  const [like, setLike] = useState(post.likes?.some((elem) => elem === loggedInUser.name || false));
   const [showComments, setShowComments] = useState(false);
   const [updatedComments, setUpdatedComments] = useState(post.comments || []);
+  const [updatedLikes, setUpdatedLikes] = useState(post.likes || []);
   const [edit, setEdit] = useState(false);
   const [newText, setNewText] = useState(post.text);
   const [editText, setEditText] = useState(post.text);
@@ -20,19 +22,37 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
 
   const textref = useRef(null);
 
-  const handlePostUpdate = (commentUpdate) => {
+  const handlePostUpdate = (commentUpdate, likeUpdate) => {
+    // if we pass either of the above updates directly, then set that otherwise use what state has
+    const updatedPost = { ...post, text: editText, comments: commentUpdate || updatedComments, likes: likeUpdate || updatedLikes };
     // send up the whole updated social post
-    const updatedPost = { ...post, text: editText, comments: commentUpdate };
     updatePost(updatedPost, deleted, index);
   };
 
+  const handleNewLike = () => {
+    // get current state
+    const currentLikes = [...updatedLikes];
+    // have we have already liked it?
+    const foundIndex = currentLikes.findIndex((elem) => elem === loggedInUser.name);
+    if (foundIndex !== -1) {
+      // found index of our name in the likes, so remove it
+      currentLikes.splice(foundIndex, 1);
+    } else {
+      // this is a new like for us, push our name in the list
+      currentLikes.push(loggedInUser.name);
+    }
+
+    setLike(!like);
+    setUpdatedLikes(currentLikes);
+    handlePostUpdate(null, currentLikes);
+  };
 
   const handleNewComment = (comment) => {
     // grab current set of comments for this post
     const update = [...updatedComments, comment];
     setUpdatedComments(update);
     // since we've added a new comment, we want to make sure this gets out to the DB
-    handlePostUpdate(update);
+    handlePostUpdate(update, null);
   };
 
   const myMessage = post.author.id === userId;
@@ -61,9 +81,19 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
     }
   };
 
-  // handle conditional comment string
+  // handle conditional render strings
   const commentPlurality = updatedComments.length > 1 ? 'comments' : 'comment';
   const commentStatus = updatedComments.length > 0 ? `(${updatedComments.length} ${commentPlurality})` : 'No Comments yet';
+  const likePlurality = updatedLikes.length > 1 ? 'likes' : 'like';
+  const likeStatus = updatedLikes.length > 0 && `(${updatedLikes.length} ${likePlurality})`;
+  // replace our name with You
+  const ourNameIndex = updatedLikes.findIndex((elem) => elem === loggedInUser.name);
+  const displayLikedNames = [...updatedLikes];
+  displayLikedNames[ourNameIndex] = 'You';
+  const likedNames = displayLikedNames.length > 0 ? displayLikedNames.join() : 'Be the first!';
+
+  // finally, if the only like is ours, don't show the status
+  const showLikeStatus = (updatedLikes.length === 1) && (ourNameIndex !== 0);
 
   return (
     <div className={'LightPinkBorder MaxSocial MinSocial MarginBottom SeeThru BoxShadow'} >
@@ -153,10 +183,16 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
 
       {/* Like or Comment Area */}
       <div className=" Flex AlignItems JustifyCenter">
-        <button className='SocialActionBtn Flex AlignItems' type="button" onClick={() => setLike(!like)}>
+
+        {/* Like Button */}
+        <button className='SocialActionBtn Flex AlignItems' type="button" onClick={() => handleNewLike(!like)} >
           <img className={`${like ? 'filter-pink' : 'filter-grey'}`} src={Like} alt="like button"/> Like
         </button>
+        {showLikeStatus
+        && <div className="cursor" title={likedNames} style={{ fontSize: 14, color: 'grey' }}>{likeStatus}</div>
+        }
 
+        {/* Show Comments */}
         <button className='SocialActionBtn' type="button" onClick={() => setShowComments(!showComments)}>
           {`${showComments ? 'Hide Comments' : 'Comment'}`}
         </button>

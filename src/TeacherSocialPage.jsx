@@ -37,6 +37,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
     if (deleted) {
       // we want to delete a comment entirely
       update.splice(index, 1);
+      updateSuccess(true, 'Post Successfully Removed!');
     } else {
       // we're just updating the post
       update[index] = updatedPost;
@@ -44,7 +45,6 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
     setUpdatedPosts(update);
     // now push to DB
     handlePostUpdates(update);
-    updateSuccess(true, 'Post Successfully Removed!');
   };
 
   return (

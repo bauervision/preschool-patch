@@ -13,8 +13,8 @@ const SingleMessage = ({ data, userId, lastMessage, seen }) => {
         <div style={{ fontSize: 20, padding: 8 }}>{data.message}</div>
       </div>
 
-      {lastMessage && (
-        <div className="PinkFont" style={{ fontSize: 12, padding: 5 }}>{isSeen ? 'Seen' : ''}</div>
+      {(lastMessage && myMessage) && (
+        <div className={`${isSeen ? 'PinkFont' : 'GreyFont'}`} style={{ fontSize: 12, padding: 5 }}>{isSeen ? 'Seen' : 'Sent'}</div>
       )}
 
     </div>

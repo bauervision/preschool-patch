@@ -70,8 +70,11 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
 
 
   const getChildAge = (year, month, day) => {
-    const momentBirthday = moment(`${year.toString()}-${month}-${day.toString()}`);
-    return moment().diff(momentBirthday, 'years', false);
+    if (year && month && day) {
+      const momentBirthday = moment(`${year.toString()}-${month}-${day.toString()}`);
+      return moment().diff(momentBirthday, 'years', false);
+    }
+    return 'Unknown';
   };
 
   return (
@@ -111,11 +114,12 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
         <span className="CursiveFont LargeFont">{!enrollment.accepted ? 'Wants to Enroll the Following:' : 'Enrolled Children'} </span>
         {children.map((child) => {
           const childAge = getChildAge(child.year, child.month, child.day);
+          const birthDay = child.month && child.day ? (`${child.month}/${child.day}`) : 'Unknown';
           return (
             <div key={child.name} className="textMargin Padding">
               <span className="profileText Padding">Name:  <strong>{child.name}</strong>  </span>
               <span className="profileText Padding"> Age: <strong>{childAge}</strong></span>
-              <span className="profileText Padding"> Birthday: <strong>{child.month}{' '}{child.day}</strong></span>
+              <span className="profileText Padding"> Birthday: <strong>{birthDay}</strong></span>
               <span className="profileText Padding">{child.enrollment} </span>
             </div>
           );

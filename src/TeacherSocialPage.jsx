@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
-import { SocialPost, NewPost } from './Components';
+import { SocialPost, NewPost, Toast } from './Components';
 
 import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
 
 
-export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts }) => {
+export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts, updateSuccess, launchToast }) => {
   const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
   const [thisPatchName, setThisPatchName] = useState(null);
+
 
   // grab the patch name of our patch based on if we're the leader or not
   useEffect(() => {
@@ -43,6 +44,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
     setUpdatedPosts(update);
     // now push to DB
     handlePostUpdates(update);
+    updateSuccess(true, 'Post Successfully Removed!');
   };
 
   return (
@@ -93,6 +95,8 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
         <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
       </div>
       <Footer />
+
+      <Toast showToast={launchToast.value} message={launchToast.message} />
     </div>
   );
 };

@@ -28,7 +28,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const now = moment().toDate().getTime();
   // mount setup default message
   useEffect(() => {
-    console.log(currentSelection);
     defaultMessage.from = userId;
     defaultMessage.fromName = loggedInUser.name;
     defaultMessage.fromUrl = loggedInUser.photoUrl;
@@ -51,6 +50,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const [newMessage, setNewMessage] = useState('');
   const [sendToSelectedContact, setSendToSelectedContact] = useState(false);
   const [childrenWarning, setChildrenWarning] = useState(false);
+  const [silenceNotifications, setSilence] = useState(false);
 
   // handle scrolling to last message
   const messagesRef = useRef(null);
@@ -62,6 +62,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     });
   };
 
+  // when do we scroll to last message
   useEffect(() => {
     if (activeThread.length > 4) { // 4 will need to be adjusted if the message window size updates
       scrollToBottom();
@@ -107,6 +108,25 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   }, [activeMessages, userId, activeThreadId, currentSelection, sendToSelectedContact]);
 
 
+  // // if we want to turn off the unread notifications, without having to send a response
+  useEffect(() => {
+    if (silenceNotifications) {
+      // loop through all messages and find the ones that are "unread"
+      const update = [...activeMessages];
+      update.forEach((elem) => {
+        if (elem.lastMessage.author !== userId) {
+          // if true, add our ID to the read value
+          elem.lastMessage.seen = userId;
+          // now update DB with this new message state
+          database.ref(`messages/${elem.messagesId}`).set(elem);
+        }
+      });
+      // update state
+      setActiveMessages(update);
+      setSilence(false);
+    }
+  }, [activeMessages, silenceNotifications, userId]);
+
   // handle default thread name
   useEffect(() => {
     if (sendToSelectedContact) {
@@ -134,6 +154,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         if (foundSelectionThreadId !== -1) {
           // we've found the current selection in activeMessages
           setActiveThreadId(activeMessages[foundSelectionThreadId].messagesId);
+
+          if (activeMessages[foundSelectionThreadId].lastMessage.author !== userId) {
+            activeMessages[foundSelectionThreadId].lastMessage.read = userId; // signal we've read the thread
+          }
           setActiveThread(activeMessages[foundSelectionThreadId].messageData);
           setActiveThreadName(activeMessages[foundSelectionThreadId].from === userId ? activeMessages[foundSelectionThreadId].toName : activeMessages[foundSelectionThreadId].fromName);
         } else {
@@ -176,6 +200,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         author: userId,
         message: newMessage,
         date: now,
+        seen: userId
       };
 
       // get and set current active message data
@@ -301,6 +326,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     setActiveThreadName(newName);
     // if we've clicked on a previous message, obv we no longer are sending to a new contact
     setSendToSelectedContact(false);
+    // finally if we click on a message, check to see if it is unread, if it is, mark it as read
   };
 
 
@@ -392,13 +418,11 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   // handle conditional render
   const showingThread = sendToSelectedContact || (activeThread?.length > 0);
   const showEnrollmentButton = !isLeader && showingThread;
-
   const myTeacher = !isLeader && (loggedInUser.enrollment.submitted && (loggedInUser.enrollment.submittedToName === activeThreadName));
-
   const showEnrollmentDetails = (showEnrollmentButton && !loggedInUser.enrollment.accepted) && (myTeacher);
   const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (!myTeacher);
-
   const messageWindowHeight = isLeader ? 350 : 400;
+  const unReadMessages = activeMessages.some((elem) => (elem.lastMessage.author !== userId));
 
   return (
     <div>
@@ -417,11 +441,16 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>
 
               {activeMessages && (<div>All Messages </div>)}
+              { unReadMessages && <button type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
+
 
               <div className={`OverFlow ${activeMessages && 'LightPinkBorder'} `}>
                 {(activeMessages?.length > 0 ? (activeMessages.map((elem) => {
-                  // if the last message isn't from us, then it's from them, so mark it unread
-                  const showAsUnread = elem.lastMessage.author !== userId;
+                  // we aren't the last one listed as seen, then they have seen the message
+                  const seen = elem.lastMessage.seen !== userId;
+                  // we aren't the last one to send a message, then we have an unread/unresponded message
+                  const unread = elem.lastMessage.author !== userId;
+                  const showAsUnread = unread && !seen;
 
                   // we need to determine if this is our message thread, or someone elses
                   const messageFromName = (elem.from === userId) ? elem.toName : elem.fromName;
@@ -432,7 +461,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                   const submittedTo = !isLeader && loggedInUser.enrollment.submittedTo;
                   const submittedEnrollmentTo = submittedTo === messageFromID;
                   const accepted = !isLeader && submittedEnrollmentTo && (loggedInUser.enrollment.accepted || false);
-
 
                   return (
                     <MessageNotification
@@ -536,7 +564,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
                 {/* Handle Warnings for Enrollment */}
                 {showEnrollmentDetails
-                                    && <div>She has been notified of your choice and you will receive an email when she has accepted your enrollment</div>}
+                  && <div>She has been notified of your choice and you will receive an email when she has accepted your enrollment</div>}
 
 
                 {childrenWarning && (<div className="PinkBorder">
@@ -554,6 +582,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         key={index.toString()}
                         data={elem}
                         userId={userId}
+                        lastMessage={(activeThread.length - 1) === index}
                       />
 
                       )}

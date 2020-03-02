@@ -106,7 +106,8 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
       updatedThumbs.splice(index, 1);
       setThumbArray(updatedThumbs);
 
-      console.log(textref.current.value);
+      // TODO clean up the files loaded in textref
+      // console.log(textref.current.value);
     };
 
     return (

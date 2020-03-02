@@ -5,7 +5,7 @@ import DropDown from './DropDown/DropDown';
 
 import SingleComment from './SingleComment';
 import NewComment from './NewComment';
-import { Accept, Cancel, Like, DecorFlat, Edit } from '../images';
+import { Accept, Cancel, Like, DecorFlat, Edit, Trash } from '../images';
 
 
 const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
@@ -139,18 +139,25 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
         )}
 
 
-        {/* Only if this is our message can we edit it */}
-        {myMessage
+        {/* Only if this is our message, or we are the leader can we edit it */}
+        {(myMessage || loggedInUser.isLeader)
         && <div className="cursor" >
 
           {/* If we are currently editing or trying to delete, dont show the dropdown icon */}
           {(!edit && !deleted) ? (
-            <DropDown
-              data={[{ name: 'Edit', method: setEdit }, { name: 'Delete', method: setDeleted }]}
-              transparent
-              icon={Edit}
-              rounded
-            />
+            <>
+              {/* If this isn't my message, but I am the leader, then I can delete it */}
+              {(!myMessage && loggedInUser.isLeader) ? (
+                <button title='Remove this post' className="transparent" type='button' onClick={() => setDeleted(true)}><img src={Trash} alt='trash can'/></button>
+              ) : (
+                <DropDown
+                  data={[{ name: 'Edit', method: setEdit }, { name: 'Delete', method: setDeleted }]}
+                  transparent
+                  icon={Edit}
+                  rounded
+                />
+              )}
+            </>
           ) : (
             <>
 

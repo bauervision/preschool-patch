@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './LightBox.css';
 import { Download } from '../images';
 
+
 const LightBox = ({ images }) => {
   const [modal, setModal] = useState(false);
   const [slideIndex, setSlideIndex] = useState(-1);
@@ -68,13 +69,17 @@ const LightBox = ({ images }) => {
       {/* Handle lightbox */}
       {modal && (
         <div className="modal">
-          <div
+
+          <a
+            href={images[slideIndex].image}
+            download
             className="cursor absolute top download"
-            onClick={() => alert('Downloaded!')}
             title="Download this image"
           >
             <img className="filter-white" src={Download} alt="download icon" />
-          </div>
+          </a>
+
+
           <span
             className="close cursor whiteFont absolute"
             onClick={() => setModal(false)}

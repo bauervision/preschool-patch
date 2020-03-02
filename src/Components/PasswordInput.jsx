@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { ShowPassword } from "../images";
+import { ShowPassword } from '../images';
 
 const PasswordInput = ({
   handlePasswordVisibility,
@@ -12,7 +12,7 @@ const PasswordInput = ({
   return (
     <div className="Flex Col JustifyCenter ">
       {/* Label */}
-      <div style={{ textAlign: "left" }}>
+      <div style={{ textAlign: 'left' }}>
         <label htmlFor="password" className="InputTextLabel">
           Password:
         </label>
@@ -20,18 +20,19 @@ const PasswordInput = ({
 
       {/* Button */}
       <div className="Flex">
-        <div style={{ position: "relative" }}>
+        <div style={{ position: 'relative' }}>
           {/* Toggle Visibility Button */}
           <button
             type="button"
             onClick={handlePasswordVisibility}
             className="TogglePassword"
+            title="Show your password"
           >
             <img src={ShowPassword} alt="show password" />
           </button>
 
           <input
-            className={`InputStyle ${passwordError && "Red"}`}
+            className={`InputStyle ${passwordError && 'Red'}`}
             style={{ width: 350 }}
             placeholder="Enter your Password"
             type={passwordType}

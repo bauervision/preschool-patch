@@ -115,7 +115,6 @@ const App = () => {
 
 
   const handleMessageUpdates = (activeMessagesID, updatedCurrentMessages) => {
-    console.log(activeMessagesID, updatedCurrentMessages);
     // push to DB
     database.ref(`messages/${activeMessagesID}`).set(updatedCurrentMessages);
   };
@@ -291,10 +290,13 @@ const App = () => {
           const messageEntries = curUser.public.messages;
           fetchMessages(messageEntries);
 
-          const unAcceptedClient = false;
+          // if a leader has a new client request, they need to redirect there first
+          let unAcceptedClient = false;
           if (curUser.public.clients?.length > 0) {
             const clientEntries = curUser.public.clients;
+
             clientEntries.forEach((client) => {
+              unAcceptedClient = !client.accepted;
               getClientData(client.clientId);
             });
           }
@@ -344,8 +346,6 @@ const App = () => {
         if (!loggedInUser) {
           getUserData(user);
           updateSuccess(true, 'Welcome!');
-        } else {
-          // console.log("logged in!")
         }
       } else {
         // logged out
@@ -475,6 +475,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
+            launchToast={toast}
             clientData={clientData && clientData}
             userId={userId}
             myMessages={myMessages && myMessages}
@@ -522,6 +523,7 @@ const App = () => {
             loggedInUser={loggedInUser}
             handleLogOut={handleLogOut}
             updateSuccess={updateSuccess}
+            launchToast={toast}
             clientData={clientData}
             userId={userId}
             myMessages={myMessages && myMessages}

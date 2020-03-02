@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 
-const SingleMessage = ({ data, userId, lastMessage }) => {
+const SingleMessage = ({ data, userId, lastMessage, seen }) => {
   const myMessage = data.author === userId;
   // if the other person has marked the message as read, then display "seen"
-  const seen = (myMessage && lastMessage) && (data.seen !== userId);
+  const isSeen = myMessage && lastMessage && seen;
 
   return (
     <div className={` ${myMessage ? 'TextRight' : 'TextLeft'} MarginTopSmall MarginHSmall`}>
@@ -12,7 +12,11 @@ const SingleMessage = ({ data, userId, lastMessage }) => {
       <div className={`MessageBorder ${!myMessage ? 'MessageBubble TextLeft' : 'TextRight'}`}>
         <div style={{ fontSize: 20, padding: 8 }}>{data.message}</div>
       </div>
-      {seen && <div className="PinkFont" style={{ fontSize: 12, padding: 5 }}>Seen</div>}
+
+      {lastMessage && (
+        <div className="PinkFont" style={{ fontSize: 12, padding: 5 }}>{isSeen ? 'Seen' : ''}</div>
+      )}
+
     </div>
   );
 };

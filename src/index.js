@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 
@@ -35,6 +35,39 @@ const App = () => {
   const [loadingSocial, setLoadingSocial] = useState(true);
   const [socialPosts, setSocialPosts] = useState(null);
   const [socialPostId, setSocialPostId] = useState(null);
+
+
+  // keep messages updated
+  useEffect(() => {
+    if (myMessages?.length > 0) {
+      myMessages.forEach((id) => {
+        // query each message string for updates
+        database.ref(`messages/${id.messagesId}`).on('value', (snap) => {
+          const data = snap.val();
+          // we will be updating myMessages so grab it now
+          const updatedMessages = [...myMessages];
+          const index = updatedMessages.findIndex((elem) => elem.messagesId === id.messagesId);
+          // if length is different, then a new message was added
+          if (id.messageData.length !== data.messageData.length) {
+            const newMessage = data[data.length - 1];
+
+            if (index !== -1) {
+              updatedMessages[index].messageData.push(newMessage);
+              setMyMessages(updatedMessages);
+            }
+          }
+
+          // now check to see if "seen" has changed
+          if (id.lastMessage.seen !== data.lastMessage.seen) {
+            if (index !== -1) {
+              updatedMessages[index].lastMessage = data.lastMessage;
+              setMyMessages(updatedMessages);
+            }
+          }
+        });
+      });
+    }
+  });
 
 
   /* Handle Loading Client Data */
@@ -447,6 +480,7 @@ const App = () => {
       }
     });
   };
+
   /* On Mount, fetch ALL leader data, this is for the public viewing of teachers */
   useEffect(() => {
     handleLoginCheck();

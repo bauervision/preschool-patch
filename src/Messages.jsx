@@ -51,6 +51,33 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const [sendToSelectedContact, setSendToSelectedContact] = useState(false);
   const [childrenWarning, setChildrenWarning] = useState(false);
   const [silenceNotifications, setSilence] = useState(false);
+  const [seenLastMessage, setSeenLast] = useState(false);
+
+
+  // function usePrevious(value) {
+  //   const ref = useRef();
+  //   useEffect(() => {
+  //     ref.current = value;
+  //   });
+  //   return ref.current;
+  // }
+
+  // const prevMessages = usePrevious(myMessages);
+
+  // // handle updating messages from parent
+  // useEffect(() => {
+  //   const index = activeMessages.findIndex((elem) => elem.messagesId === activeThreadId);
+  //   if (index !== -1) {
+  //     if (prevMessages[index].lastMessage.seen !== activeMessages[index].lastMessage.seen) {
+  //       console.log('Seen has changed!');
+  //     }
+  //   }
+
+  //   // if (prevMessages !== activeMessages) {
+  //   //   console.log('Messages have changed!');
+  //   //   // setActiveMessages(myMessages);
+  //   // }
+  // }, [activeMessages, activeThreadId, myMessages, prevMessages]);
 
   // handle scrolling to last message
   const messagesRef = useRef(null);
@@ -61,6 +88,24 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
       block: 'nearest',
     });
   };
+
+  // monitor the state of the last message
+  useEffect(() => {
+    // once there is an activeThread, find the index of it within all the messages
+    const index = activeMessages.findIndex((elem) => elem.messagesId === activeThreadId);
+    if (index !== -1) {
+      // if the last message was written by me...
+      const myMessage = activeMessages[index].lastMessage.author === userId;
+
+
+      // but the last "seen" person was them...
+      const lastSeen = activeMessages[index].lastMessage.seen !== userId;
+      if (myMessage && lastSeen) {
+        // they have seen our message without responding so set state to true
+        setSeenLast(true);
+      }
+    }
+  }, [activeMessages, activeThread, activeThreadId, userId]);
 
   // when do we scroll to last message
   useEffect(() => {
@@ -200,7 +245,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         author: userId,
         message: newMessage,
         date: now,
-        seen: userId
       };
 
       // get and set current active message data
@@ -293,7 +337,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
       updatedCurrentThread.messageData = updatedThread;
 
       // setup lastMessage object
-      updatedCurrentThread.lastMessage = { date: now, author: userId };
+      updatedCurrentThread.lastMessage = { date: now, author: userId, seen: userId };
       // push to DB
       handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
 
@@ -578,12 +622,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                   <>
                     <div style={{ height: messageWindowHeight, overflowY: 'scroll' }}>
                       {/* Display all the messages if any */}
-                      {activeThread.map((elem, index) => <SingleMessage
+                      {activeThread.map((elem, index) => (<SingleMessage
                         key={index.toString()}
                         data={elem}
                         userId={userId}
                         lastMessage={(activeThread.length - 1) === index}
-                      />
+                        seen={seenLastMessage}
+                      />)
 
                       )}
                       <div ref={messagesRef}/>

@@ -339,6 +339,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
       // setup lastMessage object
       updatedCurrentThread.lastMessage = { date: now, author: userId, seen: userId };
       // push to DB
+      console.log(sendToDBMessageId, updatedCurrentThread);
       handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
 
       /* finally handle local state update of messages! */
@@ -484,7 +485,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             {/*  Left side Message Notifcations */}
             <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>
 
-              {activeMessages && (<div>All Messages </div>)}
+              {activeMessages.length > 0 && (<div>All Messages </div>)}
               { unReadMessages && <button type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
 
 
@@ -530,7 +531,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
             {/* Right Side Client Messages */}
-            <div className="Flex Col" style={{ width: '70%' }}>
+            <div className="Flex Col" style={{ width: '70%', border: 'solid' }}>
 
               {/* If we are a leader, show the buttons */}
               {isLeader && (
@@ -568,7 +569,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
               {/* Message Data */}
               <div className="MessageFrame" >
-                {activeThread && (
+                {showingThread && (
                   <div className="Flex AlignItems Between">
 
                     <div className="Flex AlignItems">
@@ -653,26 +654,30 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                   </>
                 )
                 // No current selection, and no active messages
-                  : (<div>{!activeMessages ? (
-                    <div className="Flex Col JustifyCenter">
-                      <span className="Buffer"><strong >No conversations found.</strong></span>
-
-                      {isLeader ? (
-                        <>
-                          <span>In order to generate interest, be sure that you update your profile page,</span>
-                          <span>post pictures of your home, and of course set that you are Enrolling!</span>
-
-                          <br />
-                          <span>You should also share your profile page on different social media pages</span>
-                        </>
-                      ) : (
-                        <span>Reach out to a local Patch Leader and setup a meet and greet!</span>
-                      )}
+                  : (
+                    <>
+                      {activeMessages.length < 1 ? (
+                        <div className="Flex Col JustifyCenter" style={{ marginTop: '3vh' }}>
+                          <div>
+                            <span><strong >No conversations found.</strong></span>
+                          </div>
 
 
-                    </div>
-                  )
-                    : 'Select a message to view it'}</div>)
+                          {isLeader ? (
+                            <>
+                              <span>In order to generate interest, be sure that you update your profile page,</span>
+                              <span>post pictures of your home, and of course set that you are Enrolling!</span>
+
+                              <br />
+                              <span>You should also share your profile page on different social media pages</span>
+                            </>
+                          ) : (
+                            <span>Reach out to a local Patch Leader and setup a meet and greet!</span>
+                          )}
+
+
+                        </div>
+                      ) : 'Select a message to view it'}</>)
                 }
               </div>
             </div>

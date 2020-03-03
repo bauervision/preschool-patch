@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from 'react';
 
 import { ProfileCard } from './ProfileCard';
@@ -24,7 +23,7 @@ export const PublicLanding = ({
   const [filteredData, setFilteredData] = useState([]);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
-  const [showTeacher, setShowTeacher] = useState(true);
+  const [showTeacher, setShowTeacher] = useState(false);
 
 
   /* On Mount, fetch data, check login */
@@ -39,6 +38,11 @@ export const PublicLanding = ({
     }
   }, [leaderData]);
 
+  useEffect(() => {
+    if (loggedInUser) {
+      setShowTeacher(false);
+    }
+  }, [loggedInUser]);
 
   // handleFilters
   const filterAvailable = (e) => {
@@ -95,201 +99,206 @@ export const PublicLanding = ({
         userId={userId}
       />
 
-      <div className="Flex AlignItems  Buffer " style={{ marginTop: 80 }}>
-        <img
-          src={Logo}
-          alt="logo"
-          className="Logo"
-          style={{ width: 600, height: 'auto' }}
-        />
-        <div
-          className="Flex Col AlignItems PinkFill RoundBorder LargeBuffer"
-          style={{ marginLeft: 100 }}>
 
-          <div>
-            <h3>How It Works</h3>
-          </div>
-          <div className="Flex Row AlignItems JustifyCenter ">
-            {showTeacher ? (
-              <>
-                <div>As a Teacher</div>
-                <button
-                  type="button" onClick={() => {
-                    setShowTeacher(false);
-                  }}>
-                  As a Parent
-                </button>
-              </>
-            ) : (
-              <>
-                <button type="button" onClick={() => setShowTeacher(true)}>
-                    As a Teacher
-                </button>
-                <div>As a Parent</div>
-              </>
-            )}
+      {/* Initial Public display */}
+      {!loggedInUser && (
+        <>
+          <div className="Flex AlignItems  Buffer " style={{ marginTop: 80 }}>
+            <img
+              src={Logo}
+              alt="logo"
+              className="Logo"
+              style={{ width: 600, height: 'auto' }}
+            />
+            <div
+              className="Flex Col AlignItems PinkFill RoundBorder LargeBuffer"
+              style={{ marginLeft: 100 }}>
 
-            <img src={Corner} alt='corner' className='filter-white Rotate' style={{ width: 100, height: 'auto', zIndex: 0 }} />
-          </div>
-        </div>
-      </div>
-
-
-      <div >
-        <div className="Flex Col JustifyCenter Buffer ">
-
-          <div className="Tab SeeThru  PaddingTop">
-            <div className="CursiveFont SuperFont ">Simple Steps </div>
-            {/* How it Works: Steps */}
-            {showTeacher ? (
-              <div className="Flex JustifyCenter">
-                <div className="Flex Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                  <div className="Buffer ">Sign-up as a Patch Leader</div>
-                </div>
-
-                <div className="Flex  Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                  <div className="Buffer ">Enroll students</div>
-                </div>
-
-                <div className="Flex  Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                  <div className="Buffer ">Get paid at the end of the week!</div>
-                </div>
+              <div>
+                <h3>How It Works</h3>
               </div>
-            ) : (
-              <div className="Flex JustifyCenter">
-                <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                  <div className="Buffer ">Search Local Patches</div>
-                </div>
 
-                <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                  <div className="Buffer ">Enroll your child</div>
-                </div>
+              <div className="Flex Row AlignItems JustifyCenter ">
+                {showTeacher ? (
+                  <>
+                    <button type="button" onClick={() => setShowTeacher(false)} style={{ border: 'solid' }}> As a Parent</button>
+                    <div><strong>As a Teacher</strong></div>
+                  </>
+                ) : (
+                  <>
+                    <div><strong>As a Parent</strong></div>
+                    <button type="button" onClick={() => { setShowTeacher(true); }} style={{ border: 'solid' }}>As a Teacher</button>
+                  </>
+                )}
 
-                <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                  <div className="Buffer ">
-                      Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
-                  </div>
-                </div>
+                <img src={Corner} alt='corner' className='filter-white Rotate' style={{ width: 100, height: 'auto', zIndex: 0 }} />
               </div>
-            )}
+            </div>
+          </div>
 
-            {/* How it Works: Details */}
-            <div className="Flex JustifyCenter AlignItems GreenFill TabBottom">
+
+          <div className="Flex Col JustifyCenter Buffer ">
+
+            <div className="Tab SeeThru  PaddingTop">
+              <div className="CursiveFont SuperFont ">Simple Steps </div>
+              {/* How it Works: Steps */}
               {showTeacher ? (
-                <div className="Flex Col JustifyCenter AlignItems Buffer">
-                  <p>
-                    After you signup, your profile will be added to our database
-                    and will show up in local searches.
-                    <br />
-                    <br />
-                  </p>
-                  <div>
-                    <div className="CursiveFont LargeFont">Keys to success: </div>
-                    <ul style={{ textAlign: 'left' }}>
-                      <li>
-                        Convert a space in your home to a warm preschool
-                        environment, take pictures and upload them to your profile
-                        to impress prospective clients. This is the best thing you
-                        can do to create interest in your business!
-                      </li>
-                      <li>
-                        Complete a simple background check. It costs $20 and
-                        offers some valuable peace of mind for parents.
-                      </li>
-                      <li>
-                        Post your profile on local Social Media Mom pages to
-                        further spread the word about your availability!
-                      </li>
-                      <li>
-                        Create Social Media pages for your business and update
-                        them regularly.
-                      </li>
-                    </ul>
+                <div className="Flex JustifyCenter">
+                  <div className="Flex Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
+                    <div className="Buffer ">Sign-up as a Patch Leader</div>
+                  </div>
+
+                  <div className="Flex  Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
+                    <div className="Buffer ">Enroll students</div>
+                  </div>
+
+                  <div className="Flex  Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
+                    <div className="Buffer ">Get paid at the end of the week!</div>
                   </div>
                 </div>
               ) : (
-                <p style={{ marginTop: 50, marginBottom: 50 }}>
-                    Preschool Patch offers a small group setting designed to elevate
-                    your child's education and social interactions in a warm,
-                    inviting, and safe space.
-                  <br />
-                  <br />
-                    Max class size of 5 means that your child will not be just a
-                    number, but a nurtured student.
-                </p>
+                <div className="Flex JustifyCenter">
+                  <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
+                    <div className="Buffer ">Search Local Patches</div>
+                  </div>
+
+                  <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
+                    <div className="Buffer ">Enroll your child</div>
+                  </div>
+
+                  <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
+                    <div className="Buffer ">
+              Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
+                    </div>
+                  </div>
+                </div>
               )}
+
+              {/* How it Works: Details */}
+              <div className="Flex JustifyCenter AlignItems GreenFill TabBottom">
+                {showTeacher ? (
+                  <div className="Flex Col JustifyCenter AlignItems Buffer">
+                    <p>
+            After you signup, your profile will be added to our database
+            and will show up in local searches.
+                      <br />
+                      <br />
+                    </p>
+                    <div>
+                      <div className="CursiveFont LargeFont">Keys to success: </div>
+                      <ul style={{ textAlign: 'left' }}>
+                        <li>
+                Convert a space in your home to a warm preschool
+                environment, take pictures and upload them to your profile
+                to impress prospective clients. This is the best thing you
+                can do to create interest in your business!
+                        </li>
+                        <li>
+                Complete a simple background check. It costs $20 and
+                offers some valuable peace of mind for parents.
+                        </li>
+                        <li>
+                Post your profile on local Social Media Mom pages to
+                further spread the word about your availability!
+                        </li>
+                        <li>
+                Create Social Media pages for your business and update
+                them regularly.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <p style={{ marginTop: 50, marginBottom: 50 }}>
+                    {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
+                    <br />
+                    <br />
+            Max class size of 5 means that your child will not be just a
+            number, but a nurtured student.
+                  </p>
+                )}
+              </div>
             </div>
+
           </div>
 
-        </div>
+          <div>
+            <img src={Elegant} alt="decorative" className="filter-green Margins" />
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+          </div>
+        </>
+      )}
 
-        {/* Filter Criteria */}
-        <div className="Flex Col JustifyCenter  SeeThru">
-          {!showTeacher ? (
-            <>
-              <div className="CursiveFont SuperFont Buffer PinkFont">
+
+      {/* Filter Criteria */}
+      <div className="Flex Col JustifyCenter  SeeThru">
+        {!showTeacher ? (
+          <>
+            <div className="CursiveFont SuperFont Buffer PinkFont">
                 Find a local preschool teacher for your child!
-              </div>
+            </div>
 
-              {/* Filter data by zipcode */}
-              <div>
-                <input
-                  placeholder="Enter Zipcode"
-                  style={{ width: 100 }}
-                  className="InputStyle"
-                />
-              </div>
+            {/* Filter data by zipcode */}
+            <div>
+              <input
+                placeholder="Enter Zipcode"
+                style={{ width: 100 }}
+                className="InputStyle"
+              />
+            </div>
 
-              <label>
+            <label>
                 Show Only Available
-                <input type="checkbox" onChange={(e) => filterAvailable(e)} />
-              </label>
+              <input type="checkbox" onChange={(e) => filterAvailable(e)} />
+            </label>
 
-              <label>
+            <label>
                 Accepting Infants
-                <input type="checkbox" onChange={(e) => filterInfants(e)} />
-              </label>
-            </>
-          ) : (
-            <div className="CursiveFont SuperFont Buffer">
+              <input type="checkbox" onChange={(e) => filterInfants(e)} />
+            </label>
+          </>
+        ) : (
+          <div className="CursiveFont SuperFont Buffer">
                 Explore some example profiles of our most successful Patches!
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="PublicLanding_Container JustifyCenter BoxShadow ">
+          {filteredData.length !== 0 ? (
+            filteredData.map((elem) => {
+              return (
+                <ProfileCard
+                  key={elem.name}
+                  data={elem}
+                  handleSelection={handleSelection}
+                />
+              );
+            })
+          ) : (
+            <div style={{ padding: 40 }}>
+              <h3>{'No Patch Leaders yet. :('}</h3>
+              <div>Maybe you can be the first.....?</div>
+              <div>
+                <button onClick={() => pageUpdate(2)}>
+                      Become a Patch Leader!
+                </button>
+              </div>
             </div>
           )}
-          {/* Content */}
-          <div className="PublicLanding_Container JustifyCenter BoxShadow ">
-            {filteredData.length !== 0 ? (
-              filteredData.map((elem) => {
-                return (
-                  <ProfileCard
-                    key={elem.name}
-                    data={elem}
-                    handleSelection={handleSelection}
-                  />
-                );
-              })
-            ) : (
-              <div style={{ padding: 40 }}>
-                <h3>{'No Patch Leaders yet. :('}</h3>
-                <div>Maybe you can be the first.....?</div>
-                <div>
-                  <button onClick={() => pageUpdate(2)}>
-                      Become a Patch Leader!
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
-
-        <div className="CursiveFont RedicFont Margins PinkFont">Love Learning Early!</div>
 
       </div>
+
+      <div>
+        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+
+      </div>
+
+      <div className="CursiveFont RedicFont Margins PinkFont">Love Learning Early!</div>
+
+
       <Footer />
 
       <Toast showToast={launchToast.value} message={launchToast.message} />

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import moment from 'moment';
+
 import { EditField, SimpleImage, KidSection, PatchLogo, Toast } from './Components';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
@@ -13,6 +15,8 @@ import { Add, Elegant } from './images';
 const galleryImages = [Coloring, Kids, Table, Working];
 
 export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, launchToast, userId }) => {
+  const now = moment().toDate().getTime();
+
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
   let userData = {};
 
@@ -26,6 +30,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       rates: loggedInUser.rates,
       infants: loggedInUser.infants,
       kidTotal: loggedInUser.kidTotal,
+      lastUpdate: loggedInUser.lastUpdate,
       name: loggedInUser.name,
       patchName: loggedInUser.patchName,
       photoUrl: loggedInUser.photoUrl,
@@ -36,6 +41,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
     // basic user
     userData = {
       aboutMe: loggedInUser.aboutMe,
+      lastUpdate: loggedInUser.lastUpdate,
       name: loggedInUser.name,
       phone: loggedInUser.phone,
       zipcode: loggedInUser.zipcode,
@@ -89,7 +95,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         isLeader: true,
         infants: updatedInfants,
         kidTotal: updatedKidTotal,
-        messages: loggedInUser?.messages,
+        lastUpdate: now,
+        messages: loggedInUser?.messages || [],
         name: updatedName,
         patchName: updatedPatchName,
         phone: updatedPhone,
@@ -105,12 +112,14 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         enrollment: loggedInUser.enrollment, // like this
         id: userId, // and this
         isLeader: false,
-        messages: loggedInUser?.messages, // and these
+        lastUpdate: now,
+        messages: loggedInUser?.messages || [], // and these
         name: updatedName,
         phone: updatedPhone,
         zipcode: updatedZipcode,
       };
     }
+
 
     // now that we have updated data, push it up to our database
     database
@@ -231,6 +240,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   // if the user has removed all of their previously enrolled children
   const removeEnrollment = enrolledKids && (updatedChildren.length === 0);
 
+  const lastDataUpdate = moment(loggedInUser.lastUpdate).fromNow();
+
   return (
     <div>
       <div>
@@ -314,6 +325,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
 
               </div>
 
+              <div className="Buffer PinkFont">Last Update: {lastDataUpdate}</div>
               <div className="CursiveFont LargeFont Buffer PinkFont">My Data</div>
               <div className="Flex Row AlignItems SimpleBorder JustifyCenter">
                 <EditField

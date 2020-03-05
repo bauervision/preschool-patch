@@ -8,6 +8,7 @@ $SONICSILVER: #757575;
 $PANSYPURPLE: #82204A;
 $PARADISEPINK: #FF4C76;
 $LIGHTPINK: rgb(255, 112, 146);
+
 .App {
   font-family: "Raleway", sans-serif;
   text-align: center;
@@ -32,8 +33,6 @@ $LIGHTPINK: rgb(255, 112, 146);
     flex-direction: column;
     justify-content: center;
     
-    padding-top: 20px;
-
     &_Container {
       display: flex;
       flex-direction: row;

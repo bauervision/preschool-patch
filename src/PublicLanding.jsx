@@ -18,9 +18,9 @@ export const PublicLanding = ({
   myMessages,
   userId
 }) => {
+  console.log();
   // handle local state
-  // const [leaderData, setLeaderData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState(null);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
   const [showTeacher, setShowTeacher] = useState(false);
@@ -28,12 +28,12 @@ export const PublicLanding = ({
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
+    console.log(leaderData);
     // incoming data is an obj, so lets convert it to a useable array
     if (leaderData) {
       const leadersArray = Object.entries(leaderData);
       const newData = [];
       leadersArray.forEach((elem) => { newData.push(elem[1].public); });
-      // setLeaderData(newData);
       setFilteredData(newData);
     }
   }, [leaderData]);
@@ -99,6 +99,10 @@ export const PublicLanding = ({
         userId={userId}
       />
 
+      {/* Top Left Title */}
+      {loggedInUser
+      && <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>
+      }
 
       {/* Initial Public display */}
       {!loggedInUser && (
@@ -265,8 +269,8 @@ export const PublicLanding = ({
 
         {/* Content */}
         <div className="PublicLanding_Container JustifyCenter BoxShadow ">
-          {filteredData.length !== 0 ? (
-            filteredData.map((elem) => {
+          {filteredData?.length !== 0 ? (
+            filteredData?.map((elem) => {
               return (
                 <ProfileCard
                   key={elem.name}

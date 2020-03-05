@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 
-import { Header } from "./Components/Header";
-import { Footer } from "./Components/Footer";
-import { Ratings, SimpleImage } from "./Components";
+import { Header } from './Components/Header';
+import { Footer } from './Components/Footer';
+import { Ratings, SimpleImage } from './Components';
 
-import { Coloring, Kids, Table, Working } from "./images/photos";
-import { DecorFlat, Logo, Elegant } from "./images";
+import { Coloring, Kids, Table, Working } from './images/photos';
+import { DecorFlat, Logo, Elegant } from './images';
 
 const galleryImages = [Coloring, Kids, Table, Working];
-export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
+export const ProfilePage = ({ pageUpdate, currentSelection, loggedInUser }) => {
   // pull out public data
   const {
     aboutMe,
@@ -23,7 +23,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
     rating,
     photoUrl
 
-  } = data;
+  } = currentSelection;
 
   const buttonLabel = loggedInUser ? (`Contact ${name}`) : (`Login to contact ${name}`);
 
@@ -39,7 +39,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
           <div
             className="Flex AlignItems SeeThru RoundBorder SimpleBorder Margins BoxShadow"
             style={{
-              justifyContent: "space-evenly",
+              justifyContent: 'space-evenly',
 
             }}
           >
@@ -64,7 +64,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                 <div style={{ textAlign: 'left', marginTop: 20 }}>
 
                   <div className="textMargin">
-                    <span className="profileText">{available && 'Currently Enrolling!'}</span>
+                    <span className="Price LargeFont PinkFont">{available && 'Enrolling!'}</span>
                   </div>
 
 
@@ -74,12 +74,12 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                   </div>
 
                   <div className="textMargin">
-                    <span className="profileText">Total Kids Enrolled:</span>{" "}
+                    <span className="profileText">Total Kids Enrolled:</span>{' '}
                     <strong>{kidTotal}</strong>
                   </div>
 
                   <div className="textMargin">
-                    <span className="profileText">Infants?:</span>{" "}
+                    <span className="profileText">Infants?:</span>{' '}
                     <strong>{infants ? 'Yes!' : 'Not at this time'}</strong>
                   </div>
 
@@ -147,7 +147,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
           <div className="SimpleBorder Buffer WhiteFill">
 
             {galleryImages.map((elem, index) => (
-              <SimpleImage key={'gallery' + index} image={elem} alt={'gallery' + index} />
+              <SimpleImage key={`gallery${index}`} image={elem} alt={`gallery${index}`} />
             ))}
 
           </div>

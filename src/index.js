@@ -298,7 +298,6 @@ const App = () => {
             }
           });
 
-
           setPatchData(data);
           setPage(7); // go to admin
         }

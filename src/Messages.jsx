@@ -531,7 +531,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
             {/* Right Side Client Messages */}
-            <div className="Flex Col" style={{ width: '70%', border: 'solid' }}>
+            <div className="Flex Col" style={{ width: '70%' }}>
 
               {/* If we are a leader, show the buttons */}
               {isLeader && (
@@ -675,9 +675,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                             <span>Reach out to a local Patch Leader and setup a meet and greet!</span>
                           )}
 
-
                         </div>
-                      ) : 'Select a message to view it'}</>)
+                      ) : <div className="Buffer">Select a message to view it</div>}</>)
                 }
               </div>
             </div>

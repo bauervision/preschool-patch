@@ -62,7 +62,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [updatedPTRates, setPTRates] = useState(userData.rates && userData.rates.pt);
   const [updatedDIRates, setDIRates] = useState(userData.rates && userData.rates.di);
   const [updatedInfants, setInfants] = useState(userData.infants);
-  const [updatedKidTotal, setKidTotal] = useState(userData.kidTotal);
   const [updatedChildren, setUpdatedChildren] = useState(userData.children || []);
   const [updatedName, setName] = useState(userData.name);
   const [updatedPhotoUrl, setPhotoUrl] = useState(userData.photoUrl);
@@ -94,7 +93,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         },
         isLeader: true,
         infants: updatedInfants,
-        kidTotal: updatedKidTotal,
         lastUpdate: now,
         messages: loggedInUser?.messages || [],
         name: updatedName,
@@ -242,6 +240,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
 
   const lastDataUpdate = moment(loggedInUser.lastUpdate).fromNow();
 
+
   return (
     <div>
       <div>
@@ -379,16 +378,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   value={updatedZipcode}
                 />
 
-                {isLeader && (
-                  <EditField
-                    title="Current Student Count"
-                    placeholder={userData.kidTotal}
-                    type="number"
-                    forLabel="kidTotal"
-                    onChange={setKidTotal}
-                    value={updatedKidTotal}
-                  />
-                )}
 
               </div>
 

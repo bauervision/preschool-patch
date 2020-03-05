@@ -1,15 +1,15 @@
-import React from "react";
-import { Ratings } from "./Components";
+import React from 'react';
+import { Ratings } from './Components';
 
 export const ProfileCard = ({ data, handleSelection }) => {
   // pull out data
   const {
     age,
     available,
+    clients,
     experience,
     rates,
     infants,
-    kidTotal,
     name,
     rating,
     zipcode,
@@ -22,6 +22,10 @@ export const ProfileCard = ({ data, handleSelection }) => {
     handleSelection(data);
   };
 
+  // handle conditional rendering
+  const init = 0;
+  const kidTotal = (clients?.reduce((a, c) => a + c.children.length, init)) || 0;
+
   return (
     <div className="Card" onClick={getSelection}>
       {/* Profile Pic */}
@@ -31,7 +35,7 @@ export const ProfileCard = ({ data, handleSelection }) => {
       </div>
 
       {/* Data row 1*/}
-      <div className="Flex Col Buffer " style={{ textAlign: "left", width: '30%' }}>
+      <div className="Flex Col Buffer " style={{ textAlign: 'left', width: '30%' }}>
 
         <div className="textMargin">
           <Ratings rating={rating} />
@@ -43,7 +47,6 @@ export const ProfileCard = ({ data, handleSelection }) => {
 
           </div>
         )}
-
 
 
         <div className="textMargin">
@@ -59,14 +62,14 @@ export const ProfileCard = ({ data, handleSelection }) => {
       </div>
 
       {/* Data row 2*/}
-      <div className="Flex Col Buffer " style={{ textAlign: "left", width: '30%' }}>
+      <div className="Flex Col Buffer " style={{ textAlign: 'left', width: '30%' }}>
         <div className="textMargin">
-          <span className="profileText">Total Kids:</span>{" "}
+          <span className="profileText">Total Kids:</span>{' '}
           <strong>{kidTotal}</strong>
         </div>
 
         <div className="textMargin">
-          <span className="profileText">Infants?:</span>{" "}
+          <span className="profileText">Infants?:</span>{' '}
           <strong>{infants ? 'Yes!' : 'Not at this time'}</strong>
         </div>
 
@@ -77,7 +80,7 @@ export const ProfileCard = ({ data, handleSelection }) => {
       </div>
 
       {/* Rates*/}
-      <div className="Flex Col Buffer SimpleBorder " style={{ textAlign: "left", width: '10%' }}>
+      <div className="Flex Col Buffer SimpleBorder " style={{ textAlign: 'left', width: '10%' }}>
 
         <div className="Tooltip">
           <span className="TT_Text">Full-time, Part-time, and Drop-in rates</span>

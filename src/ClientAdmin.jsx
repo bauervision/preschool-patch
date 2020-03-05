@@ -60,7 +60,6 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
       updateSuccess(true, 'Please email a reason to the parent');
     }
 
-    console.log(updatedClientData, updatedClient);
     setClientDataState(updatedClientData);
     setClientState(updatedClient);
   };

@@ -18,7 +18,6 @@ export const PublicLanding = ({
   myMessages,
   userId
 }) => {
-  console.log();
   // handle local state
   const [filteredData, setFilteredData] = useState(null);
   const [filterAvail, setFilterAvail] = useState(false);
@@ -28,7 +27,6 @@ export const PublicLanding = ({
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
-    console.log(leaderData);
     // incoming data is an obj, so lets convert it to a useable array
     if (leaderData) {
       const leadersArray = Object.entries(leaderData);
@@ -101,22 +99,22 @@ export const PublicLanding = ({
 
       {/* Top Left Title */}
       {loggedInUser
-      && <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>
+      && <div className="CursiveFont SuperFont TextLeft Buffer ">Preschool Patch</div>
       }
 
       {/* Initial Public display */}
       {!loggedInUser && (
         <>
-          <div className="Flex AlignItems  Buffer " style={{ marginTop: 80 }}>
+          <div className="Flex AlignItems  Buffer ">
             <img
               src={Logo}
               alt="logo"
               className="Logo"
-              style={{ width: 600, height: 'auto' }}
+
             />
             <div
               className="Flex Col AlignItems PinkFill RoundBorder LargeBuffer"
-              style={{ marginLeft: 100 }}>
+            >
 
               <div>
                 <h3>How It Works</h3>
@@ -135,7 +133,7 @@ export const PublicLanding = ({
                   </>
                 )}
 
-                <img src={Corner} alt='corner' className='filter-white Rotate' style={{ width: 100, height: 'auto', zIndex: 0 }} />
+                <img src={Corner} alt='corner' className='filter-white Rotate' />
               </div>
             </div>
           </div>

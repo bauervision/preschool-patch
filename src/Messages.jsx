@@ -339,7 +339,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
       // setup lastMessage object
       updatedCurrentThread.lastMessage = { date: now, author: userId, seen: userId };
       // push to DB
-      console.log(sendToDBMessageId, updatedCurrentThread);
       handleMessageUpdates(sendToDBMessageId, updatedCurrentThread);
 
       /* finally handle local state update of messages! */

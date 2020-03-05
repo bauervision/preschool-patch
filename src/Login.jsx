@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
@@ -8,7 +8,7 @@ import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection } fro
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from './helpers/auth';
-import { Add, Elegant } from './images';
+import { Add, Elegant, Corner } from './images';
 
 export const Login = ({ pageUpdate, handleLogin }) => {
   // handle local state
@@ -25,9 +25,10 @@ export const Login = ({ pageUpdate, handleLogin }) => {
   const [passwordType, setPasswordType] = useState('password');
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
   const [kidTotal, setKidTotal] = useState([]);
+  const [loadingUser, setLoadingUser] = useState(false);
 
-  const handleSubmitLogin = async (e) => {
-    e.preventDefault();
+  const handleSubmitLogin = useCallback(async () => {
+    setLoadingUser(true);
     const status = await LoginUserEmailPassword(email, password);
 
     // if we didn't get a user back, then there was an error
@@ -39,7 +40,15 @@ export const Login = ({ pageUpdate, handleLogin }) => {
       handleLogin(status.user);
       pageUpdate(0);
     }
-  };
+  }, [email, handleLogin, pageUpdate, password]);
+
+
+  useEffect(() => {
+    if (loadingUser) {
+      handleSubmitLogin();
+    }
+  }, [handleSubmitLogin, loadingUser]);
+
 
   const validEmailRegex = RegExp(
     // eslint-disable-next-line
@@ -296,39 +305,47 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                   </>
                 ) : (
                 // Existing User
-                  <form onSubmit={handleSubmitLogin}>
-                    <div className="Flex Col JustifyCenter AlignItems">
-                      <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
-                      <div className="Flex Col LoginForm BoxShadow">
-                        <BasicInput
-                          title="Email"
-                          type="email"
-                          forLabel="email"
-                          onChange={setEmail}
-                          value={email}
-                        />
-
-                        <PasswordInput
-                          handlePasswordVisibility={handlePasswordVisibility}
-                          setPassword={setPassword}
-                          password={password}
-                          passwordType={passwordType}
-                          passwordError={passwordError}
-                        />
-
-                        {emailError || passwordError ? (
-                          <div className="FakeButton">
-                              Enter Valid Email and Password
-                          </div>
-                        ) : (
-                          <button type="submit">Login</button>
-                        )}
+                  <>
+                    {loadingUser ? (
+                      <div className="Flex Col JustifyCenter AlignItems">
+                        <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
                       </div>
-                      {loginError && (
-                        <div className="LoginError">{loginError}</div>
-                      )}
-                    </div>
-                  </form>
+                    ) : (
+                      <form onSubmit={() => setLoadingUser(true)}>
+                        <div className="Flex Col JustifyCenter AlignItems">
+                          <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
+                          <div className="Flex Col LoginForm BoxShadow">
+                            <BasicInput
+                              title="Email"
+                              type="email"
+                              forLabel="email"
+                              onChange={setEmail}
+                              value={email}
+                            />
+
+                            <PasswordInput
+                              handlePasswordVisibility={handlePasswordVisibility}
+                              setPassword={setPassword}
+                              password={password}
+                              passwordType={passwordType}
+                              passwordError={passwordError}
+                            />
+
+                            {emailError || passwordError ? (
+                              <div className="FakeButton">
+                              Enter Valid Email and Password
+                              </div>
+                            ) : (
+                              <button type="submit">Login</button>
+                            )}
+                          </div>
+                          {loginError && (
+                            <div className="LoginError">{loginError}</div>
+                          )}
+                        </div>
+                      </form>
+                    )}
+                  </>
                 )}
               </>
             )}

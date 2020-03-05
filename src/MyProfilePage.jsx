@@ -91,6 +91,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
           pt: updatedPTRates,
           di: updatedDIRates
         },
+        id: userId, // and this
         isLeader: true,
         infants: updatedInfants,
         lastUpdate: now,

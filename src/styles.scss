@@ -1,3 +1,5 @@
+@import './mixins.scss';
+
 $MALACHITE: #20bf55;
 $PATCHGREEN: #0b8e51;
 $DARKIMPERIALBLUE: #0b4f6c;
@@ -9,39 +11,57 @@ $PANSYPURPLE: #82204A;
 $PARADISEPINK: #FF4C76;
 $LIGHTPINK: rgb(255, 112, 146);
 
+
+html{
+  display: flex;
+  font-size: 62.5%; // 1rem = 10px
+  @include respond(phone){ font-size: 62.5%;}
+  @include respond(tab-port){ font-size: 50%;}// 1rem = 8px (8/16)
+  @include respond(tab-land){ font-size: 56.25%;}// 1rem = 9px (9/16)
+  @include respond(big){ font-size: 75%;}// 1rem = 12px ( 12/16 )
+}
+
+body{
+  box-sizing: border-box;
+}
 .App {
   font-family: "Raleway", sans-serif;
   text-align: center;
-  //background-color: $GHOSTWHITE;
   margin: 0;
   padding: 0;
   color: $PATCHGREEN;
+
+ 
   font-size: 14pt;
   background-image: url("https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2FwhiteWoodBG.jpg?alt=media&token=51c0538f-945d-4cf1-9c8f-4a5c54e8e557");
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-size: cover;
+  
+}
+ 
+  
   // Pages
-
-  .FixedBG {
-    background-image: url("https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2FwhiteWoodBG.jpg?alt=media&token=51c0538f-945d-4cf1-9c8f-4a5c54e8e557");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-
   .PublicLanding {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    
     
     &_Container {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       background-color: $LIGHTROSE;
+
+      @media (min-width: 320px) {
+       padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+      }
+
       padding: 10px;
-      margin: 40px;
-      margin-left: 80px;
-      margin-right: 80px;
+      margin: 40px 80px;
       border-radius: 10px;
     }
 
@@ -53,7 +73,7 @@ $LIGHTPINK: rgb(255, 112, 146);
       text-align: center;
       max-width: 10px;
       max-height: 10px;
-      display: block !important;
+      // display: block !important;
       border-radius: 30px;
       padding: 20px;
       background-color: $PATCHGREEN;
@@ -573,8 +593,8 @@ $LIGHTPINK: rgb(255, 112, 146);
   .Tab{
     border-radius: 30px 30px 0 0;
     margin-bottom: 0;
-    margin-left: 60px;
-    margin-right: 60px;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 
   .TabBottom{
@@ -885,7 +905,7 @@ transition: opacity  0s linear 1.5s;
 
 
 
-}
+
 
 
 @keyframes rotation {

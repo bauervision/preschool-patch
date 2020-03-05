@@ -8,7 +8,7 @@ import { Coloring, Kids, Table, Working } from './images/photos';
 import { DecorFlat, Logo, Elegant } from './images';
 
 const galleryImages = [Coloring, Kids, Table, Working];
-export const ProfilePage = ({ pageUpdate, currentSelection, loggedInUser }) => {
+export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
   // pull out public data
   const {
     aboutMe,
@@ -23,7 +23,7 @@ export const ProfilePage = ({ pageUpdate, currentSelection, loggedInUser }) => {
     rating,
     photoUrl
 
-  } = currentSelection;
+  } = data;
 
   const buttonLabel = loggedInUser ? (`Contact ${name}`) : (`Login to contact ${name}`);
 

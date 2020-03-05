@@ -639,7 +639,7 @@ const App = () => {
 
   // BIG TODO:  add in proper routing so page doesnt update on refresh so bad
   return (
-    <div className="App FixedBG ">
+    <div className="App">
       {/* Handle which page to load based on state page value */}
       {onPage(currentPage)}
     </div>

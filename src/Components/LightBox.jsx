@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './LightBox.css';
+import './LightBox.scss';
 import { Download } from '../images';
 
 

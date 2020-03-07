@@ -53,7 +53,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
         <Header pageUpdate={pageUpdate} isSocial loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} userId={userId}/>
 
         {/* Top Left Title */}
-        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>Preschool Patch</div>
 
         {/* Page Data*/}
         <div className="Flex AlignItems SeeThru Evenly TabSocial">
@@ -62,10 +62,10 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
           <div className="Flex Col JustifyCenter AlignItems">
 
 
-            <div className="Flex AlignItems Buffer">
-              <img src={MiniFlower} alt="flower left" style={{ height: 100, width: 'auto' }} />
-              <div className="CursiveFont SuperFont PinkFont ">{thisPatchName}</div>
-              <img src={MiniFlowerFlip} alt="flower right" style={{ height: 100, width: 'auto' }} />
+            <div className="Flex AlignItems Buffer ">
+              <img src={MiniFlower} alt="flower left" style={{ height: 100, width: 'auto' }} className="HideMobile"/>
+              <div className="CursiveFont SuperFont PinkFont  MarginTopMobile">{thisPatchName}</div>
+              <img src={MiniFlowerFlip} alt="flower right" style={{ height: 100, width: 'auto' }} className="HideMobile"/>
             </div>
 
 
@@ -89,10 +89,10 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
           </div>
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
       </div>
       <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
+        <img src={Logo} alt="logo" className="responsive"/>
       </div>
       <Footer />
 

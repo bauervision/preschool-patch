@@ -128,26 +128,27 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
   };
 
   return (
-    <div className="Flex Col  AlignItems  FullSize" >
+    <div className="Flex Col  AlignItems" >
 
-      <div className="Flex AlignStart ">
-        <div>
+      <div className="Flex ">
+        <div className=" HideMobile">
           <img alt="profile pic" className="ImgFrameReversed MarginHSmall" src={photoUrl} />
         </div>
 
-        <div className="Col ThreeQuarters">
+        <div className="Col JustifyCenter ">
+
           <textarea
             ref={textref}
             className="FullWidth"
             placeholder="What would you like to say about today?"
             name="newPost"
-            rows='2'
-            cols='80'
+            // rows='2'
+            // cols='80'
             onChange={(e) => setNewText(e.target.value)}
           />
           <div className="Flex Col JustifyCenter AlignItems">
 
-            <div className="TextLeft Buffer">
+            <div className="TextLeft SmallBuffer">
               <div className="InputTextLabel" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>Limit of 10 Images</div>
               <input
                 ref={filesref}
@@ -169,7 +170,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
             }
 
 
-            {!uploading ? (<button className="Quarter" type="button" onClick={handleSubmitPost}>Submit</button>) : (
+            {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Submit</button>) : (
               <div className="Flex Col JustifyCenter AlignItems">
                 <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
               </div>

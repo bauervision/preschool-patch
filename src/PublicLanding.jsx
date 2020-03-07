@@ -120,7 +120,7 @@ export const PublicLanding = ({
 
             />
 
-            <div className="HowItWorks PinkFill RoundBorder MarginTop Mobile3" >
+            <div className="HowItWorks PinkFill RoundBorder MarginTopMobile Mobile3" >
               <h3>How It Works</h3>
 
 
@@ -150,19 +150,17 @@ export const PublicLanding = ({
               {/* How it Works: Steps */}
               {showTeacher ? (
                 <div className="Step CursiveFont">
-                  <div className="Buffer ">Sign-up as a Patch Leader</div>
-                  <div className="Buffer ">Enroll students</div>
-                  <div className="Buffer ">Get paid at the end of the week!</div>
+                  <div className="Step_Child">Sign-up as a Patch Leader</div>
+                  <div className="Step_Child" >Enroll students</div>
+                  <div className="Step_Child">Get paid at the end of the week!</div>
 
                 </div>
               ) : (
                 <div className="Step CursiveFont">
 
-                  <div className="Buffer ">Search Local Patches</div>
-
-                  <div className="Buffer ">Enroll your child</div>
-
-                  <div className="Buffer ">
+                  <div className="Step_Child">Search Local Patches</div>
+                  <div className="Step_Child">Enroll your child</div>
+                  <div className="Step_Child">
               Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
                   </div>
 
@@ -229,12 +227,12 @@ export const PublicLanding = ({
       {loadingLeaders ? (
         <Loader />
       ) : (
-        <div className="Flex Col JustifyCenter  SeeThru">
+        <div className="Flex Col JustifyCenter  SeeThru MarginTopMobileLarge">
 
           {/* If we're not a teacher, then show search options */}
           {!showTeacher ? (
             <>
-              <div className="CursiveFont SuperFont Buffer PinkFont">
+              <div className="CursiveFont SuperFont Buffer PinkFont ">
                 Find a local preschool teacher for your child!
               </div>
 

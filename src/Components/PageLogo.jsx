@@ -7,6 +7,7 @@ const PageHeader = ({ isLogin, title, handleUserTypeSwitch, userType }) => (
 
     <div className="HideMobile">
       <img src={Flower} alt="flower left" style={{ height: 200, width: 'auto' }} />
+
       <h2 style={{ margin: 20, fontSize: 32 }} className="CursiveFont">
         {title}
       </h2>

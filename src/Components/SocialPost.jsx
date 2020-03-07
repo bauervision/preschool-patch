@@ -5,7 +5,7 @@ import DropDown from './DropDown/DropDown';
 
 import SingleComment from './SingleComment';
 import NewComment from './NewComment';
-import { Accept, Cancel, Like, DecorFlat, Edit, Trash } from '../images';
+import { Accept, Cancel, Like, Edit, Trash } from '../images';
 
 
 const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
@@ -96,55 +96,55 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
   const showLikeStatus = (updatedLikes.length === 1) && (ourNameIndex !== 0);
 
   return (
-    <div className={'LightPinkBorder MaxSocial MinSocial MarginBottom SeeThru BoxShadow'} >
+    <div className={'LightPinkBorder MarginBottom SeeThru BoxShadow FullSize'} >
       {/* Post Author and date */}
-      <div className="Flex AlignItems LightPinkFill PaddingLite SocialPostHeader">
+      <div className="Flex AlignItems LightPinkFill PaddingLite SocialPostHeader Between">
         <div className="CursiveFont MediumFont MarginHSmall">{name}</div>
+
+        <div className="MobileFontSmall WhiteFont">{moment(date).fromNow()}</div>
+
 
       </div>
 
       {/* Post Data */}
-      <div className="Flex AlignItems Buffer  SocialMessage">
-        {/* Author Pic */}
-        <img alt="profile pic" className="ImgFrame" src={photoUrl} />
+      {!deleted && (
+        <div className="Flex AlignItems Padding  SocialMessage">
 
+          {/* Author Pic */}
+          {!deleted && <img alt="profile pic" className="ImgFrame" src={photoUrl} />}
 
-        {/* Post Message IF NOT EDITING */}
-        {!edit ? (
-          <div className="FullSize TextLeft RoundBorder Padding" >
-            {newText}
-          </div>
-        ) : (
-          <>
-            {!deleted ? (
-              <textarea
-                ref={textref}
-                className="FullWidth"
-                value={editText}
-                name="newPost"
-                rows='2'
-                cols='80'
-                onChange={(e) => setEditText(e.target.value)}
-              />
-            ) : (
-              <>
-                <div className="FullSize TextLeft RoundBorder Padding" >
-                  {newText}
-                </div>
+          {/* Post Message IF NOT EDITING */}
+          {!edit ? (<div className="FullSize TextLeft RoundBorder MarginHSmall MobileFont" >{newText}</div>
+          ) : (
+            // Otherwise we are editing
+            <>
+              {edit && (
+                < >
+                  <textarea
+                    className="FullSize MarginHSmall"
+                    ref={textref}
+                    value={editText}
+                    name="newPost"
+                    onChange={(e) => setEditText(e.target.value)}
+                  />
+                  {/* If we're deleting show these buttons */}
+                  <div className="Flex AlignItems JustifyCenter">
+                    <button title={deleted ? 'Remove the post' : 'Submit Edit'} className="transparent NoMargin" type='button' onClick={() => handleFinalEdit(true)}><img src={Accept} alt="accept change"/></button>
+                    <button title={deleted ? 'Cancel Removal' : 'Cancel Edit'} className="transparent NoMargin" type='button' onClick={() => handleFinalEdit(false)}><img src={Cancel} alt="deny change"/></button>
 
-              </>
-            )}
+                  </div>
+                </>
+              ) }
 
-          </>
-        )}
+            </>
+          )}
 
-
-        {/* Only if this is our message, or we are the leader can we edit it */}
-        {(myMessage || loggedInUser.isLeader)
-        && <div className="cursor" >
+          {/* Only if this is our message, or we are the leader can we edit it */}
+          {(myMessage || loggedInUser.isLeader)
+        && <div className="cursor HideMobile" >
 
           {/* If we are currently editing or trying to delete, dont show the dropdown icon */}
-          {(!edit && !deleted) ? (
+          {(!edit && !deleted) && (
             <>
               {/* If this isn't my message, but I am the leader, then I can delete it */}
               {(!myMessage && loggedInUser.isLeader) ? (
@@ -158,31 +158,29 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
                 />
               )}
             </>
-          ) : (
-            <>
-
-              {/* If we're editing or deleting show these buttons */}
-              <div className="Flex">
-                {deleted && <div >Delete the Post?</div>}
-                <button title={deleted ? 'Remove the post' : 'Submit Edit'} className="transparent" type='button' onClick={() => handleFinalEdit(true)}><img src={Accept} alt="accept change"/></button>
-                <button title={deleted ? 'Cancel Removal' : 'Cancel Edit'} className="transparent" type='button' onClick={() => handleFinalEdit(false)}><img src={Cancel} alt="deny change"/></button>
-              </div>
-
-            </>
-          )}
+          ) }
 
         </div>
-        }
+          }
 
-        {/* If we're deleting, who cares about seeing the date */}
-        {!deleted
-        && <div style={{ fontSize: 14, color: 'grey' }}>{moment(date).fromNow()}</div>
 
-        }
-      </div>
+        </div>
+      )}
+
+      {deleted && (
+        <>
+          {/* If we're deleting show these buttons */}
+          <div className="Flex AlignItems JustifyCenter Padding SocialMessage">
+            Delete the Post?
+            <button title={deleted ? 'Remove the post' : 'Submit Edit'} className="transparent NoMargin" type='button' onClick={() => handleFinalEdit(true)}><img src={Accept} alt="accept change"/></button>
+            <button title={deleted ? 'Cancel Removal' : 'Cancel Edit'} className="transparent NoMargin" type='button' onClick={() => handleFinalEdit(false)}><img src={Cancel} alt="deny change"/></button>
+
+          </div>
+        </>
+      )}
 
       {/* Pictures if any */}
-      <div className="margin-bottom">
+      <div >
         <LightBox
           images={images}
         />
@@ -206,33 +204,25 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
 
         {/* Only show this if we're not already looking at the comments' */}
         {!showComments
-        && <div style={{ fontSize: 14, color: 'grey' }}>{commentStatus}</div>}
+        && <div className="HideMobile" style={{ fontSize: 14, color: 'grey' }}>{commentStatus}</div>}
       </div>
 
 
       {/* Comments if any, and if shown */}
       {showComments
-        ? (<>
+        && (<div className="SimpleBorderSmall Flex Col AlignItems JustifyCenter Padding ">
           {updatedComments.length > 0
             ? (
-              <div className="SimpleBorderSmall Flex AlignItems Buffer">
-                <div className="Flex Col FullSize">
-                  {updatedComments.map((comment) => <SingleComment key={comment.date} comment={comment}/>)}
-                  <NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>
-                </div>
-              </div>
+              <>
+                {updatedComments.map((comment) => <SingleComment key={comment.date} comment={comment}/>)}
+                <NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>
+              </>
             )
             : (
-              <div className="SimpleBorderSmall Flex AlignItems Buffer">
-                <div className="Flex Col FullSize">
-                  <NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>
-                </div>
-              </div>)}
-        </>) : (
-          <div className="Flex JustifyCenter">
-            <img src={DecorFlat} alt="decorative" className='filter-green' style={{ width: 200, height: 'auto' }} />
-          </div>
-        )
+              <>
+                <NewComment userId={userId} loggedInUser={loggedInUser} handleNewComment={handleNewComment}/>
+              </>)}
+        </div>)
       }
 
 

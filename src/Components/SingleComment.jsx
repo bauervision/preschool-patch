@@ -1,34 +1,20 @@
 import React from 'react';
 import moment from 'moment';
 
-const SingleComment = ({ comment }) => {
-  return (
-    <div className="Flex AlignStart FullSize SocialMessage MarginBottomSocial ">
-      <div>
-        <img alt="profile pic" className="ImgFrameCircle MarginHSmall" src={comment.author.photoUrl} />
-      </div>
-      {/* Post Author and date */}
-      <div className="Flex AlignItems">
+const SingleComment = ({ comment }) => (
+  <div className="Flex FullSize SocialMessage MarginBottomSocial MobileRowToColumn">
 
-        <div className="Col">
-          <div className="CursiveFont">{comment.author.name}</div>
-
-        </div>
-
-        <div className="Col">
-
-          <div
-            className="LightPinkFill PaddingHSmall MarginHSmall TextLeft RoundBorder"
-            style={{ fontSize: 16 }}
-          >{comment.text}</div>
-
-          <div style={{ fontSize: 14, color: 'grey' }}>{moment(comment.date).fromNow()}</div>
-        </div>
-
-      </div>
-
-
+    <div>
+      <img alt="profile pic" className="ImgFrameCircle MarginHSmall" src={comment.author.photoUrl} />
+      <div className="CursiveFont MobileFont">{comment.author.name.replace(/ .*/, '')}</div>
     </div>
-  );
-};
+    {/* Post Author and date */}
+    <div className="Col">
+      <div className="LightPinkFill PaddingHSmall MarginHSmall TextLeft RoundBorder MobileFont" >{comment.text}</div>
+      <div className="MobileFontSmall">{moment(comment.date).fromNow()}</div>
+    </div>
+
+  </div>
+);
+
 export default SingleComment;

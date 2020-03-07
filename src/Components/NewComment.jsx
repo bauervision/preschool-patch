@@ -27,20 +27,29 @@ const NewComment = ({ loggedInUser, userId, handleNewComment }) => {
 
   return (
 
-    <div className="Flex AlignStart FullSize">
-      <div>
+    <div className="Flex JustifyCenter MobileRowToCol FullSize">
+
+      <div className="HideMobile">
         <img alt="profile pic" className="ImgFrameCircle MarginHSmall" src={photoUrl} />
       </div>
 
       <textarea
+        className="HideMobile FullSize"
         ref={textref}
-        className="FullWidth"
         placeholder="What would you like to add to this post?"
         name="newPost"
         onChange={(e) => setNewText(e.target.value)}
       />
 
-      <button className="Quarter" type="button" onClick={handleSubmitComment}>Submit</button>
+      <textarea
+        className="ShowMobile"
+        ref={textref}
+        placeholder="What would you like to add to this post?"
+        name="newPost"
+        onChange={(e) => setNewText(e.target.value)}
+      />
+
+      <button type="button" onClick={handleSubmitComment}>Submit</button>
 
     </div>
 

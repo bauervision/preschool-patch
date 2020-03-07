@@ -250,31 +250,13 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
 
         {/* Profile Page Data */}
-        <div
-          className="Flex Row WhiteFill"
-          style={{
-            justifyContent: 'space-evenly',
-            margin: 20,
-            marginRight: 40,
-            border: 'solid',
-            borderWidth: 1,
-            borderColor: 'green',
-            borderRadius: 50,
-            padding: 30
-          }}
-        >
+        <div className="Flex Row WhiteFill SimpleBorder Margins JustifyCenter" >
           <div>
-            <form onSubmit={(e) => handleDataUpdate(e)}>
+            <form onSubmit={(e) => handleDataUpdate(e)} >
               <div className="Flex Row AlignItems JustifyCenter">
                 <img
-                  className="BoxShadow"
+                  className="BoxShadow ProfilePic"
                   alt="profile pic"
-                  style={{
-                    margin: 30,
-                    borderRadius: 25,
-                    width: 200,
-                    height: 'auto'
-                  }}
                   src={updatedPhotoUrl}
                 />
                 <div>

@@ -29,9 +29,9 @@ html{
   background-size: cover;
 
   @include respond(phone){ font-size: 150%;}
-  @include respond(tab-land){ font-size: 56.25%;}// 1rem = 9px (9/16)
-  @include respond(tab-port){ font-size: 50%;}// 1rem = 8px (8/16)
-  @include respond(big){ font-size: 75%;}// 1rem = 10.2rem ( 12/16 )
+  @include respond(tab-land){ font-size: 56.25%;}// 1em = 9px (9/16)
+  @include respond(tab-port){ font-size: 50%;}// 1em = 8px (8/16)
+  @include respond(big){ font-size: 75%;}// 1em = 10.2em ( 12/16 )
 
   overflow-x: hidden;
   
@@ -50,36 +50,42 @@ html{
       flex-direction: row;
       flex-wrap: wrap;
       background-color: $LIGHTROSE;
-      border-radius: 1rem;
-      margin: 2rem;
-    }
-
-    &_HowItWorks {
-      font-size: 1.2rem;
+      border-radius: 1em;
+      margin: 2em;
     }
 
   }
  
   .Step{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    background-color: $PARADISEPINK;
-    color:$GHOSTWHITE;
+    
+    justify-content: space-evenly;
+    
 
-    @include respond(phone){flex-direction: row;}
+    @include respond(phone){flex-direction: column;}
+
+    &_Child{
+      background-color: $PARADISEPINK;
+      color:$GHOSTWHITE;
+      margin: 2em;
+      font-size: 2em;
+      border-radius: 1em;
+      padding: 1em;
+    }
   }
 
   .SimpleBorder {
     border: solid 1px rgba(0, 220, 0, 0.4);
-    border-radius: 1.3rem;
-    padding: 2rem;
+    border-radius: 1.3em;
+    padding: 2em;
   }
 
   .SimpleBorderSmall {
     border: solid 1px rgba(0, 220, 0, 0.4);
-    border-radius: 1.3rem;
-    padding: 0.5rem;
+    border-radius: 1.3em;
+    padding: 0.5em;
   }
 
   .MessageClientHeader{
@@ -89,20 +95,20 @@ html{
 
   .PinkBorder {
     border: solid 1px $PARADISEPINK;
-    border-radius: 1.3rem;
-    padding: 2rem;
+    border-radius: 1.3em;
+    padding: 2em;
   }
 
   .MessageFrame {
     border-left: solid 1px $PARADISEPINK;
-    padding-left: 0.5rem;
+    padding-left: 0.5em;
   }
 
   .MessageBorder {
     border: solid 1px $PARADISEPINK;
-    border-radius: 0.5rem;
+    border-radius: 0.5em;
    
-    padding-left: 0.5rem;
+    padding-left: 0.5em;
   }
 
   .TestBorder{border: solid 1px grey}
@@ -110,8 +116,8 @@ html{
     border: none;
     background-color: transparent;
     padding: 0;
-    border-radius: 1.3rem;
-    margin: 0.5rem;
+    border-radius: 1.3em;
+    margin: 0.5em;
     &:hover {
       cursor: pointer;
     }
@@ -127,27 +133,29 @@ html{
     justify-content: center;
 
     &_Imagery {
-      width: 16rem;
+      width: 16em;
       height: auto;
-      border-radius: 4rem;
-      margin: 4rem;
+      border-radius: 4em;
+      margin: 4em;
     }
   }
 
   .HideMobile{ @include respond(phone){ display: none; } }
+  .ShowMobile{ display: none;  @include respond(phone){ display: block; } }
 
 
   // Components
   .Header {
     background-color: $PATCHGREEN;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     right: 0;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
-    border-top-left-radius: 0 0 0 3px;
+    padding: 0.5em;
+    border-radius: 0 0 0 1em;
+    transition: top 1s ease-in-out;
     
     @include respond(phone){ 
       border-radius: 0;
@@ -156,43 +164,47 @@ html{
     }
 
     &_Logo {
-      display:block;
+      display:none;
       @include respond(phone){ 
-        font-size: 350%;
+        display:block;
+        font-size: 3em;
       }
-      &:hover {
-        cursor: pointer;
-      }
+      
     }
 
     &_MessageBtn {
       background-color: $MALACHITE;
-      padding: 0.5rem;
-      margin: 0.2rem;
+      padding: 0.5em;
+      margin: 0.2em;
       color: $GHOSTWHITE;
       border: none;
       cursor: pointer;
 
       &:hover {
         background-color: $GHOSTWHITE;
-        padding: 0.5rem;
-        margin: 0.2rem;
+        padding: 0.5em;
+        margin: 0.2em;
         color: $PATCHGREEN;
       }
     }
   }
 
+  .HeaderHide{
+    top: -5em;
+    @include respond(phone){ top: -7em;}
+  }
+
   .PreFooter {
     background-color: rgb(233, 233, 233);
     div {
-      margin: 3rem;
+      margin: 3em;
     }
   }
 
   .Footer {
     background-color: $MALACHITE;
     color: darkslategray;
-    padding: 2rem;
+    padding: 2em;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -200,9 +212,9 @@ html{
 
   .LoginForm {
     border: solid 1px mediumaquamarine;
-    border-radius: 1rem;
-    padding: 1rem;
-    margin: 1.3rem;
+    border-radius: 1em;
+    padding: 1em;
+    margin: 1.3em;
   }
 
   // General Styling
@@ -232,8 +244,8 @@ html{
   .WhiteFont{ color: $GHOSTWHITE; }
 
   .UploadImageContainer{
-    padding: 1rem;
-    border-radius: 1rem;
+    padding: 1em;
+    border-radius: 1em;
     max-width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -244,7 +256,7 @@ html{
     flex-grow: 1;
     width: 9vh;
     position: relative;
-    &:hover .RemoveUpload{ opacity: 1}
+    &:hover .emoveUpload{ opacity: 1}
   }
 
   .UploadImage{
@@ -280,15 +292,17 @@ html{
 
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
-  .SmallFont { font-size: 0.5rem; }
-  .MediumFont { font-size: 1.2rem; }
-  .LargeFont { font-size:2rem; }
-  .SuperFont { font-size: 3rem; @include respond(phone){font-size:2rem;}}
-  .RedicFont{ font-size: 4rem; }
+  .SmallFont { font-size: 0.5em; }
+  .MediumFont { font-size: 1.2em; @include respond(phone){font-size:2em;}}
+  .LargeFont { font-size:2em; }
+  .SuperFont { font-size: 3em; @include respond(phone){font-size:4em;}}
+  .RedicFont{ font-size: 4em; }
 
+.MobileFont{@include respond(phone){font-size:1.5em;}}
+.MobileFontSmall{@include respond(phone){font-size:1em;}}
   .Logo {
     margin-left: 10%;
-    margin-top: 1.3rem;
+    margin-top: 1.3em;
     max-width: 40%;
   }
 
@@ -298,6 +312,8 @@ html{
     align-items: center;
     width: 40%;
     height: 20%;
+    margin: 1em;
+    @include respond(phone){margin-top: 22em;}
    
 
   }
@@ -307,15 +323,15 @@ html{
   }
 
   .Flower{
-    width: 4rem;
-    z-index: 2;
+    width: 4em;
+    z-index: 1;
     height: auto;
   }
   
 
   .Social {
     background-color: transparent;
-    border-radius: 3rem;
+    border-radius: 3em;
     border-width: 0;
     border-color: none !important;
     &:hover{
@@ -325,7 +341,7 @@ html{
 
   .SocialActionBtn {
     border: none;
-    margin: 0 1rem;
+    margin: 0 1em;
     background-color: transparent;
     transition: all 0.3s ease-in-out;
     color: $PATCHGREEN;
@@ -337,10 +353,10 @@ html{
   
   .SocialMessageBtn {
     border: solid;
-    border-width: 0.2rem;
-    margin: 0 2rem;
+    border-width: 0.2em;
+    margin: 0 2em;
     background-color: transparent;
-    border-radius: 4rem;
+    border-radius: 4em;
     transition: all 0.3s ease-in-out;
 
     &:hover{
@@ -350,10 +366,10 @@ html{
 
   .SocialMessageBtnHeader {
     border: solid;
-    border-width: 0.2rem;
-    margin: 0 1rem;
+    border-width: 0.2em;
+    margin: 0 1em;
     background-color: transparent;
-    border-radius: 4rem;
+    border-radius: 4em;
     transition: all 0.3s ease-in-out;
 
     &:hover{
@@ -368,12 +384,12 @@ html{
     font-family: "Raleway", sans-serif;
     color: $PARADISEPINK;
     border-bottom: solid 1px rgb(250, 177, 173);
-    padding: 0.5rem;
+    padding: 0.5em;
   }
 
   .Add {
     background-color: transparent;
-    border-radius: 4rem;
+    border-radius: 4em;
     border-width: 0;
     border-color: none !important;
   }
@@ -383,7 +399,7 @@ html{
     color: $GHOSTWHITE;    
   }
 
-  .RoundBorder{ border-radius: 1.3rem; }
+  .RoundBorder{ border-radius: 1.3em; }
 
   .WhiteFill {  background-color: $GHOSTWHITE; }
 
@@ -392,12 +408,18 @@ html{
   .Card {
     display: flex;
     max-width: 45%;
-    max-height: 17rem;
-    margin: 1rem;
-    padding: 1rem;
+    max-height: 17em;
+    margin: 1em;
+    padding: 1em;
     border: solid $PATCHGREEN 1px;
-    border-radius: 1rem;
+    border-radius: 1em;
     transition: all 1s;
+
+    @include respond(phone){
+      max-width: 100%;
+      max-height: 27em;
+     
+    }
 
     &:hover {
       border: solid $PARADISEPINK 2px;
@@ -406,47 +428,57 @@ html{
     }
 
     &:hover > &_Pic {
-      width: 13rem;
+      width: 13em;
     }
     &_Pic {
-      border-radius: 5rem;
-      width: 9rem;
+      border-radius: 5em;
+      width: 9em;
       height: auto;
       transition: width 1s;
     }
   }
 
   .AdminPic{
-    border-radius: 4rem;
-      width: 8rem;
+    border-radius: 4em;
+      width: 8em;
       height: auto;
       transition: width 1s;
   }
 
+  .ProfilePic{
+    margin: 2em;
+    border-radius: 50%;
+    width: 10em;
+    height: auto;
+    
+  }
   .Raleway { font-family: "Raleway", sans-serif; }
   .CursiveFont { font-family: "Dancing Script", cursive; }
   .profileText { color: $PATCHGREEN; }
-  .textMargin { margin: 0.5rem; }
+  .textMargin { margin: 0.5em; }
   .TextLeft{ text-align: left; }
   .TextRight{ text-align: right; }
-  .BoxShadow { box-shadow: 1rem 1rem 1.3rem lightslategray; @include respond(phone){box-shadow: none;} }
-  .LightShadow { box-shadow: 1rem 1rem 3rem $GHOSTWHITE; }
-  .InnerShadow { box-shadow: inset 7px 7px 2rem rgba(0, 220, 0, 0.2); }
-  .InnerShadowWhite { box-shadow: inset 7px 7px 2rem rgba(225, 225, 225, 1); }
+  .BoxShadow { box-shadow: 1em 1em 1.3em lightslategray; @include respond(phone){box-shadow: none;} }
+  .LightShadow { box-shadow: 1em 1em 3em $GHOSTWHITE; }
+  .InnerShadow { box-shadow: inset 7px 7px 2em rgba(0, 220, 0, 0.2); }
+  .InnerShadowWhite { box-shadow: inset 7px 7px 2em rgba(225, 225, 225, 1); }
   .MarginAuto{margin:auto}
-  .Margins{ margin: 3rem; }
-  .MarginSmall{ margin: 1.3rem; }
-  .MarginTopSmall{ margin-top: 1rem; }
-  .MarginHSmall{ margin-right: 1rem; margin-left: 1rem; }
-  .MarginTop{ margin-top: 3rem; }
-  .MarginBottom{ margin-bottom: 3rem; }
-  .MarginBottomSocial{ margin-bottom: 1rem; }
-  .PaddingLite{ padding: 0.5rem; }
-  .Padding{ padding: 1.3rem; }
-  .PaddingBoost{ padding: 4rem; }
-  .PaddingTop{ padding-top: 1.3rem; }
-  .PaddingBottom{ padding-bottom: 1.3rem; }
-  .PaddingHSmall{ padding: 1rem 1.3rem; }
+  .NoMargin{margin:0}
+  .Margins{ margin: 3em; }
+  .MarginSmall{ margin: 1.3em; }
+  .MarginTopSmall{ margin-top: 1em; }
+  .MarginHSmall{ margin-right: 1em; margin-left: 1em; }
+  .MarginTop{ margin-top: 3em; }
+  .MarginTopMobile{@include respond(phone){margin-top: 2em;}}
+  .MarginTopMobileLarge{@include respond(phone){margin-top: 6em;}}
+  .MarginBottom{ margin-bottom: 3em; @include respond(phone){margin-bottom: 1em;}}
+  .MarginBottomSocial{ margin-bottom: 1em; @include respond(phone){margin-bottom: 0.5em;}}
+  .PaddingLite{ padding: 0.5em; }
+  .Padding{ padding: 1.3em; }
+  .PaddingBoost{ padding: 4em; }
+  .PaddingTop{ padding-top: 1.3em; }
+  .PaddingBottom{ padding-bottom: 1.3em; }
+  .PaddingHSmall{ padding: 1em 1.3em; @include respond(phone){padding: 0.5em 0.6em;}}
   .Flex { display: flex; }
   .Evenly{ justify-content: space-evenly; }
   .Between{ justify-content: space-between; }
@@ -458,20 +490,29 @@ html{
   .JustifyStart { justify-content: flex-start; }
   .JustifyEnd { justify-content: flex-end; }
   .HalfSize{ width: 50%; }
-  .Quarter{ width: 25%; }
+  .Quarter{ width: 25%;}
   .Thirds{width: 33.3%}
   .ThreeQuarters{ width: 75%; }
   .Mobile3{@include respond(phone){width: 75%}}
-  .FullSize{ width: 100%; }
+  .FullSize{ width: 100%;}
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
-  .MaxSocial{ max-width: 1000px; }
-  .MinSocial{ min-width: 1000px; }
+  .MaxSocial{ max-width: 1000px; @include respond(phone){width: 100%}}
+  .MinSocial{ min-width: 1000px; @include respond(phone){width: 100%} }
 
+  .MobileColToRow{
+    flex-direction: column;
+    @include respond(phone){flex-direction: row;}
+  }
+
+  .MobileRowToCol{
+    flex-direction: row;
+    @include respond(phone){flex-direction: column;}
+  }
 
 /* RIBBON */
 .ribbon {
-  width: 12rem;
-  min-height: 7rem;
+  width: 12em;
+  min-height: 7em;
   overflow: hidden;
   position: relative;
   
@@ -480,9 +521,9 @@ html{
 .ribbon span {
   position: absolute;
   display: block;
-  left: -5rem;
-  width: 16rem;
-  padding: 1rem 0;
+  left: -5em;
+  width: 16em;
+  padding: 1em 0;
   background-color:  $PARADISEPINK;
   color: $GHOSTWHITE;
   text-transform: uppercase;
@@ -492,11 +533,16 @@ html{
 
 /* top left*/
 .ribbon-top-left {
-  top:-17rem;
-  left: -1.3rem;
+  top:-15.5em;
+  left: -1.3em;
+
+  @include respond(phone){
+    top:-23em;
+  }
+
 }
 .ribbon-top-left span {
-  top: 0.5rem;
+  top: 0.5em;
   transform: rotate(-30deg);
 }
 
@@ -511,16 +557,16 @@ html{
 
 
   .ImgFrame{
-    width: 4rem;
+    width: 4em;
     height: auto;
-    border-top-left-radius: 0.5rem;
+    border-top-left-radius: 0.5em;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
-    border-bottom-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5em;
 }
 
 .ImgFrameReversed{
-  width: 11.3rem;
+  width: 11.3em;
   height: auto;
   border-top-left-radius: 50%;
   border-top-right-radius: 15%;
@@ -529,7 +575,7 @@ html{
 }
 
   .ImgFrameCircle{
-    width: 4rem;
+    width: 4em;
     height: auto;
     border-radius: 50%;
     
@@ -540,8 +586,8 @@ html{
     justify-content: space-around;
     align-items: center;
     border: solid 1px $PANSYPURPLE;
-    border-radius: 0.5rem;
-    margin: 0.5rem;
+    border-radius: 0.5em;
+    margin: 0.5em;
     cursor: pointer;
     &:hover{
       background-color: $PARADISEPINK;
@@ -555,12 +601,12 @@ html{
     }
 
     p{
-      font-size: 0.8rem;
+      font-size: 0.8em;
       font-family: "Raleway", sans-serif;
     }
 
     span{
-      font-size:0.8rem;
+      font-size:0.8em;
       font-family: "Raleway", sans-serif;
       color: $SONICSILVER;
     }
@@ -568,10 +614,10 @@ html{
     img{
       width: 30%;
       height: auto;
-      border-top-left-radius: 0.5rem;
+      border-top-left-radius: 0.5em;
       border-top-right-radius: 50%;
       border-bottom-right-radius: 50%;
-      border-bottom-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5em;
 
     }
     
@@ -582,8 +628,8 @@ html{
     justify-content: space-around;
     align-items: center;
     border: solid 1px $PANSYPURPLE;
-    border-radius: 0.5rem;
-    margin: 0.5rem;
+    border-radius: 0.5em;
+    margin: 0.5em;
     background-color: $LIGHTPINK;
     color: $GHOSTWHITE;
     &:hover{
@@ -613,12 +659,12 @@ html{
       filter: invert(100%) ;
     }
     p{
-      font-size: 0.9rem;
+      font-size: 0.9em;
       font-family: "Raleway", sans-serif;
     }
 
     span{
-      font-size:0.8rem;
+      font-size:0.8em;
       font-family: "Raleway", sans-serif;
       color: $SONICSILVER;
     }
@@ -626,57 +672,57 @@ html{
     img{
       width: 30%;
       height: auto;
-      border-radius: 0.5rem 50% 50% 0.5rem;
+      border-radius: 0.5em 50% 50% 0.5em;
     }
     
   }
 
   .Tab{
-    border-radius: 2rem 2rem 0 0;
-    margin: 0 1rem;
+    border-radius: 2em 2em 0 0;
+    margin: 0 1em;
     @include respond(phone){ 
       margin: 0 0;
     }
   }
 
   .TabBottom{
-    border-radius: 0 0 2rem 2rem;
+    border-radius: 0 0 2em 2em;
   }
 
   .TabSocial{
-    border-radius: 2rem;
-    margin: 0 4rem;
+    border-radius: 2em;
+    margin: 0 4em;
   }
 
   
   .SmallBuffer {
-    padding: 0.5rem;
-    margin: 0.5rem;
+    padding: 0.1em;
+    margin: 0.1em;
   }
 
   .Buffer {
-    padding: 1rem;
-    margin: 1rem;
+    padding: 0.3em;
+    margin: 0.3em;
   }
 
   .LargeBuffer {
-    padding: 3rem;
-    margin: 3rem;
+    padding: 3em;
+    margin: 3em;
   }
 
   .FakeButton {
     border: solid 1px $DARKIMPERIALBLUE;
     background-color: lightsteelblue;
-    padding: 1rem;
-    margin: 1rem;
-    border-radius: 0.5rem;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 0.5em;
   }
 
   .InputStyle {
-    padding: 1rem;
-    margin: 1rem;
+    padding: 1em;
+    margin: 1em;
     border: solid 1px $PATCHGREEN;
-    border-radius: 0.5rem;
+    border-radius: 0.5em;
     border-style: solid;
   }
 
@@ -694,14 +740,14 @@ html{
   }
 
   .InputTextLabel {
-    margin-left: 1rem;
-    font-size: 1rem;
+    margin-left: 1em;
+    font-size: 1em;
     color: $SONICSILVER;
   }
 
   .RegisterButton {
-    padding: 1rem;
-    margin: 1rem;
+    padding: 1em;
+    margin: 1em;
     background-color: $MALACHITE;
     color: white;
     transition: all 0.5s ease-in-out;
@@ -709,9 +755,9 @@ html{
     &:hover {
       background-color: $PARADISEPINK;
       cursor: pointer;
-      font-size: 1.2rem;
-      padding-left: 3rem;
-      padding-right: 3rem;
+      font-size: 1.2em;
+      padding-left: 3em;
+      padding-right: 3em;
     }
   }
 
@@ -725,26 +771,26 @@ html{
   }
 
   .LoginError {
-    margin: 1rem;
+    margin: 1em;
     border: solid 1px red;
     color: darkred;
     font-style: italic;
-    border-radius: 1.3rem;
-    padding: 1.3rem;
+    border-radius: 1.3em;
+    padding: 1.3em;
   }
   .LoginBox {
-    border: solid $MALACHITE 0.2rem;
-    border-radius: 1rem;
-    margin: 1.3rem;
-    padding: 1.3rem;
+    border: solid $MALACHITE 0.2em;
+    border-radius: 1em;
+    margin: 1.3em;
+    padding: 1.3em;
   }
 
   .TogglePassword {
     background-color: transparent;
     border: none;
     position: absolute;
-    top: -1rem;
-    right: -1rem;
+    top: -1em;
+    right: -1em;
     cursor: pointer;
   }
 
@@ -755,34 +801,33 @@ html{
 
 .LightPinkBorder{
   border: solid 1px rgb(250, 177, 173);
-  border-radius: 1rem;
+  border-radius: 1em;
   
 }
 
 .SocialPostHeader{
-  border-radius: 0.5rem 0.5rem 0 0;
+  border-radius: 0.5em 0.5em 0 0;
   color:white;
 }
 
   textarea {
     font-family: "Raleway", sans-serif;
-    border-radius: 1rem;
+    border-radius: 1em;
     font-size: 12pt;
-    width: 100%;
-    padding: 1rem;
-    min-height: 3rem;
+    padding: 1em;
+    min-height: 3em;
     resize: none;
     
   }
 
 
   table{
-    padding: 1.3rem;
-    border-radius: 1.3rem;
+    padding: 1.3em;
+    border-radius: 1.3em;
     border: 1px solid $PATCHGREEN;
   }
   tr{
-    padding: 1rem;
+    padding: 1em;
   }
   tr:hover{ background-color:$MALACHITE; color:$GHOSTWHITE}
   tr:nth-child(even){background-color: #f2f2f2;}
@@ -792,7 +837,7 @@ html{
     border-collapse: collapse;
   }
   th{
-    padding: 10.5rem;
+    padding: 10.5em;
     text-align: left;
     background-color: $PARADISEPINK;
     color: white;
@@ -826,9 +871,9 @@ html{
   .HeaderButton {
     background-color: transparent;
     color: $GHOSTWHITE;
-    margin: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
+    margin: 0.5em;
+    padding: 0.5em;
+    border-radius: 0.5em;
     border: solid 1px green !important;
     transition: all 0.5s;
 
@@ -861,10 +906,10 @@ html{
   button {
     background-color: $PARADISEPINK;
     color: $GHOSTWHITE;
-    margin: 2rem;
-    padding: 1rem;
+    margin: 2em;
+    padding: 1em;
     transition: transform 0.5s;
-    border-radius: 1rem;
+    border-radius: 1em;
     border: none;
 
     &:hover {
@@ -877,9 +922,9 @@ html{
   }
 
   footer {
-    margin-top: 1.3rem;
+    margin-top: 1.3em;
     background-color: $SONICSILVER;
-    padding: 1rem;
+    padding: 1em;
     display: flex;
     justify-content: center;
   }
@@ -894,12 +939,12 @@ html{
   /// Toast
 .Toast {
   visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 23rem; /* Set a default minimum width */
-  margin-left: -120.5rem; /* Divide value of min-width by 2 */
+  min-width: 23em; /* Set a default minimum width */
+  margin-left: -120.5em; /* Divide value of min-width by 2 */
   position: fixed; /* Sit on top of the screen */
   z-index: 1; /* Add a z-index if needed */
   left: 50%; /* Center the snackbar */
-  bottom: 2rem; /* 2rem from the bottom */
+  bottom: 2em; /* 2em from the bottom */
 
   
 }
@@ -914,21 +959,21 @@ html{
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
   from {bottom: 0; opacity: 0;}
-  to {bottom: 2rem; opacity: 1;}
+  to {bottom: 2em; opacity: 1;}
 }
 
 @keyframes fadein {
   from {bottom: 0; opacity: 0;}
-  to {bottom: 2rem; opacity: 1;}
+  to {bottom: 2em; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 2rem; opacity: 1;}
+  from {bottom: 2em; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-  from {bottom: 2rem; opacity: 1;}
+  from {bottom: 2em; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
 
@@ -947,11 +992,11 @@ html{
 
 .TT_Text{
   visibility: hidden;
-width: 11.3rem;
+width: 11.3em;
 background-color: $SONICSILVER;
 color: $GHOSTWHITE;
 text-align: center;
-padding: 0.5rem 0;
+padding: 0.5em 0;
 border-radius: 6px;
 
 /* Position the tooltip text */
@@ -959,7 +1004,7 @@ position: absolute;
 z-index: 1;
 
 right: 0%;
-margin-left: -4rem;
+margin-left: -4em;
 
 /* Fade in tooltip */
 opacity: 0;

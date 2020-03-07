@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const BasicInput = ({
   title,
@@ -9,7 +9,7 @@ const BasicInput = ({
   isFile,
   placeholder
 }) => {
-  const handleChange = e => {
+  const handleChange = (e) => {
     if (isFile) {
       e.preventDefault();
     }
@@ -24,7 +24,7 @@ const BasicInput = ({
         padding: 2
       }}
     >
-      <div style={{ textAlign: "left" }}>
+      <div className="TextLeft">
         <label htmlFor={forLabel} className="InputTextLabel">
           {title}:
         </label>
@@ -36,7 +36,7 @@ const BasicInput = ({
         type={type}
         name={forLabel}
         value={value}
-        onChange={e => handleChange(e)}
+        onChange={(e) => handleChange(e)}
       />
     </div>
   );

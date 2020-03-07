@@ -36,7 +36,12 @@ export const Header = ({
 
   return (
     <header className="Header LightShadow">
-      <div className="Flex AlignItems">
+      <div className="Flex AlignItems JustifyCenter">
+
+        <div className="Header_Logo">
+          <div className="CursiveFont TextLeft WhiteFont ">Preschool Patch</div>
+        </div>
+
 
         {/* Show Home Icon, if we're not on home page' */}
         {!isHome && (
@@ -44,15 +49,12 @@ export const Header = ({
             <img
               src={Home}
               alt="Home icon"
-              className="Header_Logo"
+
               onClick={() => pageUpdate(0)}
             />
           </div>
         )}
 
-        {/* <div>
-          <input placeholder="Search" className="InputStyle" />
-        </div> */}
 
         {/* We're not yet logged in */}
         {!loggedInUser ? (
@@ -60,9 +62,9 @@ export const Header = ({
           // IF we're not on the login page
           <>
             {!isLogin && (
-              <div>
-                <button className='HeaderButton' onClick={() => pageUpdate(1)}>Login / Signup</button>
-              </div>
+
+              <button className='HeaderButton' onClick={() => pageUpdate(1)}>Login / Signup</button>
+
             )}
           </>
 
@@ -121,8 +123,6 @@ export const Header = ({
 
 
       </div >
-
-
     </header >
   );
 };

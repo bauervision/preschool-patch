@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ProfileCard } from './ProfileCard';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
-import { Toast } from './Components';
+import { Toast, Loader } from './Components';
 
 import { Logo, Elegant, Corner } from './images';
 
@@ -23,7 +23,13 @@ export const PublicLanding = ({
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
   const [showTeacher, setShowTeacher] = useState(false);
+  const [loadingLeaders, setLoadingLeaders] = useState(true);
 
+  useEffect(() => {
+    if (filteredData) {
+      setLoadingLeaders(false);
+    }
+  }, [filteredData]);
 
   /* On Mount, fetch data, check login */
   useEffect(() => {
@@ -99,41 +105,39 @@ export const PublicLanding = ({
 
       {/* Top Left Title */}
       {loggedInUser
-      && <div className="CursiveFont SuperFont TextLeft Buffer ">Preschool Patch</div>
+      && <div className="CursiveFont SuperFont TextLeft Buffer HideMobile">Preschool Patch</div>
       }
 
       {/* Initial Public display */}
       {!loggedInUser && (
         <>
-          <div className="Flex AlignItems  Buffer ">
+          <div className="Flex AlignItems JustifyCenter Buffer ">
+
             <img
               src={Logo}
               alt="logo"
-              className="Logo"
+              className="Logo HideMobile"
 
             />
-            <div
-              className="Flex Col AlignItems PinkFill RoundBorder LargeBuffer"
-            >
 
-              <div>
-                <h3>How It Works</h3>
-              </div>
+            <div className="HowItWorks PinkFill RoundBorder MarginTop Mobile3" >
+              <h3>How It Works</h3>
+
 
               <div className="Flex Row AlignItems JustifyCenter ">
                 {showTeacher ? (
-                  <>
+                  <div className="Flex Row AlignItems">
                     <button type="button" onClick={() => setShowTeacher(false)} style={{ border: 'solid' }}> As a Parent</button>
                     <div><strong>As a Teacher</strong></div>
-                  </>
+                  </div>
                 ) : (
-                  <>
+                  <div className=" Flex Row AlignItems">
                     <div><strong>As a Parent</strong></div>
                     <button type="button" onClick={() => { setShowTeacher(true); }} style={{ border: 'solid' }}>As a Teacher</button>
-                  </>
+                  </div>
                 )}
 
-                <img src={Corner} alt='corner' className='filter-white Rotate' />
+                <img src={Corner} alt='corner' className='filter-white Rotate Flower' />
               </div>
             </div>
           </div>
@@ -145,34 +149,23 @@ export const PublicLanding = ({
               <div className="CursiveFont SuperFont ">Simple Steps </div>
               {/* How it Works: Steps */}
               {showTeacher ? (
-                <div className="Flex JustifyCenter">
-                  <div className="Flex Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                    <div className="Buffer ">Sign-up as a Patch Leader</div>
-                  </div>
+                <div className="Step CursiveFont">
+                  <div className="Buffer ">Sign-up as a Patch Leader</div>
+                  <div className="Buffer ">Enroll students</div>
+                  <div className="Buffer ">Get paid at the end of the week!</div>
 
-                  <div className="Flex  Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                    <div className="Buffer ">Enroll students</div>
-                  </div>
-
-                  <div className="Flex  Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                    <div className="Buffer ">Get paid at the end of the week!</div>
-                  </div>
                 </div>
               ) : (
-                <div className="Flex JustifyCenter">
-                  <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                    <div className="Buffer ">Search Local Patches</div>
-                  </div>
+                <div className="Step CursiveFont">
 
-                  <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                    <div className="Buffer ">Enroll your child</div>
-                  </div>
+                  <div className="Buffer ">Search Local Patches</div>
 
-                  <div className="Flex JustifyCenter Col AlignItems Buffer SimpleBorder PinkFill CursiveFont LargeFont">
-                    <div className="Buffer ">
+                  <div className="Buffer ">Enroll your child</div>
+
+                  <div className="Buffer ">
               Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
-                    </div>
                   </div>
+
                 </div>
               )}
 
@@ -211,13 +204,13 @@ export const PublicLanding = ({
                     </div>
                   </div>
                 ) : (
-                  <p style={{ marginTop: 50, marginBottom: 50 }}>
+                  <div className="Buffer">
                     {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
                     <br />
                     <br />
             Max class size of 5 means that your child will not be just a
             number, but a nurtured student.
-                  </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -225,81 +218,81 @@ export const PublicLanding = ({
           </div>
 
           <div>
-            <img src={Elegant} alt="decorative" className="filter-green Margins" />
-
+            <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />
           </div>
+
+
         </>
       )}
 
+      {/* Show loader if data is still coming in */}
+      {loadingLeaders ? (
+        <Loader />
+      ) : (
+        <div className="Flex Col JustifyCenter  SeeThru">
 
-      {/* Filter Criteria */}
-      <div className="Flex Col JustifyCenter  SeeThru">
-        {!showTeacher ? (
-          <>
-            <div className="CursiveFont SuperFont Buffer PinkFont">
+          {/* If we're not a teacher, then show search options */}
+          {!showTeacher ? (
+            <>
+              <div className="CursiveFont SuperFont Buffer PinkFont">
                 Find a local preschool teacher for your child!
-            </div>
-
-            {/* Filter data by zipcode */}
-            <div>
-              <input
-                placeholder="Enter Zipcode"
-                style={{ width: 100 }}
-                className="InputStyle"
-              />
-            </div>
-
-            <label>
-                Show Only Available
-              <input type="checkbox" onChange={(e) => filterAvailable(e)} />
-            </label>
-
-            <label>
-                Accepting Infants
-              <input type="checkbox" onChange={(e) => filterInfants(e)} />
-            </label>
-          </>
-        ) : (
-          <div className="CursiveFont SuperFont Buffer">
-                Explore some example profiles of our most successful Patches!
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="PublicLanding_Container JustifyCenter BoxShadow ">
-          {filteredData?.length !== 0 ? (
-            filteredData?.map((elem) => {
-              return (
-                <ProfileCard
-                  key={elem.name}
-                  data={elem}
-                  handleSelection={handleSelection}
-                />
-              );
-            })
-          ) : (
-            <div style={{ padding: 40 }}>
-              <h3>{'No Patch Leaders yet. :('}</h3>
-              <div>Maybe you can be the first.....?</div>
-              <div>
-                <button onClick={() => pageUpdate(2)}>
-                      Become a Patch Leader!
-                </button>
               </div>
+
+              {/* Filter data by zipcode */}
+              <div>
+                <input
+                  placeholder="Enter Zipcode"
+                  style={{ width: 100 }}
+                  className="InputStyle"
+                />
+              </div>
+
+              <label>
+                Show Only Available
+                <input type="checkbox" onChange={(e) => filterAvailable(e)} />
+              </label>
+
+              <label>
+                Accepting Infants
+                <input type="checkbox" onChange={(e) => filterInfants(e)} />
+              </label>
+            </>
+          ) : (
+            <div className="CursiveFont SuperFont Buffer">
+                Explore some example profiles of our most successful Patches!
             </div>
           )}
+
+          <div className="PublicLanding_Container JustifyCenter BoxShadow ">
+            {filteredData?.length !== 0 ? (
+                filteredData?.map((elem) => {
+                  return (
+                    <ProfileCard
+                      key={elem.name}
+                      data={elem}
+                      handleSelection={handleSelection}
+                    />
+                  );
+                })) : (
+              <div style={{ padding: 40 }}>
+                <h3>{'No Patch Leaders yet. :('}</h3>
+                <div>Maybe you can be the first.....?</div>
+                <div>
+                  <button onClick={() => pageUpdate(2)}>Become a Patch Leader!</button>
+                </div>
+              </div>
+            )}
+          </div>
+
+
         </div>
-
-
-      </div>
+      )}
 
       <div>
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
-
+        <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />
       </div>
 
       <div className="CursiveFont RedicFont Margins PinkFont">Love Learning Early!</div>
-
 
       <Footer />
 

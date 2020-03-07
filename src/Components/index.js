@@ -19,3 +19,4 @@ export { default as SocialPost } from './SocialPost';
 export { default as SingleComment } from './SingleComment';
 export { default as NewPost } from './NewPost';
 export { default as NewComment } from './NewComment';
+export { default as Loader } from './Loader';

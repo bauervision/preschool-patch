@@ -3,6 +3,10 @@ import React from 'react';
 import { FacebookIcon, InstagramIcon } from '../images';
 
 export const Footer = () => {
+  const handleWindowChange = (path) => {
+    window.location.href = path;
+  };
+
   return (
     <>
       {/* Prefooter */}
@@ -19,25 +23,29 @@ export const Footer = () => {
           <div>Safety</div>
           <div>FAQs</div>
         </div>
+
+
         <div className="PreFooter_Social">
           <button
             className="Social"
-            onClick={() => (window.location.href = 'https://www.facebook.com/preschoolpatchchesapeake/')
+            onClick={() => handleWindowChange('https://www.facebook.com/preschoolpatchchesapeake/')
             }
           >
             <img src={FacebookIcon} alt="facebook icon" />
           </button>
           <button
             className="Social"
-            onClick={() => (window.location.href = 'https://www.instagram.com/preschoolpatch/')
+            onClick={() => handleWindowChange('https://www.instagram.com/preschoolpatch/')
             }
           >
             <img src={InstagramIcon} alt="instagram icon" />
           </button>
         </div>
+
+
       </div>
       <footer className="Footer">
-        <p>
+        <div className="SmallFont">
           Preschool Patch is the world's first and largest online destination
           for at-home preschool services. We connect families with local
           teachers who have turned their homes into warm, inviting, educational
@@ -54,7 +62,7 @@ export const Footer = () => {
           providers and preschool seekers themselves and is not information
           generated or verified by Preschool Patch.Preschool Patch does not
           engage in any conduct that requires a professional license.
-        </p>
+        </div>
         <p>
           Preschool Patch and "Love Learning Early" are service marks or
           registered service marks of Preschool Patch, Inc.© 2020 - 2027

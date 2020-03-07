@@ -152,7 +152,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
         {/* Login Box */}
         <div className="MarginTop">
           <div
-            className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter" style={{ width: '50%', margin: 'auto' }}
+            className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter ThreeQuarters MarginAuto"
           >
             <div>
               <PageLogo
@@ -201,7 +201,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                             requests to local Patch Leaders.
                           </p>
 
-                          <div className="Flex Col LoginForm BoxShadow">
+                          <div className="Flex Col LoginForm BoxShadow FullSize">
 
                             <BasicInput
                               title="Full Name"
@@ -237,7 +237,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
 
 
                             {/* Kid section */}
-                            <div className="Flex Col AlignItems SimpleBorder JustifyCenter" style={{ width: 570 }}>
+                            <div className="Flex Col AlignItems SimpleBorder JustifyCenter" >
 
                               <div className="PinkFont CursiveFont LargeFont">Children Info</div>
 
@@ -270,14 +270,16 @@ export const Login = ({ pageUpdate, handleLogin }) => {
 
                             </div>
 
+                            <div>
+                              <PasswordInput
+                                handlePasswordVisibility={handlePasswordVisibility}
+                                setPassword={setPassword}
+                                password={password}
+                                passwordType={passwordType}
+                                passwordError={passwordError}
+                              />
+                            </div>
 
-                            <PasswordInput
-                              handlePasswordVisibility={handlePasswordVisibility}
-                              setPassword={setPassword}
-                              password={password}
-                              passwordType={passwordType}
-                              passwordError={passwordError}
-                            />
 
                             {emailError || passwordError ? (
                               <div className="FakeButton">
@@ -290,14 +292,6 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                             )}
                           </div>
                           {loginError && <Error errorMessage={loginError} />}
-
-                          <div className="Flex Col JustifyCenter AlignItems">
-
-                            <p>
-                              Note; Once your account has been created, you will be able to update your account
-                              and add details concerning any children you are looking to enroll.
-                            </p>
-                          </div>
                         </div>
                       </form>
                     )}
@@ -355,7 +349,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
 
       </div>
 
-      <img src={Elegant} alt="decorative" className="filter-green Margins" />
+      <img src={Elegant} alt="decorative" className="filter-green Margins responsive HideMobile" />
       <PatchLogo />
       <Footer />
     </div >

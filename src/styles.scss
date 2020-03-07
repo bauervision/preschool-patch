@@ -11,19 +11,11 @@ $PANSYPURPLE: #82204A;
 $PARADISEPINK: #FF4C76;
 $LIGHTPINK: rgb(255, 112, 146);
 
-
 html{
-  display: flex;
-  font-size: 62.5%; // 1rem = 10px
-  @include respond(phone){ font-size: 62.5%;}
-  @include respond(tab-port){ font-size: 50%;}// 1rem = 8px (8/16)
-  @include respond(tab-land){ font-size: 56.25%;}// 1rem = 9px (9/16)
-  @include respond(big){ font-size: 75%;}// 1rem = 12px ( 12/16 )
+  overflow-x:hidden;
 }
 
-body{
-  box-sizing: border-box;
-}
+
 .App {
   font-family: "Raleway", sans-serif;
   text-align: center;
@@ -31,12 +23,17 @@ body{
   padding: 0;
   color: $PATCHGREEN;
 
- 
-  font-size: 14pt;
   background-image: url("https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2FwhiteWoodBG.jpg?alt=media&token=51c0538f-945d-4cf1-9c8f-4a5c54e8e557");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+
+  @include respond(phone){ font-size: 150%;}
+  @include respond(tab-land){ font-size: 56.25%;}// 1rem = 9px (9/16)
+  @include respond(tab-port){ font-size: 50%;}// 1rem = 8px (8/16)
+  @include respond(big){ font-size: 75%;}// 1rem = 10.2rem ( 12/16 )
+
+  overflow-x: hidden;
   
 }
  
@@ -53,45 +50,36 @@ body{
       flex-direction: row;
       flex-wrap: wrap;
       background-color: $LIGHTROSE;
-
-      @media (min-width: 320px) {
-       padding: 10px;
-        margin: 10px;
-        border-radius: 5px;
-      }
-
-      padding: 10px;
-      margin: 40px 80px;
-      border-radius: 10px;
+      border-radius: 1rem;
+      margin: 2rem;
     }
 
     &_HowItWorks {
-      font-size: 18pt;
+      font-size: 1.2rem;
     }
 
-    &_Step {
-      text-align: center;
-      max-width: 10px;
-      max-height: 10px;
-      // display: block !important;
-      border-radius: 30px;
-      padding: 20px;
-      background-color: $PATCHGREEN;
-      color: $GHOSTWHITE;
-      font-size: 18pt;
-    }
+  }
+ 
+  .Step{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $PARADISEPINK;
+    color:$GHOSTWHITE;
+
+    @include respond(phone){flex-direction: row;}
   }
 
   .SimpleBorder {
     border: solid 1px rgba(0, 220, 0, 0.4);
-    border-radius: 20px;
-    padding: 30px;
+    border-radius: 1.3rem;
+    padding: 2rem;
   }
 
   .SimpleBorderSmall {
     border: solid 1px rgba(0, 220, 0, 0.4);
-    border-radius: 20px;
-    padding: 5px;
+    border-radius: 1.3rem;
+    padding: 0.5rem;
   }
 
   .MessageClientHeader{
@@ -101,20 +89,20 @@ body{
 
   .PinkBorder {
     border: solid 1px $PARADISEPINK;
-    border-radius: 20px;
-    padding: 30px;
+    border-radius: 1.3rem;
+    padding: 2rem;
   }
 
   .MessageFrame {
     border-left: solid 1px $PARADISEPINK;
-    padding-left: 5px;
+    padding-left: 0.5rem;
   }
 
   .MessageBorder {
     border: solid 1px $PARADISEPINK;
-    border-radius: 5px;
+    border-radius: 0.5rem;
    
-    padding-left: 5px;
+    padding-left: 0.5rem;
   }
 
   .TestBorder{border: solid 1px grey}
@@ -122,8 +110,8 @@ body{
     border: none;
     background-color: transparent;
     padding: 0;
-    border-radius: 20px;
-    margin: 5px;
+    border-radius: 1.3rem;
+    margin: 0.5rem;
     &:hover {
       cursor: pointer;
     }
@@ -139,15 +127,17 @@ body{
     justify-content: center;
 
     &_Imagery {
-      width: 400px;
+      width: 16rem;
       height: auto;
-      border-radius: 100px;
-      margin: 100px;
+      border-radius: 4rem;
+      margin: 4rem;
     }
   }
 
-  // Components
+  .HideMobile{ @include respond(phone){ display: none; } }
 
+
+  // Components
   .Header {
     background-color: $PATCHGREEN;
     position: fixed;
@@ -156,67 +146,63 @@ body{
     right: 0;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-left-radius: 40px;
-    border-top-left-radius: 0px;
+    padding: 0.5rem;
+    border-top-left-radius: 0 0 0 3px;
+    
+    @include respond(phone){ 
+      border-radius: 0;
+      width: 100%;
+      justify-content: center;
+    }
 
     &_Logo {
+      display:block;
+      @include respond(phone){ 
+        font-size: 350%;
+      }
       &:hover {
         cursor: pointer;
       }
     }
 
-    &_Align {
-      display: flex;
-      align-items: center;
-    }
-
     &_MessageBtn {
       background-color: $MALACHITE;
-      padding: 5px;
-      margin: 2px;
+      padding: 0.5rem;
+      margin: 0.2rem;
       color: $GHOSTWHITE;
       border: none;
       cursor: pointer;
 
       &:hover {
         background-color: $GHOSTWHITE;
-        padding: 5px;
-        margin: 2px;
+        padding: 0.5rem;
+        margin: 0.2rem;
         color: $PATCHGREEN;
       }
     }
   }
 
   .PreFooter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     background-color: rgb(233, 233, 233);
     div {
-      margin: 40px;
+      margin: 3rem;
     }
   }
 
   .Footer {
     background-color: $MALACHITE;
     color: darkslategray;
-    font-size: 14px;
-    padding: 30px;
+    padding: 2rem;
     margin: 0;
     display: flex;
     flex-direction: column;
   }
 
   .LoginForm {
-    // background-color: white;
     border: solid 1px mediumaquamarine;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 20px;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1.3rem;
   }
 
   // General Styling
@@ -246,8 +232,8 @@ body{
   .WhiteFont{ color: $GHOSTWHITE; }
 
   .UploadImageContainer{
-    padding: 10px;
-    border-radius: 10px;
+    padding: 1rem;
+    border-radius: 1rem;
     max-width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -294,35 +280,52 @@ body{
 
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
-  .SmallFont { font-size: 10pt; }
-  .MediumFont { font-size: 20pt; }
-  .LargeFont { font-size: 28pt; }
-  .SuperFont { font-size: 34pt; }
-  .RedicFont{ font-size: 60pt; }
+  .SmallFont { font-size: 0.5rem; }
+  .MediumFont { font-size: 1.2rem; }
+  .LargeFont { font-size:2rem; }
+  .SuperFont { font-size: 3rem; @include respond(phone){font-size:2rem;}}
+  .RedicFont{ font-size: 4rem; }
 
   .Logo {
-    margin-left: 200px;
-    margin-top: 20px;
+    margin-left: 10%;
+    margin-top: 1.3rem;
+    max-width: 40%;
   }
 
+  .HowItWorks{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    height: 20%;
+   
+
+  }
   .Rotate{
     z-index: -1;
     animation: rotation 7s infinite linear;
   }
 
+  .Flower{
+    width: 4rem;
+    z-index: 2;
+    height: auto;
+  }
   
 
   .Social {
     background-color: transparent;
-    border-radius: 60px;
+    border-radius: 3rem;
     border-width: 0;
     border-color: none !important;
+    &:hover{
+      filter: invert(45%) sepia(25%) saturate(5592%) hue-rotate(319deg) brightness(102%) contrast(101%);
+    }
   }
 
   .SocialActionBtn {
     border: none;
-    margin: 0px 10px;
-    padding: 3px;
+    margin: 0 1rem;
     background-color: transparent;
     transition: all 0.3s ease-in-out;
     color: $PATCHGREEN;
@@ -334,10 +337,10 @@ body{
   
   .SocialMessageBtn {
     border: solid;
-    border-width: 2px;
-    margin: 0px 30px;
+    border-width: 0.2rem;
+    margin: 0 2rem;
     background-color: transparent;
-    border-radius: 60px;
+    border-radius: 4rem;
     transition: all 0.3s ease-in-out;
 
     &:hover{
@@ -347,10 +350,10 @@ body{
 
   .SocialMessageBtnHeader {
     border: solid;
-    border-width: 2px;
-    margin: 0px 10px;
+    border-width: 0.2rem;
+    margin: 0 1rem;
     background-color: transparent;
-    border-radius: 60px;
+    border-radius: 4rem;
     transition: all 0.3s ease-in-out;
 
     &:hover{
@@ -358,19 +361,19 @@ body{
     }
   }
 
-  .SocialMessageBtn_UnActive { border-color: $MALACHITE; box-shadow: 1px 1px 10px $PATCHGREEN;}
-  .SocialMessageBtn_Active { border-color: $GHOSTWHITE; box-shadow: 1px 1px 10px $GHOSTWHITE}
+  .SocialMessageBtn_UnActive { border-color: $MALACHITE; box-shadow: 1px 1px 1px $PATCHGREEN;}
+  .SocialMessageBtn_Active { border-color: $GHOSTWHITE; box-shadow: 1px 1px 1px $GHOSTWHITE}
 
   .SocialMessage{
     font-family: "Raleway", sans-serif;
     color: $PARADISEPINK;
     border-bottom: solid 1px rgb(250, 177, 173);
-    padding: 8;
+    padding: 0.5rem;
   }
 
   .Add {
     background-color: transparent;
-    border-radius: 60px;
+    border-radius: 4rem;
     border-width: 0;
     border-color: none !important;
   }
@@ -380,7 +383,7 @@ body{
     color: $GHOSTWHITE;    
   }
 
-  .RoundBorder{ border-radius: 20px; }
+  .RoundBorder{ border-radius: 1.3rem; }
 
   .WhiteFill {  background-color: $GHOSTWHITE; }
 
@@ -388,33 +391,34 @@ body{
 
   .Card {
     display: flex;
-    max-width: 590px;
-    padding: 10px;
-    margin: 5px;
-    border: solid $PANSYPURPLE 1px;
-    border-radius: 10px;
+    max-width: 45%;
+    max-height: 17rem;
+    margin: 1rem;
+    padding: 1rem;
+    border: solid $PATCHGREEN 1px;
+    border-radius: 1rem;
     transition: all 1s;
 
     &:hover {
-      border: solid $PARADISEPINK 4px;
+      border: solid $PARADISEPINK 2px;
       background-color: $GHOSTWHITE;
       transform: scale(1.03);
     }
 
     &:hover > &_Pic {
-      width: 150px;
+      width: 13rem;
     }
     &_Pic {
-      border-radius: 50px;
-      width: 100px;
+      border-radius: 5rem;
+      width: 9rem;
       height: auto;
       transition: width 1s;
     }
   }
 
   .AdminPic{
-    border-radius: 50px;
-      width: 200px;
+    border-radius: 4rem;
+      width: 8rem;
       height: auto;
       transition: width 1s;
   }
@@ -422,26 +426,27 @@ body{
   .Raleway { font-family: "Raleway", sans-serif; }
   .CursiveFont { font-family: "Dancing Script", cursive; }
   .profileText { color: $PATCHGREEN; }
-  .textMargin { margin: 5px; }
+  .textMargin { margin: 0.5rem; }
   .TextLeft{ text-align: left; }
   .TextRight{ text-align: right; }
-  .BoxShadow { box-shadow: 10px 10px 20px lightslategray; }
-  .LightShadow { box-shadow: 10px 10px 40px $GHOSTWHITE; }
-  .InnerShadow { box-shadow: inset 7px 7px 30px rgba(0, 220, 0, 0.2); }
-  .InnerShadowWhite { box-shadow: inset 7px 7px 30px rgba(225, 225, 225, 1); }
-  .Margins{ margin: 50px; }
-  .MarginSmall{ margin: 20px; }
-  .MarginTopSmall{ margin-top: 10px; }
-  .MarginHSmall{ margin-right: 10px; margin-left: 10px; }
-  .MarginTop{ margin-top: 50px; }
-  .MarginBottom{ margin-bottom: 50px; }
-  .MarginBottomSocial{ margin-bottom: 10px; }
-  .PaddingLite{ padding: 5px; }
-  .Padding{ padding: 20px; }
-  .PaddingBoost{ padding: 60px; }
-  .PaddingTop{ padding-top: 20px; }
-  .PaddingBottom{ padding-bottom: 20px; }
-  .PaddingHSmall{ padding: 10px 20px; }
+  .BoxShadow { box-shadow: 1rem 1rem 1.3rem lightslategray; @include respond(phone){box-shadow: none;} }
+  .LightShadow { box-shadow: 1rem 1rem 3rem $GHOSTWHITE; }
+  .InnerShadow { box-shadow: inset 7px 7px 2rem rgba(0, 220, 0, 0.2); }
+  .InnerShadowWhite { box-shadow: inset 7px 7px 2rem rgba(225, 225, 225, 1); }
+  .MarginAuto{margin:auto}
+  .Margins{ margin: 3rem; }
+  .MarginSmall{ margin: 1.3rem; }
+  .MarginTopSmall{ margin-top: 1rem; }
+  .MarginHSmall{ margin-right: 1rem; margin-left: 1rem; }
+  .MarginTop{ margin-top: 3rem; }
+  .MarginBottom{ margin-bottom: 3rem; }
+  .MarginBottomSocial{ margin-bottom: 1rem; }
+  .PaddingLite{ padding: 0.5rem; }
+  .Padding{ padding: 1.3rem; }
+  .PaddingBoost{ padding: 4rem; }
+  .PaddingTop{ padding-top: 1.3rem; }
+  .PaddingBottom{ padding-bottom: 1.3rem; }
+  .PaddingHSmall{ padding: 1rem 1.3rem; }
   .Flex { display: flex; }
   .Evenly{ justify-content: space-evenly; }
   .Between{ justify-content: space-between; }
@@ -454,11 +459,47 @@ body{
   .JustifyEnd { justify-content: flex-end; }
   .HalfSize{ width: 50%; }
   .Quarter{ width: 25%; }
+  .Thirds{width: 33.3%}
   .ThreeQuarters{ width: 75%; }
+  .Mobile3{@include respond(phone){width: 75%}}
   .FullSize{ width: 100%; }
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
   .MaxSocial{ max-width: 1000px; }
   .MinSocial{ min-width: 1000px; }
+
+
+/* RIBBON */
+.ribbon {
+  width: 12rem;
+  min-height: 7rem;
+  overflow: hidden;
+  position: relative;
+  
+}
+
+.ribbon span {
+  position: absolute;
+  display: block;
+  left: -5rem;
+  width: 16rem;
+  padding: 1rem 0;
+  background-color:  $PARADISEPINK;
+  color: $GHOSTWHITE;
+  text-transform: uppercase;
+  text-align: center;
+ 
+}
+
+/* top left*/
+.ribbon-top-left {
+  top:-17rem;
+  left: -1.3rem;
+}
+.ribbon-top-left span {
+  top: 0.5rem;
+  transform: rotate(-30deg);
+}
+
 
   .transparent{ 
     background-color: transparent; 
@@ -470,16 +511,16 @@ body{
 
 
   .ImgFrame{
-    width: 60px;
+    width: 4rem;
     height: auto;
-    border-top-left-radius: 5px;
+    border-top-left-radius: 0.5rem;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
-    border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 0.5rem;
 }
 
 .ImgFrameReversed{
-  width: 120px;
+  width: 11.3rem;
   height: auto;
   border-top-left-radius: 50%;
   border-top-right-radius: 15%;
@@ -488,7 +529,7 @@ body{
 }
 
   .ImgFrameCircle{
-    width: 60px;
+    width: 4rem;
     height: auto;
     border-radius: 50%;
     
@@ -499,8 +540,8 @@ body{
     justify-content: space-around;
     align-items: center;
     border: solid 1px $PANSYPURPLE;
-    border-radius: 5px;
-    margin: 5px;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
     cursor: pointer;
     &:hover{
       background-color: $PARADISEPINK;
@@ -514,12 +555,12 @@ body{
     }
 
     p{
-      font-size: 12pt;
+      font-size: 0.8rem;
       font-family: "Raleway", sans-serif;
     }
 
     span{
-      font-size: 10pt;
+      font-size:0.8rem;
       font-family: "Raleway", sans-serif;
       color: $SONICSILVER;
     }
@@ -527,10 +568,10 @@ body{
     img{
       width: 30%;
       height: auto;
-      border-top-left-radius: 5px;
+      border-top-left-radius: 0.5rem;
       border-top-right-radius: 50%;
       border-bottom-right-radius: 50%;
-      border-bottom-left-radius: 5px;
+      border-bottom-left-radius: 0.5rem;
 
     }
     
@@ -541,8 +582,8 @@ body{
     justify-content: space-around;
     align-items: center;
     border: solid 1px $PANSYPURPLE;
-    border-radius: 5px;
-    margin: 5px;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
     background-color: $LIGHTPINK;
     color: $GHOSTWHITE;
     &:hover{
@@ -572,12 +613,12 @@ body{
       filter: invert(100%) ;
     }
     p{
-      font-size: 12pt;
+      font-size: 0.9rem;
       font-family: "Raleway", sans-serif;
     }
 
     span{
-      font-size: 10pt;
+      font-size:0.8rem;
       font-family: "Raleway", sans-serif;
       color: $SONICSILVER;
     }
@@ -585,74 +626,92 @@ body{
     img{
       width: 30%;
       height: auto;
-      border-radius: 5px 50% 50% 5px;
+      border-radius: 0.5rem 50% 50% 0.5rem;
     }
     
   }
 
   .Tab{
-    border-radius: 30px 30px 0 0;
-    margin-bottom: 0;
-    margin-left: 10%;
-    margin-right: 10%;
+    border-radius: 2rem 2rem 0 0;
+    margin: 0 1rem;
+    @include respond(phone){ 
+      margin: 0 0;
+    }
   }
 
   .TabBottom{
-    border-radius: 0 0 30px 30px;
+    border-radius: 0 0 2rem 2rem;
   }
 
   .TabSocial{
-    border-radius: 30px;
-    margin: 0 60px;
+    border-radius: 2rem;
+    margin: 0 4rem;
+  }
+
+  
+  .SmallBuffer {
+    padding: 0.5rem;
+    margin: 0.5rem;
   }
 
   .Buffer {
-    padding: 10px;
-    margin: 10px;
+    padding: 1rem;
+    margin: 1rem;
   }
 
   .LargeBuffer {
-    padding: 40px;
-    margin: 40px;
+    padding: 3rem;
+    margin: 3rem;
   }
 
   .FakeButton {
     border: solid 1px $DARKIMPERIALBLUE;
     background-color: lightsteelblue;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 0.5rem;
   }
 
   .InputStyle {
-    padding: 10px;
-    margin: 10px;
+    padding: 1rem;
+    margin: 1rem;
     border: solid 1px $PATCHGREEN;
-    border-radius: 5px;
+    border-radius: 0.5rem;
     border-style: solid;
-    
+  }
+
+  .PassWordInput{
+    width: 40vw;
+  }
+
+  .responsive {
+    width: 50%;
+    height: auto;
+
+    @include respond(phone){ 
+      width: 80%
+    }
   }
 
   .InputTextLabel {
-    margin-left: 10px;
-    font-size: 12px;
+    margin-left: 1rem;
+    font-size: 1rem;
     color: $SONICSILVER;
   }
 
   .RegisterButton {
-    padding: 10px;
-    margin: 10px;
+    padding: 1rem;
+    margin: 1rem;
     background-color: $MALACHITE;
     color: white;
-    font-size: 14pt;
     transition: all 0.5s ease-in-out;
 
     &:hover {
       background-color: $PARADISEPINK;
       cursor: pointer;
-      font-size: 18pt;
-      padding-left: 40px;
-      padding-right: 40px;
+      font-size: 1.2rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
     }
   }
 
@@ -666,28 +725,27 @@ body{
   }
 
   .LoginError {
-    margin: 10px;
+    margin: 1rem;
     border: solid 1px red;
     color: darkred;
     font-style: italic;
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 1.3rem;
+    padding: 1.3rem;
   }
   .LoginBox {
-    border: solid $MALACHITE 2px;
-    border-radius: 10px;
-    margin: 20px;
-    padding: 20px;
+    border: solid $MALACHITE 0.2rem;
+    border-radius: 1rem;
+    margin: 1.3rem;
+    padding: 1.3rem;
   }
 
   .TogglePassword {
     background-color: transparent;
     border: none;
-    border-radius: 5px;
-    padding: 0px;
     position: absolute;
-    top: 12px;
-    right: 10px;
+    top: -1rem;
+    right: -1rem;
+    cursor: pointer;
   }
 
 .OverFlow{
@@ -697,34 +755,34 @@ body{
 
 .LightPinkBorder{
   border: solid 1px rgb(250, 177, 173);
-  border-radius: 10px;
+  border-radius: 1rem;
   
 }
 
 .SocialPostHeader{
-  border-radius: 5px 5px 0 0;
+  border-radius: 0.5rem 0.5rem 0 0;
   color:white;
 }
 
   textarea {
     font-family: "Raleway", sans-serif;
-    border-radius: 10px;
+    border-radius: 1rem;
     font-size: 12pt;
     width: 100%;
-    padding: 10px;
-    min-height: 40px;
+    padding: 1rem;
+    min-height: 3rem;
     resize: none;
     
   }
 
 
   table{
-    padding: 20px;
-    border-radius: 20px;
+    padding: 1.3rem;
+    border-radius: 1.3rem;
     border: 1px solid $PATCHGREEN;
   }
   tr{
-    padding: 10px;
+    padding: 1rem;
   }
   tr:hover{ background-color:$MALACHITE; color:$GHOSTWHITE}
   tr:nth-child(even){background-color: #f2f2f2;}
@@ -734,7 +792,7 @@ body{
     border-collapse: collapse;
   }
   th{
-    padding: 15px;
+    padding: 10.5rem;
     text-align: left;
     background-color: $PARADISEPINK;
     color: white;
@@ -768,13 +826,17 @@ body{
   .HeaderButton {
     background-color: transparent;
     color: $GHOSTWHITE;
-    margin: 5px;
-    padding: 5px;
-    border-radius: 5px;
-    border-width: 1px;
-    border-color: green !important;
-    border: solid;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: solid 1px green !important;
     transition: all 0.5s;
+
+    // @include respond(phone){ 
+    //   border-radius: 0;
+    //   width: 100%;
+    //   justify-content: center;
+    // }
 
     &:hover {
       background-color: $MALACHITE;
@@ -799,14 +861,15 @@ body{
   button {
     background-color: $PARADISEPINK;
     color: $GHOSTWHITE;
-    margin: 5px;
-    padding: 15px;
-    transition: all 0.5s;
-    border-radius: 10px;
+    margin: 2rem;
+    padding: 1rem;
+    transition: transform 0.5s;
+    border-radius: 1rem;
     border: none;
 
     &:hover {
       transform: scale(1.05);
+      
     }
     &:disabled{
       background-color: rgba(115, 119, 115, 0.4);
@@ -814,9 +877,9 @@ body{
   }
 
   footer {
-    margin-top: 20px;
+    margin-top: 1.3rem;
     background-color: $SONICSILVER;
-    padding: 10px;
+    padding: 1rem;
     display: flex;
     justify-content: center;
   }
@@ -831,12 +894,12 @@ body{
   /// Toast
 .Toast {
   visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 250px; /* Set a default minimum width */
-  margin-left: -125px; /* Divide value of min-width by 2 */
+  min-width: 23rem; /* Set a default minimum width */
+  margin-left: -120.5rem; /* Divide value of min-width by 2 */
   position: fixed; /* Sit on top of the screen */
   z-index: 1; /* Add a z-index if needed */
   left: 50%; /* Center the snackbar */
-  bottom: 30px; /* 30px from the bottom */
+  bottom: 2rem; /* 2rem from the bottom */
 
   
 }
@@ -851,21 +914,21 @@ body{
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
   from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  to {bottom: 2rem; opacity: 1;}
 }
 
 @keyframes fadein {
   from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  to {bottom: 2rem; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
+  from {bottom: 2rem; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
+  from {bottom: 2rem; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
 
@@ -884,11 +947,11 @@ body{
 
 .TT_Text{
   visibility: hidden;
-width: 120px;
+width: 11.3rem;
 background-color: $SONICSILVER;
 color: $GHOSTWHITE;
 text-align: center;
-padding: 5px 0;
+padding: 0.5rem 0;
 border-radius: 6px;
 
 /* Position the tooltip text */
@@ -896,7 +959,7 @@ position: absolute;
 z-index: 1;
 
 right: 0%;
-margin-left: -60px;
+margin-left: -4rem;
 
 /* Fade in tooltip */
 opacity: 0;

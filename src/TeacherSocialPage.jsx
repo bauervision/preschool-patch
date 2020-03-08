@@ -59,7 +59,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
         <div className="Flex AlignItems SeeThru Evenly TabSocial">
 
           {/* Page Title */}
-          <div className="Flex Col JustifyCenter AlignItems">
+          <div className="Flex Col JustifyCenter AlignItems FullSize">
 
 
             <div className="Flex AlignItems Buffer ">

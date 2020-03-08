@@ -96,7 +96,7 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
   const showLikeStatus = (updatedLikes.length === 1) && (ourNameIndex !== 0);
 
   return (
-    <div className={'LightPinkBorder MarginBottom SeeThru BoxShadow FullSize'} >
+    <div className={'SocialPost'} >
       {/* Post Author and date */}
       <div className="Flex AlignItems LightPinkFill PaddingLite SocialPostHeader Between">
         <div className="CursiveFont MediumFont MarginHSmall">{name}</div>

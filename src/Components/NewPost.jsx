@@ -128,60 +128,64 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
   };
 
   return (
-    <div className="Flex Col  AlignItems" >
+    <div className="NewPost" >
 
-      <div className="Flex ">
-        <div className=" HideMobile">
-          <img alt="profile pic" className="ImgFrameReversed MarginHSmall" src={photoUrl} />
+      {/* Picture and textarea */}
+      <div className="Flex AlignItems ">
+        <div className=" HideMobile MarginHSmall">
+          <img alt="profile pic" className="ImgFrameReversed" src={photoUrl} />
         </div>
 
-        <div className="Col JustifyCenter ">
+        <textarea
+          ref={textref}
+          placeholder="What would you like to say about today?"
+          name="newPost"
+          className="FullSizeMobile"
+          // rows='2'
+          // cols='80'
+          onChange={(e) => setNewText(e.target.value)}
+        />
+      </div>
 
-          <textarea
-            ref={textref}
-            className="FullWidth"
-            placeholder="What would you like to say about today?"
-            name="newPost"
-            // rows='2'
-            // cols='80'
-            onChange={(e) => setNewText(e.target.value)}
-          />
-          <div className="Flex Col JustifyCenter AlignItems">
 
-            <div className="TextLeft SmallBuffer">
-              <div className="InputTextLabel" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>Limit of 10 Images</div>
-              <input
-                ref={filesref}
-                className="InputStyle  ThreeQuarters"
-                placeholder="Select a File"
-                type="file"
-                name="files"
-                multiple
-                onChange={(e) => handleNewFiles(e.target.files)}
-              />
-            </div>
+      <div className="Col JustifyCenter ThreeQuarters">
+        {/* File input, Thumbnails and submit button */}
+        <div className="Flex Col JustifyCenter AlignItems">
 
-            {/* Thumbnail images prior to upload */}
-            { newFiles
+          <div className="TextLeft SmallBuffer">
+            <div className="InputTextLabel" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>Limit of 10 Images</div>
+            <input
+              ref={filesref}
+              className="InputStyle  "
+              placeholder="Select a File"
+              type="file"
+              name="files"
+              multiple
+              onChange={(e) => handleNewFiles(e.target.files)}
+            />
+          </div>
+
+          {/* Thumbnail images prior to upload */}
+          { newFiles
             && <div className="UploadImageContainer">
               { thumbArray.map((file, index) => (
                 <HoverableThumbnail key={index.toString()} file={file.thumb} index={index}/>))}
             </div>
-            }
+          }
 
 
-            {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Submit</button>) : (
-              <div className="Flex Col JustifyCenter AlignItems">
-                <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
-              </div>
-            )}
+          {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Submit</button>) : (
+            <div className="Flex Col JustifyCenter AlignItems">
+              <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
+            </div>
+          )}
 
-
-          </div>
 
         </div>
 
       </div>
+
+
     </div>
 
   );

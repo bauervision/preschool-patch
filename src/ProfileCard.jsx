@@ -50,15 +50,21 @@ export const ProfileCard = ({ data, handleSelection }) => {
 
 
       {/* Rates*/}
-      <div className="Flex JustifyCenter AlignItems">
-        <div className="MarginHSmall"> Full-time<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.ft}</span></div>
+      <div className="Flex JustifyCenter HideMobile">
+        <div className="MarginHSmall "> Full-time<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.ft}</span></div>
         <div className="MarginHSmall">Part-Time<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.pt}</span></div>
         <div className="MarginHSmall">Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.di}</span></div>
       </div>
 
+      <div className="Flex JustifyCenter ShowMobile">
+        FT<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.ft}</span>
+        PT<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.pt}</span>
+        Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.di}</span>
+      </div>
+
       {/* Show Ribbon if they are enrolling */}
       {available && (
-        <div className="ribbon ribbon-top-left"><span>Enrolling</span></div>
+        <div className="ribbon ribbon-top-left HideMobile"><span>Enrolling</span></div>
       )}
     </div>
   );

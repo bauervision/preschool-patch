@@ -29,3 +29,4 @@ export { default as Accept } from './accept.png';
 export { default as Cancel } from './cancel.png';
 export { default as Trash } from './trash.png';
 export { default as Arrow } from './arrow.png';
+export { default as UploadPic } from './pic.png';

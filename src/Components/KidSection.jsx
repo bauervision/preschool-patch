@@ -37,7 +37,7 @@ const KidSection = ({
   };
 
   return (
-    <div className="Flex">
+    <div className="Flex MobileRowToCol">
 
       {/* Name Input */}
       <div

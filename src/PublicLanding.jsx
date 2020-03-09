@@ -228,7 +228,6 @@ export const PublicLanding = ({
         <Loader />
       ) : (
         <div className="Flex Col JustifyCenter  SeeThru MarginTopMobileLarge">
-
           {/* If we're not a teacher, then show search options */}
           {!showTeacher ? (
             <>

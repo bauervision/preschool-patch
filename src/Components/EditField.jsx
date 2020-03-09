@@ -41,7 +41,7 @@ const EditField = ({
             // cols={!isMessage ? "70" : '120'}
             onChange={(e) => onChange(e.target.value)}
             value={value}
-            style={{ width: '100%' }}
+
 
           />
         )}

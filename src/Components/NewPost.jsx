@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import moment from 'moment';
 
 import { storage } from '../config';
-import { Corner } from '../images';
+import { Corner, UploadPic } from '../images';
 
 const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
   const [newText, setNewText] = useState(null);
@@ -10,6 +10,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
   const [thumbArray, setThumbArray] = useState([]);
   const [imageUrlArray, setImageUrlArray] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadPics, setUploadPics] = useState(false);
 
 
   const textref = useRef(null);
@@ -68,7 +69,9 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
     setNewText(null);
     setNewFiles(null);
     textref.current.value = null;
-    filesref.current.value = null;
+    if (filesref.current) {
+      filesref.current.value = null;
+    }
   };
 
 
@@ -131,7 +134,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
     <div className="NewPost" >
 
       {/* Picture and textarea */}
-      <div className="Flex AlignItems ">
+      <div className="Flex AlignItems FullSize">
         <div className=" HideMobile MarginHSmall">
           <img alt="profile pic" className="ImgFrameReversed" src={photoUrl} />
         </div>
@@ -145,18 +148,37 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
           // cols='80'
           onChange={(e) => setNewText(e.target.value)}
         />
+
+        {/* Far Right section for submit and optional pic uploader: Hidden on Mobile */}
+        {!uploadPics && (
+
+          <div className="Flex Col AlignItems JustifyCenter Quarter HideMobile">
+            <button
+              type='button'
+              onClick={() => setUploadPics(true)}
+              className="transparent filter-green NoMargin NoPadding"
+              title="Upload pictures with this post?"
+            >
+              <img src={UploadPic} alt="pic uploader"/>
+            </button>
+
+            <button type="button" onClick={handleSubmitPost}className="NoMargin" >Submit</button>
+          </div>
+
+        )}
       </div>
 
+      {/* File input, Thumbnails and submit button */}
+      {uploadPics && (
 
-      <div className="Col JustifyCenter ThreeQuarters">
-        {/* File input, Thumbnails and submit button */}
-        <div className="Flex Col JustifyCenter AlignItems">
+        <div className="Flex Col JustifyCenter AlignItems PaddingLite">
 
-          <div className="TextLeft SmallBuffer">
-            <div className="InputTextLabel" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>Limit of 10 Images</div>
+          <div className="TextLeft FullSize Flex JustifyCenter Col">
+            <span className="InputTextLabel HideMobile" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>Limit of 10 Images</span>
+            <span className="InputTextLabel ShowMobile" style={{ fontSize: 12, color: 'grey', marginLeft: 10 }}>Limit 10</span>
             <input
               ref={filesref}
-              className="InputStyle  "
+              className="InputStyle"
               placeholder="Select a File"
               type="file"
               name="files"
@@ -166,24 +188,41 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
           </div>
 
           {/* Thumbnail images prior to upload */}
-          { newFiles
-            && <div className="UploadImageContainer">
-              { thumbArray.map((file, index) => (
-                <HoverableThumbnail key={index.toString()} file={file.thumb} index={index}/>))}
-            </div>
+          { newFiles && <div className="UploadImageContainer">
+            { thumbArray.map((file, index) => (
+              <HoverableThumbnail key={index.toString()} file={file.thumb} index={index}/>))}
+          </div>
           }
-
-
-          {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Submit</button>) : (
-            <div className="Flex Col JustifyCenter AlignItems">
-              <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
-            </div>
-          )}
-
 
         </div>
 
-      </div>
+
+      )};
+
+      {/* Show this section on Mobile as it displays in a Row underneath the textarea */}
+      {!uploadPics && (
+        <div className="Flex AlignItems ShowMobile">
+          <button
+            type='button'
+            onClick={() => setUploadPics(true)}
+            className="transparent filter-pink NoMargin NoPadding"
+            title="Upload pictures with this post?"
+          >
+            <img src={UploadPic} alt="pic uploader"/>
+          </button>
+          <button type="button" onClick={handleSubmitPost}className="NoMargin" >Submit</button>
+        </div>
+      )}
+
+      {uploadPics && (
+        <>
+          {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Submit</button>) : (
+            <div className="Flex Col JustifyCenter AlignItems">
+              <img src={Corner} alt='corner' className='filter-green Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
+            </div>
+          )}
+        </>
+      )}
 
 
     </div>

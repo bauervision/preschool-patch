@@ -140,8 +140,6 @@ html{
     }
   }
 
-  .HideMobile{ @include respond(phone){ display: none; } }
-  .ShowMobile{ display: none;  @include respond(phone){ display: block; } }
 
 
   // Components
@@ -292,19 +290,11 @@ html{
 
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
-  .SmallFont { font-size: 0.5em; }
-  .MediumFont { font-size: 1.2em; @include respond(phone){font-size:2em;}}
+  .SmallFont { font-size: 0.8em; }
+  .MediumFont { font-size: 1.2em; @include respond(phone){font-size:1em;}}
   .LargeFont { font-size:2em; }
   .SuperFont { font-size: 3em; @include respond(phone){font-size:4em;}}
   .RedicFont{ font-size: 4em; }
-
-.MobileFont{@include respond(phone){font-size:1.5em;}}
-.MobileFontSmall{@include respond(phone){font-size:1em;}}
-  .Logo {
-    margin-left: 10%;
-    margin-top: 1.3em;
-    max-width: 40%;
-  }
 
   .HowItWorks{
     display:flex;
@@ -466,13 +456,14 @@ html{
   .NoMargin{margin:0}
   .Margins{ margin: 3em; }
   .MarginSmall{ margin: 1.3em; }
-  .MarginTopSmall{ margin-top: 1em; }
+  .MarginTopSmall{ margin-top: 1em; @include respond(phone){margin-top: 0.3em;} }
   .MarginHSmall{ margin-right: 1em; margin-left: 1em; }
   .MarginTop{ margin-top: 3em; }
-  .MarginTopMobile{@include respond(phone){margin-top: 2em;}}
-  .MarginTopMobileLarge{@include respond(phone){margin-top: 6em;}}
+  
+  
   .MarginBottom{ margin-bottom: 3em; @include respond(phone){margin-bottom: 1em;}}
   .MarginBottomSocial{ margin-bottom: 1em; @include respond(phone){margin-bottom: 0.5em;}}
+  .NoPadding{padding:0}
   .PaddingLite{ padding: 0.5em; }
   .Padding{ padding: 1.3em; }
   .PaddingBoost{ padding: 4em; }
@@ -493,22 +484,35 @@ html{
   .Quarter{ width: 25%;}
   .Thirds{width: 33.3%}
   .ThreeQuarters{ width: 75%; }
-  .Mobile3{@include respond(phone){width: 75%}}
+  
   .FullSize{ width: 100%;}
-  .FullSizeMobile{ width: 100%; @include respond(phone){width: 90%} }
+  
   .PinkLine{ border-bottom: solid 1px $PARADISEPINK; }
   .MaxSocial{ max-width: 1000px; @include respond(phone){width: 100%}}
   .MinSocial{ min-width: 1000px; @include respond(phone){width: 100%} }
 
-  .MobileColToRow{
-    flex-direction: column;
-    @include respond(phone){flex-direction: row;}
+  
+  /* MOBILE SPECIFIC CLASSES */
+  .HideMobile{ @include respond(phone){ display: none; } }
+  .ShowMobile{ display: none;  @include respond(phone){ display: block; } }
+  .MarginTopMobile{@include respond(phone){margin-top: 2em;}}
+  .MarginTopMobileLarge{@include respond(phone){margin-top: 6em;}}
+  .FullSizeMobile{ width: 100%; @include respond(phone){width: 90%} }
+  .Mobile3{@include respond(phone){width: 75%}}
+  .MobileHalf{@include respond(phone){width: 60%}}
+  .MobileColToRow{ flex-direction: column; @include respond(phone){flex-direction: row;}}
+  .MobileRowToCol{ flex-direction: row; @include respond(phone){flex-direction: column;}}
+  .MobileFont{@include respond(phone){font-size:1.5em;}}
+  .MobileFontSmall{@include respond(phone){font-size:1em;}}
+  .MobileNoMargin{@include respond(phone){margin:0;}}
+
+
+  .Logo {
+    margin-left: 10%;
+    margin-top: 1.3em;
+    max-width: 40%;
   }
 
-  .MobileRowToCol{
-    flex-direction: row;
-    @include respond(phone){flex-direction: column;}
-  }
 
 /* RIBBON */
 .ribbon {
@@ -725,6 +729,11 @@ html{
     border: solid 1px $PATCHGREEN;
     border-radius: 0.5em;
     border-style: solid;
+    @include respond(phone){
+      padding: 0.8em;
+      margin: 0.2em;
+      
+    }
   }
 
   .PassWordInput{
@@ -828,6 +837,10 @@ html{
   flex-direction: column;
   align-items: center;
   min-width: 1000px;
+  @include respond(phone){
+    min-width: 100%;
+    box-shadow: none;
+  }
 }
 
 

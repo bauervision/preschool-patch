@@ -250,10 +250,10 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
 
         {/* Profile Page Data */}
-        <div className="Flex Row WhiteFill SimpleBorder Margins JustifyCenter" >
+        <div className="Flex  WhiteFill SimpleBorder Margins JustifyCenter" >
           <div>
             <form onSubmit={(e) => handleDataUpdate(e)} >
-              <div className="Flex Row AlignItems JustifyCenter">
+              <div className="Flex MobileRowToCol AlignItems JustifyCenter">
                 <img
                   className="BoxShadow ProfilePic"
                   alt="profile pic"
@@ -309,7 +309,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
 
               <div className="Buffer PinkFont">Last Update: {lastDataUpdate}</div>
               <div className="CursiveFont LargeFont Buffer PinkFont">My Data</div>
-              <div className="Flex Row AlignItems SimpleBorder JustifyCenter">
+              <div className="Flex MobileRowToCol AlignItems SimpleBorder JustifyCenter">
                 <EditField
                   title="Full Name"
                   placeholder={userData.name}
@@ -518,7 +518,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   {galleryImages.map((elem, index) => (
                     <SimpleImage key={`gallery${index}`} image={elem} alt={`gallery${index}`} />
                   ))}
-
                 </div>
 
                 <div>
@@ -558,7 +557,9 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         </div>
       </div>
 
-      <img src={Elegant} alt="decorative" className="filter-green Margins" />
+      <div>
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
+      </div>
       <PatchLogo />
       <Footer />
       <Toast showToast={launchToast.value} message={launchToast.message} />

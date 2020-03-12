@@ -56,23 +56,28 @@ html{
 
   }
  
+
+
+
   .Step{
     display: flex;
     flex-direction: row;
     align-items: center;
-    
     justify-content: space-evenly;
     
 
     @include respond(phone){flex-direction: column;}
 
     &_Child{
+      display:flex;
+      justify-content: center;
       background-color: $PARADISEPINK;
       color:$GHOSTWHITE;
-      margin: 2em;
-      font-size: 2em;
+      margin: 0.5em;
+      font-size: 1.3em;
       border-radius: 1em;
       padding: 1em;
+      align-items: center;
     }
   }
 
@@ -102,6 +107,7 @@ html{
   .MessageFrame {
     border-left: solid 1px $PARADISEPINK;
     padding-left: 0.5em;
+    @include respond(phone){border:none; padding-left: 0;}
   }
 
   .MessageBorder {
@@ -153,7 +159,7 @@ html{
     align-items: center;
     padding: 0.5em;
     border-radius: 0 0 0 1em;
-    transition: top 1s ease-in-out;
+    transition: top 0.5s ease-in-out;
     
     @include respond(phone){ 
       border-radius: 0;
@@ -254,7 +260,14 @@ html{
     flex-grow: 1;
     width: 9vh;
     position: relative;
-    &:hover .emoveUpload{ opacity: 1}
+    &:hover .RemoveUpload{ opacity: 1}
+  }
+
+  .UploadImageRowProfile{
+    flex-grow: 1;
+    width: 50vh;
+    position: relative;
+    &:hover .RemoveUpload{ opacity: 1}
   }
 
   .UploadImage{
@@ -274,7 +287,7 @@ html{
     width: 100%;
     height: 100%;
     text-align: center;
-    font-size: 2em;
+    font-size: 1em;
     color: $PARADISEPINK;
   }
 
@@ -290,9 +303,9 @@ html{
 
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
-  .SmallFont { font-size: 0.8em; }
-  .MediumFont { font-size: 1.2em; @include respond(phone){font-size:1em;}}
-  .LargeFont { font-size:2em; }
+  .SmallFont { font-size: 0.8em; @include respond(phone){font-size:1.2em;}}
+  .MediumFont { font-size: 1.2em; @include respond(phone){font-size:2em;}}
+  .LargeFont { font-size:2em; @include respond(phone){font-size:3em;}}
   .SuperFont { font-size: 3em; @include respond(phone){font-size:4em;}}
   .RedicFont{ font-size: 4em; }
 
@@ -398,7 +411,7 @@ html{
   .Card {
     display: flex;
     max-width: 45%;
-    max-height: 17em;
+    max-height: 15em;
     margin: 1em;
     padding: 1em;
     border: solid $PATCHGREEN 1px;
@@ -407,7 +420,7 @@ html{
 
     @include respond(phone){
       max-width: 100%;
-      max-height: 27em;
+      //max-height: 20em;
      
     }
 
@@ -440,11 +453,14 @@ html{
     border-radius: 50%;
     width: 10em;
     height: auto;
-    
+    @include respond(phone){width: 15em;}
   }
+
   .Raleway { font-family: "Raleway", sans-serif; }
   .CursiveFont { font-family: "Dancing Script", cursive; }
-  .profileText { color: $PATCHGREEN; }
+  .Nunito{font-family: 'Nunito', sans-serif;}
+
+  .profileText { color: $PATCHGREEN; @include respond(phone){font-size: 2em;}}
   .textMargin { margin: 0.5em; }
   .TextLeft{ text-align: left; }
   .TextRight{ text-align: right; }
@@ -457,10 +473,8 @@ html{
   .Margins{ margin: 3em; }
   .MarginSmall{ margin: 1.3em; }
   .MarginTopSmall{ margin-top: 1em; @include respond(phone){margin-top: 0.3em;} }
-  .MarginHSmall{ margin-right: 1em; margin-left: 1em; }
+  .MarginHSmall{ margin-right: 1em; margin-left: 1em; @include respond(phone){margin-right: 0.3em; margin-left: 0.3em;} }
   .MarginTop{ margin-top: 3em; }
-  
-  
   .MarginBottom{ margin-bottom: 3em; @include respond(phone){margin-bottom: 1em;}}
   .MarginBottomSocial{ margin-bottom: 1em; @include respond(phone){margin-bottom: 0.5em;}}
   .NoPadding{padding:0}
@@ -491,12 +505,21 @@ html{
   .MaxSocial{ max-width: 1000px; @include respond(phone){width: 100%}}
   .MinSocial{ min-width: 1000px; @include respond(phone){width: 100%} }
 
+  .WhiteBorder{border: solid 1px white}
+
+  .Hover{
+    transition: transform 0.5s;
+    &:hover { transform: scale(1.1); }
+  }
   
   /* MOBILE SPECIFIC CLASSES */
   .HideMobile{ @include respond(phone){ display: none; } }
   .ShowMobile{ display: none;  @include respond(phone){ display: block; } }
+  .ShowMobileFlex{ display: none;  @include respond(phone){ display: flex; } }
+  
   .MarginTopMobile{@include respond(phone){margin-top: 2em;}}
   .MarginTopMobileLarge{@include respond(phone){margin-top: 6em;}}
+  .MarginTopMobileHome{margin-top: 5em; @include respond(phone){margin-top: 8em;}}
   .FullSizeMobile{ width: 100%; @include respond(phone){width: 90%} }
   .Mobile3{@include respond(phone){width: 75%}}
   .MobileHalf{@include respond(phone){width: 60%}}
@@ -505,7 +528,15 @@ html{
   .MobileFont{@include respond(phone){font-size:1.5em;}}
   .MobileFontSmall{@include respond(phone){font-size:1em;}}
   .MobileNoMargin{@include respond(phone){margin:0;}}
+  .MobileHalfToFull{width: 50%; @include respond(phone){width: 100%}}
 
+  .MobileMessagesLeft{width: 30%; @include respond(phone){width: 15%}}
+  .MobileMessagesRight{width: 70%; @include respond(phone){width: 100%}}
+  .MobileMessagesPadding{padding: 1em; @include respond(phone){padding: 0.5em}}
+  .MobileMessages{
+    position:fixed;
+    bottom: 0;
+  }
 
   .Logo {
     margin-left: 10%;
@@ -542,7 +573,7 @@ html{
   left: -1.3em;
 
   @include respond(phone){
-    top:-23em;
+    top:-16.2em;
   }
 
 }
@@ -594,6 +625,9 @@ html{
     border-radius: 0.5em;
     margin: 0.5em;
     cursor: pointer;
+
+    @include respond(phone){margin: 0.1em;
+    }
     &:hover{
       background-color: $PARADISEPINK;
       color: $GHOSTWHITE
@@ -623,6 +657,7 @@ html{
       border-top-right-radius: 50%;
       border-bottom-right-radius: 50%;
       border-bottom-left-radius: 0.5em;
+      @include respond(phone){ width: 80%; }
 
     }
     
@@ -637,6 +672,10 @@ html{
     margin: 0.5em;
     background-color: $LIGHTPINK;
     color: $GHOSTWHITE;
+
+    @include respond(phone){margin: 0.1em;
+    }
+
     &:hover{
       background-color: $PARADISEPINK;
       color: $GHOSTWHITE
@@ -678,6 +717,7 @@ html{
       width: 30%;
       height: auto;
       border-radius: 0.5em 50% 50% 0.5em;
+      @include respond(phone){ width: 80%; }
     }
     
   }
@@ -799,8 +839,8 @@ html{
     background-color: transparent;
     border: none;
     position: absolute;
-    top: -1em;
-    right: -1em;
+    top: 0;
+    right: 0.2em;
     cursor: pointer;
   }
 
@@ -969,10 +1009,15 @@ html{
   }
 
   li {
-    font-size: 16pt;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
   }
 
  
+  ul{
+    padding-left: 0.5em;
+    
+  }
   
 
   /// Toast
@@ -1062,4 +1107,58 @@ transition: opacity  0s linear 1.5s;
   to {
     transform: rotate(-359deg);
   }
+}
+
+
+
+
+.arrow_box {
+  height: 3em;
+	position: relative;
+	background: $PARADISEPINK;
+  border: 4px solid #c2e1f5;
+  
+}
+
+.arrow_box:after, .arrow_box:before {
+	left: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+  pointer-events: none;
+  
+  @include respond(phone){
+    display: none;
+  }
+}
+
+.arrow_box:after {
+	border-color: rgba(70, 213, 89, 0);
+	border-left-color: $PARADISEPINK;
+	border-width: 30px;
+	margin-top: -30px;
+
+  @include respond(phone){
+  display:none
+  }
+}
+.arrow_box:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-left-color: #c2e1f5;
+	border-width: 36px;
+	margin-top: -36px;
+
+  @include respond(phone){
+    display: none;
+  }
+}
+
+.arrow_box_end {
+  height: 3em;
+	position: relative;
+	background: $PARADISEPINK;
+  border: 4px solid #c2e1f5;
 }

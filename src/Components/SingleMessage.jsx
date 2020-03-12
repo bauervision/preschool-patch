@@ -8,13 +8,13 @@ const SingleMessage = ({ data, userId, lastMessage, seen }) => {
 
   return (
     <div className={` ${myMessage ? 'TextRight' : 'TextLeft'} MarginTopSmall MarginHSmall`}>
-      <div className="" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>{moment(data.date).fromNow()}</div>
+      <div className="" style={{ fontSize: 10, color: 'grey', marginLeft: 10 }}>{moment(data.date).fromNow()}</div>
       <div className={`MessageBorder ${!myMessage ? 'MessageBubble TextLeft' : 'TextRight'}`}>
-        <div style={{ fontSize: 20, padding: 8 }}>{data.message}</div>
+        <div className="MediumFont MobileMessagesPadding">{data.message}</div>
       </div>
 
       {(lastMessage && myMessage) && (
-        <div className={`${isSeen ? 'PinkFont' : 'GreyFont'}`} style={{ fontSize: 12, padding: 5 }}>{isSeen ? 'Seen' : 'Sent'}</div>
+        <div className={`  ${isSeen ? 'PinkFont' : 'GreyFont'}`} >{isSeen ? 'Seen' : 'Sent'}</div>
       )}
 
     </div>

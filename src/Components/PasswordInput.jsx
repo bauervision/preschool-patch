@@ -10,7 +10,7 @@ const PasswordInput = ({
   passwordError
 }) => {
   return (
-    <div className="Flex JustifyCenter">
+    <div className="Flex JustifyCenter FullSize">
       <div className="SmallBuffer">
         {/* Label */}
         <div className="TextLeft ">
@@ -23,14 +23,15 @@ const PasswordInput = ({
         <div className="Flex">
           <div style={{ position: 'relative' }}>
             {/* Toggle Visibility Button */}
-            <button
+            {password && (<button
               type="button"
               onClick={handlePasswordVisibility}
-              className="TogglePassword"
+              className="TogglePassword NoMargin"
               title="Show your password"
             >
               <img src={ShowPassword} alt="show password" />
             </button>
+            )}
 
             <input
               className={`InputStyle ${passwordError && 'Red'} PassWordInput`}

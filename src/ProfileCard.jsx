@@ -18,13 +18,13 @@ export const ProfileCard = ({ data, handleSelection }) => {
   };
 
   return (
-    <div className="Card Flex Col" onClick={getSelection}>
+    <div className="Card Flex Col FullSize" onClick={getSelection}>
 
       {/* Pic, Name and Rating */}
       <div className="Flex AlignItems JustifyCenter SmallBuffer">
         <img alt="profile pic" className="Card_Pic" src={photoUrl} />
         <div className="MarginHSmall Flex JustifyCenter Col">
-          <div className="MarginTopSmall CursiveFont SuperFont PinkFont TextCenter" >{name}</div>
+          <div className="MarginTopSmall CursiveFont LargeFont PinkFont TextCenter" >{name}</div>
           <div className="textMargin">
             <Ratings rating={rating} />
           </div>
@@ -36,13 +36,13 @@ export const ProfileCard = ({ data, handleSelection }) => {
       <div className=" Flex AlignItems JustifyCenter">
 
         <div className="textMargin">
-          <span className="MediumFont">Years of Experience with Children:</span>
+          <span className="SmallFont">Years of Experience with Children:</span>
           <strong className="PinkFont">{experience}</strong>
         </div>
 
         {infants && (
           <div className="textMargin">
-            <span className="MediumFont">Infants?:</span>{' '}
+            <span className="SmallFont">Infants?:</span>{' '}
             <strong className="PinkFont">{ 'Yes!' }</strong>
           </div>
         )}
@@ -64,7 +64,7 @@ export const ProfileCard = ({ data, handleSelection }) => {
 
       {/* Show Ribbon if they are enrolling */}
       {available && (
-        <div className="ribbon ribbon-top-left HideMobile"><span>Enrolling</span></div>
+        <div className="ribbon ribbon-top-left mobile-top-left"><span>Enrolling</span></div>
       )}
     </div>
   );

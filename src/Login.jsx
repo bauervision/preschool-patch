@@ -349,7 +349,7 @@ export const Login = ({ pageUpdate, handleLogin }) => {
 
       </div>
 
-      <img src={Elegant} alt="decorative" className="filter-green Margins responsive HideMobile" />
+      <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
       <PatchLogo />
       <Footer />
     </div >

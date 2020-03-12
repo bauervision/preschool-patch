@@ -62,7 +62,8 @@ export const Header = ({
 
   useScrollPosition(({ prevPos, currPos }) => {
     const isShow = currPos.y > prevPos.y;
-    if (isShow !== hideOnScroll) setHideOnScroll(isShow);
+    const atTop = currPos.y === 0;
+    if ((isShow || atTop) !== hideOnScroll) setHideOnScroll(isShow);
   }, [hideOnScroll]);
 
 
@@ -81,8 +82,6 @@ export const Header = ({
 
   // if we aren't a leader, check to see if we're enrolled, if we are a leader, show our social page link
   const currentlyEnrolled = (!isLeader ? (loggedInUser?.enrollment?.accepted || false) : true);
-
-  console.log(currentlyEnrolled, loggedInUser);
 
   return (
     <header className={`Header LightShadow ${!hideOnScroll && 'HeaderHide'}`}>

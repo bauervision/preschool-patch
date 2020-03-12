@@ -170,9 +170,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
 
       {/* File input, Thumbnails and submit button */}
       {uploadPics && (
-
         <div className="Flex Col JustifyCenter AlignItems PaddingLite">
-
           <div className="TextLeft FullSize Flex JustifyCenter Col">
             <span className="InputTextLabel HideMobile" style={{ fontSize: 14, color: 'grey', marginLeft: 10 }}>Limit of 10 Images</span>
             <span className="InputTextLabel ShowMobile" style={{ fontSize: 12, color: 'grey', marginLeft: 10 }}>Limit 10</span>
@@ -195,9 +193,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
           }
 
         </div>
-
-
-      )};
+      )}
 
       {/* Show this section on Mobile as it displays in a Row underneath the textarea */}
       {!uploadPics && (

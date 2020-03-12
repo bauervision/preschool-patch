@@ -5,7 +5,7 @@ import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { SingleMessage, EditField, MessageNotification } from './Components';
 
-import { Logo, Elegant } from './images';
+import { Logo, Elegant, Send } from './images';
 
 import { database } from './config';
 
@@ -52,39 +52,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const [childrenWarning, setChildrenWarning] = useState(false);
   const [silenceNotifications, setSilence] = useState(false);
   const [seenLastMessage, setSeenLast] = useState(false);
-
-
-  // function usePrevious(value) {
-  //   const ref = useRef();
-  //   useEffect(() => {
-  //     ref.current = value;
-  //   });
-  //   return ref.current;
-  // }
-
-  // const prevMessages = usePrevious(myMessages);
-
-  // // handle updating messages from parent
-  // useEffect(() => {
-  //   const index = activeMessages.findIndex((elem) => elem.messagesId === activeThreadId);
-  //   if (index !== -1) {
-  //     if (prevMessages[index].lastMessage.seen !== activeMessages[index].lastMessage.seen) {
-  //       console.log('Seen has changed!');
-  //     }
-  //   }
-
-  //   // if (prevMessages !== activeMessages) {
-  //   //   console.log('Messages have changed!');
-  //   //   // setActiveMessages(myMessages);
-  //   // }
-  // }, [activeMessages, activeThreadId, myMessages, prevMessages]);
+  const [showLeftMobile, setShowLeftMobile] = useState(true);// left side is shown by default
 
   // handle scrolling to last message
   const messagesRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesRef.current.scrollIntoView({
-      behavior: 'smooth',
       block: 'nearest',
     });
   };
@@ -473,22 +447,23 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
       <div>
         <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} isLeader={isLeader} isMessages />
 
-        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Messenger</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer" style={{ marginLeft: 30 }}>Messenger</div>
 
-        {/* Client Data*/}
+        {/* Message Data*/}
         <div className="SeeThru" >
 
           {/* Message Columns */}
           <div className="Flex Between Buffer ">
 
-            {/*  Left side Message Notifcations */}
-            <div className="Padding CursiveFont LargeFont PinkFont" style={{ width: '30%' }}>
 
-              {activeMessages.length > 0 && (<div>All Messages </div>)}
-              { unReadMessages && <button type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
+            {/*  Left side Message Notifcations Hidden on Mobile*/}
+            <div className=" CursiveFont LargeFont PinkFont HideMobile">
+
+              {activeMessages.length > 0 && (<div className="HideMobile">All Messages </div>)}
+              { unReadMessages && <button className="HideMobile" type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
 
 
-              <div className={`OverFlow ${activeMessages && 'LightPinkBorder'} `}>
+              <div className={'OverFlow '}>
                 {(activeMessages?.length > 0 ? (activeMessages.map((elem) => {
                   // we aren't the last one listed as seen, then they have seen the message
                   const seen = elem.lastMessage.seen !== userId;
@@ -528,9 +503,58 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
             </div>
 
+            {/*  Left side Message Notifcations SHOWN on Mobile*/}
+            <div className=" CursiveFont LargeFont PinkFont ShowMobile">
 
-            {/* Right Side Client Messages */}
-            <div className="Flex Col" style={{ width: '70%' }}>
+              {showLeftMobile && (
+                <>
+                  {activeMessages.length > 0 && (<div >All Messages </div>)}
+                  { unReadMessages && <button type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
+
+
+                  <div className={'OverFlow '}>
+                    {(activeMessages?.length > 0 ? (activeMessages.map((elem) => {
+                      // we aren't the last one listed as seen, then they have seen the message
+                      const seen = elem.lastMessage.seen !== userId;
+                      // we aren't the last one to send a message, then we have an unread/unresponded message
+                      const unread = elem.lastMessage.author !== userId;
+                      const showAsUnread = unread && !seen;
+
+                      // we need to determine if this is our message thread, or someone elses
+                      const messageFromName = (elem.from === userId) ? elem.toName : elem.fromName;
+                      const messageFromUrl = (elem.from === userId) ? elem.toUrl : elem.fromUrl;
+                      const messageFromID = (elem.from === userId) ? elem.to : elem.from;
+
+                      // handle enrollment submissions
+                      const submittedTo = !isLeader && loggedInUser.enrollment.submittedTo;
+                      const submittedEnrollmentTo = submittedTo === messageFromID;
+                      const accepted = !isLeader && submittedEnrollmentTo && (loggedInUser.enrollment.accepted || false);
+
+                      return (
+                        <MessageNotification
+                          key={elem.messagesId}
+                          name={messageFromName}
+                          url={messageFromUrl}
+                          lastMessage={elem.lastMessage}
+                          activeId={elem.messagesId}
+                          switchMessage={switchMessage}
+                          showAsUnread={showAsUnread}
+                          submitted={submittedEnrollmentTo && !accepted}
+                          accepted={accepted}
+                        />
+                      );
+                    }
+                    )) : (
+                      <div>No Messages yet!</div>
+                    ))}
+                  </div>
+
+                </>
+              )}
+            </div>
+
+            {/* Right Side Client Messages Hidden on Mobile */}
+            <div className="Flex Col MobileMessagesRight HideMobile" >
 
               {/* If we are a leader, show the buttons */}
               {isLeader && (
@@ -584,7 +608,8 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         </button>
                       }
 
-                      <div className="CursiveFont LargeFont PinkFont Padding">{activeThreadName}</div>
+                      <div className="CursiveFont LargeFont PinkFont Padding HideMobile">{activeThreadName}</div>
+                      <div className="CursiveFont LargeFont PinkFont Padding ShowMobile">{activeThreadName?.replace(/ .*/, '')}</div>
 
                     </div>
 
@@ -633,22 +658,27 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                       )}
                       <div ref={messagesRef}/>
                     </div>
-                    <EditField
-                      isTextArea
-                      isMessage
-                      small
-                      title=""
-                      placeholder="What would you like to say?"
-                      type="text"
-                      forLabel="NewMessage"
-                      onChange={setNewMessage}
-                      value={newMessage}
-                    />
 
-                    <button
-                      type="button"
-                      onClick={handleNewMessage} >Send New Message
-                    </button>
+                    {/* Desktop Messenger */}
+                    <div className="HideMobile">
+                      <EditField
+                        isTextArea
+                        isMessage
+                        small
+                        title=""
+                        placeholder="What would you like to say?"
+                        type="text"
+                        forLabel="NewMessage"
+                        onChange={setNewMessage}
+                        value={newMessage}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={handleNewMessage} >Send New Message
+                      </button>
+                    </div>
+
 
                   </>
                 )
@@ -679,18 +709,177 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                 }
               </div>
             </div>
+
+
+            {/* Right Side Client Messages Shown on Mobile */}
+            <div className="Flex Col MobileMessagesRight" >
+
+              {!showLeftMobile && (
+                <>
+                  {/* If we are a leader, show the buttons */}
+                  {isLeader && (
+                    <div className="Flex AlignItems MessageClientHeader Padding">
+
+                      <div className="CursiveFont LargeFont WhiteFont" >My Clients</div>
+
+                      {/* Buttons to switch between clients */}
+                      <div className="Flex AlignItems JustifyCenter">
+                        {clientData?.map((client) => {
+                          const message = activeMessages.find((elem) => ((elem.to === client.clientId) || (elem.from === client.clientId)));
+                          if (client.accepted) {
+                            return (
+
+                              <div
+                                className={`SocialMessageBtn Flex AlignItems JustifyCenter ${client.clientId === activeThreadId ? 'SocialMessageBtn_Active' : 'SocialMessageBtn_UnActive'}`}
+                                key={client.clientData.name}
+                                type="button"
+                                onClick={() => {
+                                  setActiveThreadId(message.messagesId);
+                                  setActiveThreadName(client.clientData.name);
+                                }} >
+                                <img style={{ width: 70, borderRadius: 50 }} src={client.clientData.photoUrl} alt='client pic' />
+                              </div>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+
+                    </div>
+                  )}
+
+                  {/* Message Data */}
+                  <div className="MessageFrame" >
+                    {showingThread && (
+                      <div className="Flex AlignItems Between">
+
+                        <div className="Flex AlignItems">
+                          {/* Enrollment Button */}
+                          {(showingThread && showEnrollmentButton)
+                        && <button
+                          type="button" disabled={disableEnrollment}
+                          title={`${submitEnrollment
+                            ? 'Revoking Enrollment will remove the request from this teacher'
+                            : 'Submitting Enrollment will notify the teacher that you have selected her!'}`}
+                          onClick={handleSubmitEnrollment}>
+                          {`${submitEnrollment ? 'Revoke Enrollment' : 'Submit For Enrollment'}`}
+                        </button>
+                          }
+
+                          <div className="CursiveFont LargeFont PinkFont Padding HideMobile">{activeThreadName}</div>
+                          <div className="CursiveFont LargeFont PinkFont Padding ShowMobile">{activeThreadName?.replace(/ .*/, '')}</div>
+
+                        </div>
+
+                        {!isLeader && (
+                          <>
+                            {(!loggedInUser.enrollment.accepted && disableEnrollment) && (<div className="PinkBorder" style={{ marginRight: 20 }}>
+                              <div className="SmallFont">{`Enrollment has been submitted to ${loggedInUser.enrollment.submittedToName}`}</div>
+                              <div className="SmallFont">You can only enroll with one teacher at a time</div>
+                            </div>)}
+
+                            {(loggedInUser.enrollment.accepted && myTeacher)
+                           && < div className="Padding">
+                             <div className="SmallFont">You are actively enrolled with this teacher!</div>
+                           </div>}
+                          </>
+                        )}
+
+                      </div>
+                    )}
+
+
+                    {/* Handle Warnings for Enrollment */}
+                    {showEnrollmentDetails
+                  && <div>She has been notified of your choice and you will receive an email when she has accepted your enrollment</div>}
+
+
+                    {childrenWarning && (<div className="PinkBorder">
+                      <div>You need to assign children in your profile first! </div>
+                      <div>Only add the children you want enrolled, then come back and submit enrollment</div>
+                    </div>)}
+
+
+                    {/* Actual messages */}
+                    {showingThread ? (
+                      <>
+                        <div style={{ height: messageWindowHeight, overflowY: 'scroll' }}>
+                          {/* Display all the messages if any */}
+                          {activeThread.map((elem, index) => (<SingleMessage
+                            key={index.toString()}
+                            data={elem}
+                            userId={userId}
+                            lastMessage={(activeThread.length - 1) === index}
+                            seen={seenLastMessage}
+                          />)
+
+                          )}
+                          <div ref={messagesRef}/>
+                        </div>
+
+                        <div className="ShowMobileFlex MobileMessages FullSize AlignItems">
+                          <input
+                            className="Flex FullSize InputStyle Buffer"
+                            placeholder="What would you like to say?"
+                            type="text"
+                            name="NewMessage"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                          />
+                          <button
+                            className='transparent NoMargin'
+                            type="button "
+                            onClick={handleNewMessage} ><img src={Send} alt='send email' />
+                          </button>
+                        </div>
+                      </>
+                    )
+                    // No current selection, and no active messages
+                      : (
+                        <>
+                          {activeMessages.length < 1 ? (
+                            <div className="Flex Col JustifyCenter" style={{ marginTop: '3vh' }}>
+                              <div>
+                                <span><strong >No conversations found.</strong></span>
+                              </div>
+
+
+                              {isLeader ? (
+                                <>
+                                  <span>In order to generate interest, be sure that you update your profile page,</span>
+                                  <span>post pictures of your home, and of course set that you are Enrolling!</span>
+
+                                  <br />
+                                  <span>You should also share your profile page on different social media pages</span>
+                                </>
+                              ) : (
+                                <span>Reach out to a local Patch Leader and setup a meet and greet!</span>
+                              )}
+
+                            </div>
+                          ) : <div className="Buffer">Select a message to view it</div>}</>)
+                    }
+                  </div>
+                </>
+              )}
+
+            </div>
+
+
           </div>
+
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive HideMobile" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
+      <div className="Buffer HideMobile">
+        <img src={Logo} alt="logo" className="responsive" />
       </div>
-
-      <Footer />
+      <div className="HideMobile">
+        <Footer />
+      </div>
     </div >
   );
 };

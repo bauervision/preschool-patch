@@ -136,12 +136,12 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
       <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
+        <img src={Logo} alt="logo" className="responsive" />
       </div>
 
       <Footer />

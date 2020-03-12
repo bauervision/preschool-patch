@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import moment from 'moment';
 
-import { EditField, SimpleImage, KidSection, PatchLogo, Toast } from './Components';
+import { EditField, KidSection, PatchLogo, Toast, SimpleImage } from './Components';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 
 
 import { f, storage, database } from './config';
 
-import { Coloring, Kids, Table, Working } from './images/photos';
-import { Add, Elegant } from './images';
+import { Add, Elegant, Corner } from './images';
 
-const galleryImages = [Coloring, Kids, Table, Working];
 
 export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, launchToast, userId }) => {
   const now = moment().toDate().getTime();
@@ -56,8 +54,9 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [updatedAvailable, setAvailable] = useState(userData.available);
   const [updatedExperience, setExperience] = useState(userData.experience);
   const [updatedPatchName, setPatchName] = useState(userData.patchName);
-  const [updatedGalleryDesription, setGalleryDescription] = useState(userData.gallery && userData.gallery.description);
-  const [updatedGalleryFeatures, setGalleryFeatures] = useState(userData.gallery && userData.gallery.features);
+  const [updatedGalleryImages, setGalleryImages] = useState(userData.gallery?.images);
+  const [updatedGalleryDesription, setGalleryDescription] = useState(userData.gallery?.description);
+  const [updatedGalleryFeatures, setGalleryFeatures] = useState(userData.gallery?.features);
   const [updatedFTRates, setFTRates] = useState(userData.rates && userData.rates.ft);
   const [updatedPTRates, setPTRates] = useState(userData.rates && userData.rates.pt);
   const [updatedDIRates, setDIRates] = useState(userData.rates && userData.rates.di);
@@ -67,6 +66,11 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [updatedPhotoUrl, setPhotoUrl] = useState(userData.photoUrl);
   const [updatedPhone, setUpdatedPhone] = useState(userData.phone);
   const [updatedZipcode, setUpdatedZipcode] = useState(userData.zipcode);
+
+  const [newFiles, setNewFiles] = useState(null);
+  const [thumbArray, setThumbArray] = useState([]);
+  const [imageUrlArray, setImageUrlArray] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
 
   const handleDataUpdate = (e) => {
@@ -84,7 +88,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         gallery: {
           description: updatedGalleryDesription,
           features: updatedGalleryFeatures,
-          // TODO: files
+          images: updatedGalleryImages
         },
         rates: {
           ft: updatedFTRates,
@@ -127,11 +131,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       .then(() => {
         updateSuccess(true, 'Save Successful!');
       });
-  };
-
-  // TODO update gallery images
-  const handleGalleryUpdate = (files) => {
-    console.log(files);
   };
 
   const handleGalleryFeatureUpdate = (string) => {
@@ -242,12 +241,114 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const lastDataUpdate = moment(loggedInUser.lastUpdate).fromNow();
 
 
+  const filesref = useRef(null);
+
+  // upload the file to storage and grab the download link
+  const imageUpload = (file) => {
+    const update = [...imageUrlArray];
+    const storageRef = storage.ref(`public/${userId}/images/${file.name}`);
+
+    return new Promise(((resolve, reject) => {
+      // Upload file
+      const task = storageRef.put(file);
+      // TODO Update progress bar
+      task.on('state_changed',
+        (snapshot) => { },
+        (err) => { reject(err); },
+        () => {
+          // complete
+          storage
+            .ref(`public/${userId}/images/`)
+            .child(file.name)
+            .getDownloadURL()
+            .then((url) => {
+              const newImage = {
+                image: url
+              };
+              update.push(newImage);
+              setImageUrlArray(update);
+              resolve(task);
+            });
+        }
+      );
+    })).then(() => {
+      // now that this single image promise has completed, return the updated array to pass to finalizePost
+      return update;
+    });
+  };
+
+  const finalizePost = (imageArray) => {
+    setGalleryImages(imageArray);
+    setUploading(false);
+    // handle clean up
+    setNewFiles(null);
+    if (filesref.current) {
+      filesref.current.value = null;
+    }
+  };
+
+  const handleSubmitPost = async () => {
+    // as long as we actually select files
+    if (newFiles) {
+      // trigger the loader
+      setUploading(true);
+
+      /* files will be in a File List array, so convert them first to a normal array and then
+      upload each to storage with promises*/
+      const data = await Promise.all(Array.from(newFiles).map(imageUpload));
+      // because it is an array of promises, image array data will be inside another array, so merge it into 1
+      const merged = [].concat(...data);
+      // combine the image data with the rest of the post data and submit it
+      finalizePost(merged);
+    } else {
+      // we didnt select files, so just post
+      finalizePost();
+    }
+  };
+
+
+  // this simple component will handle when the user changes their mind about a pic to upload, and removes it
+  const HoverableThumbnail = ({ file, index }) => {
+    const [hover, setHover] = useState(false);
+
+    const handleRemove = () => {
+      // grab current list of thumbnails to upload
+      const updatedList = newFiles;
+      updatedList.splice(index, 1);
+      setNewFiles(updatedList);
+      // and update the thumbs
+      const updatedThumbs = [...thumbArray];
+      updatedThumbs.splice(index, 1);
+      setThumbArray(updatedThumbs);
+
+      // TODO clean up the files loaded in textref
+      // console.log(textref.current.value);
+    };
+
+    return (
+      <div key={file.name} className={'UploadImageRowProfile'} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        {hover && <span className="RemoveUpload Flex AlignItems JustifyCenter">
+          <button type='button' title="Remove this image from the upload" onClick={handleRemove}>X</button></span>}
+        <img className="HalfSize"src={file} alt="thumbnail"/>
+      </div>
+    );
+  };
+
+
+  const handleNewFiles = (files) => {
+    const arrayFiles = Array.from(files);
+    const thumbs = arrayFiles.map((file) => ({ thumb: URL.createObjectURL(file) }));
+    setNewFiles(arrayFiles);
+    setThumbArray(thumbs);
+  };
+
+
   return (
     <div>
       <div>
         <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} userId={userId} />
 
-        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>My Profile Page</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>My Profile Page</div>
 
         {/* Profile Page Data */}
         <div className="Flex  WhiteFill SimpleBorder Margins JustifyCenter" >
@@ -273,8 +374,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
 
                 {isLeader && (<div>
 
-                  <div className="Flex Row AlignItems JustifyCenter ">
-                    <div>
+                  <div className="Flex MobileRowToCol AlignItems JustifyCenter ">
+                    <div className="Flex MobileColToRow Margins">
                       <EditField
                         isCheck
                         title="Currently Enrolling"
@@ -293,14 +394,16 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                         value={updatedInfants}
                       />
                     </div>
-                    <EditField
-                      title="Patch Name"
-                      placeholder={updatedPatchName || 'Enter a Patch Name!'}
-                      type="text"
-                      forLabel="PatchName"
-                      onChange={setPatchName}
-                      value={updatedPatchName}
-                    />
+                    <div className="Margins MobileNoMargin">
+                      <EditField
+                        title="Patch Name"
+                        placeholder={updatedPatchName || 'Enter a Patch Name!'}
+                        type="text"
+                        forLabel="PatchName"
+                        onChange={setPatchName}
+                        value={updatedPatchName}
+                      />
+                    </div>
                   </div>
                 </div>)}
 
@@ -446,7 +549,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
               {isLeader && (
                 <div>
                   <div className="CursiveFont LargeFont Buffer PinkFont">My Rates</div>
-                  <div className="Flex Row AlignItems JustifyCenter SimpleBorder">
+                  <div className="Flex MobileRowToCol AlignItems JustifyCenter SimpleBorder">
                     <EditField
                       title="Full Time Rate"
                       placeholder={userData.rates.ft}
@@ -501,24 +604,61 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                     onChange={setGalleryDescription}
                     value={updatedGalleryDesription}
                   />
-                  <EditField
+                  {/* <EditField
                     isFile
                     multiple
                     title="Upload Pictures"
                     type="file"
                     forLabel="homeGallery"
                     onChange={handleGalleryUpdate}
-                  />
+                  /> */}
                 </div>)}
 
               {/* Photo Gallery */}
               {isLeader && (<>
+                <div className="Flex Col JustifyCenter AlignItems PaddingLite">
+                  <div className="Flex TextLeft Flex JustifyCenter Col">
+                    <span className="InputTextLabel HideMobile" >Limit of 10 Images</span>
+                    <span className="InputTextLabel ShowMobile" >Limit 10</span>
+                    <input
+                      ref={filesref}
+                      className="InputStyle"
+                      placeholder="Select a File"
+                      type="file"
+                      name="files"
+                      multiple
+                      onChange={(e) => handleNewFiles(e.target.files)}
+                    />
+                  </div>
 
-                <div className="SimpleBorder Buffer WhiteFill">
-                  {galleryImages.map((elem, index) => (
-                    <SimpleImage key={`gallery${index}`} image={elem} alt={`gallery${index}`} />
-                  ))}
+                  { newFiles
+                  && <div className="SimpleBorder Buffer WhiteFill">
+                    {/* Thumbnail images prior to upload */}
+                    <div className="UploadImageContainer">
+                      { thumbArray.map((file, index) => (
+                        <HoverableThumbnail key={index.toString()} file={file.thumb} index={index}/>))}
+                    </div>
+
+                  </div>
+                  }
+
+                  {updatedGalleryImages && (
+                    <div className="SimpleBorder Buffer WhiteFill">
+                      {updatedGalleryImages.map((elem, index) => (
+                        <SimpleImage key={`gallery${index}`} image={elem.image} alt={`gallery${index}`} />
+                      ))}
+                    </div>
+                  )}
+
+
+                  {!uploading ? (<>{newFiles && <button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Upload New Pics</button>} </>) : (
+                    <div className="Flex Col JustifyCenter AlignItems">
+                      <img src={Corner} alt='corner' className='filter-green Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
+                    </div>
+                  )}
+
                 </div>
+
 
                 <div>
                   <div className="CursiveFont LargeFont Buffer PinkFont">Home Features</div>
@@ -536,12 +676,13 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
                   />
 
                   <div className="CursiveFont LargeFont Buffer ">Special Features of my Preschool</div>
-                  <ul style={{ textAlign: 'left' }}>
-                    {updatedGalleryFeatures && updatedGalleryFeatures.map((feature) => (
-                      <li key={feature}>{feature}</li>
-                    ))}
-                  </ul>
-
+                  <div className="PinkBorder HalfSize MarginAuto">
+                    <ul className="TextLeft">
+                      {updatedGalleryFeatures && updatedGalleryFeatures.map((feature) => (
+                        <li key={feature} className="Raleway">{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
 
                 </div>
               </>)}

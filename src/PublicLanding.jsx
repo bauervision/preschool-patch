@@ -5,7 +5,7 @@ import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Toast, Loader } from './Components';
 
-import { Logo, Elegant, Corner } from './images';
+import { Logo, Elegant, Corner, IvyHeart } from './images';
 
 export const PublicLanding = ({
   pageUpdate,
@@ -120,20 +120,20 @@ export const PublicLanding = ({
 
             />
 
-            <div className="HowItWorks PinkFill RoundBorder MarginTopMobile Mobile3" >
+            <div className="HowItWorks PinkFill RoundBorder MarginTopMobileHome Mobile3 Nunito" >
               <h3>How It Works</h3>
 
 
-              <div className="Flex Row AlignItems JustifyCenter ">
+              <div className="Flex Row AlignItems JustifyCenter MarginBottom">
                 {showTeacher ? (
-                  <div className="Flex Row AlignItems">
-                    <button type="button" onClick={() => setShowTeacher(false)} style={{ border: 'solid' }}> As a Parent</button>
-                    <div><strong>As a Teacher</strong></div>
+                  <div className="Flex Row AlignItems MarginHSmall">
+                    <div onClick={() => setShowTeacher(false)} className="cursor Hover WhiteBorder Padding RoundBorder"> As a Parent</div>
+                    <div className="WhiteFill PinkFont MarginHSmall Padding RoundBorder"><strong>As a Teacher</strong></div>
                   </div>
                 ) : (
-                  <div className=" Flex Row AlignItems">
-                    <div><strong>As a Parent</strong></div>
-                    <button type="button" onClick={() => { setShowTeacher(true); }} style={{ border: 'solid' }}>As a Teacher</button>
+                  <div className=" Flex Row AlignItems MarginHSmall">
+                    <div className="WhiteFill PinkFont MarginHSmall Padding RoundBorder"><strong>As a Parent</strong></div>
+                    <div onClick={() => { setShowTeacher(true); }} className="cursor Hover WhiteBorder Padding RoundBorder">As a Teacher</div>
                   </div>
                 )}
 
@@ -145,33 +145,36 @@ export const PublicLanding = ({
 
           <div className="Flex Col JustifyCenter Buffer ">
 
-            <div className="Tab SeeThru  PaddingTop">
-              <div className="CursiveFont SuperFont ">Simple Steps </div>
+            <div className="Tab SeeThru PaddingTop">
+
               {/* How it Works: Steps */}
               {showTeacher ? (
-                <div className="Step CursiveFont">
-                  <div className="Step_Child">Sign-up as a Patch Leader</div>
-                  <div className="Step_Child" >Enroll students</div>
-                  <div className="Step_Child">Get paid at the end of the week!</div>
+                <div className="Step Raleway">
+                  <div className="Step_Child arrow_box">{'Sign-up as a Patch Leader'}</div>
+                  <div className="Step_Child arrow_box" >{'Enroll students'}</div>
+                  <div className="Step_Child arrow_box_end">{'Get paid!'}</div>
 
                 </div>
               ) : (
-                <div className="Step CursiveFont">
+                <div className="Step Raleway">
 
-                  <div className="Step_Child">Search Local Patches</div>
-                  <div className="Step_Child">Enroll your child</div>
-                  <div className="Step_Child">
-              Pay Weekly, Bi-Weekly, <br /> or Monthly for service!
-                  </div>
+                  <div className="Step_Child arrow_box">{'Search Local Patches'}</div>
+                  <div className="Step_Child arrow_box">{'Enroll your child'}</div>
+                  <div className="Step_Child arrow_box_end">{'Relax!'} </div>
 
                 </div>
               )}
+
+              <div>
+                <img src={IvyHeart} alt="ivy" className="Padding" style={{ width: '30em' }}/>
+              </div>
+
 
               {/* How it Works: Details */}
               <div className="Flex JustifyCenter AlignItems GreenFill TabBottom">
                 {showTeacher ? (
                   <div className="Flex Col JustifyCenter AlignItems Buffer">
-                    <p>
+                    <p className="Raleway">
             After you signup, your profile will be added to our database
             and will show up in local searches.
                       <br />
@@ -202,7 +205,7 @@ export const PublicLanding = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="Buffer">
+                  <div className="Buffer Raleway MediumFont">
                     {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
                     <br />
                     <br />
@@ -228,6 +231,7 @@ export const PublicLanding = ({
         <Loader />
       ) : (
         <div className="Flex Col JustifyCenter  SeeThru MarginTopMobileLarge">
+
           {/* If we're not a teacher, then show search options */}
           {!showTeacher ? (
             <>

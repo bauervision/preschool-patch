@@ -30,3 +30,7 @@ export { default as Cancel } from './cancel.png';
 export { default as Trash } from './trash.png';
 export { default as Arrow } from './arrow.png';
 export { default as UploadPic } from './pic.png';
+export { default as NoPic } from './nopic.png';
+export { default as Ivy } from './ivyDecor.png';
+export { default as IvyHeart } from './ivyDecorHeart.png';
+export { default as Send } from './send.png';

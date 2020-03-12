@@ -12,37 +12,26 @@ const EditField = ({
   isInput,
   isTextArea,
   isCheck,
-  isFile,
-  multiple,
-  small
+  isFile
 }) => {
   return (
-    <div
-      className="Flex Col JustifyCenter"
-      style={{
-        padding: 2,
-        marginLeft: isCheck ? 40 : 0,
-        marginRight: isCheck ? 40 : 0
-      }}
-    >
+    <div className="Flex Col JustifyCenter" >
       <div style={{ textAlign: (isTextArea || isFile) ? 'center' : 'left' }}>
-        <label htmlFor={forLabel} className="InputTextLabel">
+        {title
+        && <label htmlFor={forLabel} className="InputTextLabel">
           {title}:
         </label>
+        }
       </div>
 
-      <div className="Flex Row AlignItems JustifyCenter">
+      <div className="Flex Row AlignItems JustifyCenter FullSize">
 
         {/* We want a textarea input */}
         {isTextArea && (
           <textarea
             name={forLabel}
-            rows={small ? '2' : '8'}
-            // cols={!isMessage ? "70" : '120'}
             onChange={(e) => onChange(e.target.value)}
             value={value}
-
-
           />
         )}
 
@@ -61,13 +50,12 @@ const EditField = ({
             type={type}
             name={forLabel}
             value={value}
-            multiple
-            onChange={(e) => onChange(multiple ? e.target.files : e.target.files[0])}
+            onChange={(e) => onChange(e.target.files[0])}
           />
         )}
         {(!isInput && !isTextArea && !isFile && !isCheck)
           && <input
-            className="InputStyle Buffer"
+            className="Flex FullSize InputStyle Buffer"
             placeholder={placeholder}
             type={type}
             name={forLabel}

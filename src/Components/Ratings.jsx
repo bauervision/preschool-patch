@@ -5,7 +5,7 @@ import { Star, StarEmpty } from '../images';
 const Ratings = ({ rating, reviews }) => {
   const titleString = rating ? `Current Rating: ${rating}/5 ${reviews ? `based on ${reviews} reviews` : ''}` : 'No Reviews yet';
   return (
-    <div className="Flex Quarter" title={titleString}>
+    <div className="Flex JustifyCenter AlignItems" title={titleString}>
       {rating > 0 ? (
         <>
           <img src={Star} alt="rating star" />

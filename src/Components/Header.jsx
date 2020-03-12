@@ -61,9 +61,12 @@ export const Header = ({
   const [hideOnScroll, setHideOnScroll] = useState(true);
 
   useScrollPosition(({ prevPos, currPos }) => {
-    const isShow = currPos.y > prevPos.y;
-    const atTop = currPos.y === 0;
-    if ((isShow || atTop) !== hideOnScroll) setHideOnScroll(isShow);
+    // we dont want to scroll the header away on the messenger
+    if (!isMessages) {
+      const isShow = currPos.y > prevPos.y;
+      const atTop = currPos.y === 0;
+      if ((isShow || atTop) !== hideOnScroll) setHideOnScroll(isShow);
+    }
   }, [hideOnScroll]);
 
 

@@ -36,7 +36,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
 
         {/* Profile Pic and Data Section*/}
         <div className="MarginTop">
-          <div className="Flex MobileRowToCol JustifyCenter AlignItems SeeThru RoundBorder SimpleBorder Margins BoxShadow MarginTopMobileLarge" >
+          <div className="Flex MobileRowToCol JustifyCenter AlignItems SeeThru RoundBorder SimpleBorder Margins BoxShadow MarginTopMobileHome" >
 
 
             {/* Data Row */}
@@ -59,7 +59,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                 <div className="MarginTopSmall">
 
                   <div className="textMargin">
-                    <span className="Price SuperFont PinkFont">{available && 'Enrolling!'}</span>
+                    <span className="Price SuperFont FullSize PinkFill">{available && 'Enrolling!'}</span>
                   </div>
 
 

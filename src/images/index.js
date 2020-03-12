@@ -34,3 +34,5 @@ export { default as NoPic } from './nopic.png';
 export { default as Ivy } from './ivyDecor.png';
 export { default as IvyHeart } from './ivyDecorHeart.png';
 export { default as Send } from './send.png';
+export { default as SmallLeaves } from './leavesSmall.png';
+export { default as Return } from './return.png';

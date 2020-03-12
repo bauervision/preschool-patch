@@ -100,8 +100,7 @@ html{
 
   .PinkBorder {
     border: solid 1px $PARADISEPINK;
-    border-radius: 1.3em;
-    padding: 2em;
+    
   }
 
   .MessageFrame {
@@ -530,6 +529,12 @@ html{
   .MobileNoMargin{@include respond(phone){margin:0;}}
   .MobileHalfToFull{width: 50%; @include respond(phone){width: 100%}}
 
+  .MobileMessageHeader{
+    position:fixed;
+    top: 7.3em;
+    z-index: 3;
+  }
+
   .MobileMessagesLeft{width: 30%; @include respond(phone){width: 15%}}
   .MobileMessagesRight{width: 70%; @include respond(phone){width: 100%}}
   .MobileMessagesPadding{padding: 1em; @include respond(phone){padding: 0.5em}}
@@ -626,7 +631,10 @@ html{
     margin: 0.5em;
     cursor: pointer;
 
-    @include respond(phone){margin: 0.1em;
+    @include respond(phone){
+     height: 3em;
+     justify-content: space-between;
+     padding: 0.25em;
     }
     &:hover{
       background-color: $PARADISEPINK;
@@ -657,7 +665,7 @@ html{
       border-top-right-radius: 50%;
       border-bottom-right-radius: 50%;
       border-bottom-left-radius: 0.5em;
-      @include respond(phone){ width: 80%; }
+      @include respond(phone){ width: 20%; }
 
     }
     

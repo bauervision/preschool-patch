@@ -134,7 +134,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
     <div className="NewPost" >
 
       {/* Picture and textarea */}
-      <div className="Flex AlignItems FullSize">
+      <div className="Flex JustifyCenter AlignItems FullSize">
         <div className=" HideMobile MarginHSmall">
           <img alt="profile pic" className="ImgFrameReversed" src={photoUrl} />
         </div>
@@ -144,8 +144,6 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
           placeholder="What would you like to say about today?"
           name="newPost"
           className="FullSizeMobile"
-          // rows='2'
-          // cols='80'
           onChange={(e) => setNewText(e.target.value)}
         />
 
@@ -197,7 +195,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
 
       {/* Show this section on Mobile as it displays in a Row underneath the textarea */}
       {!uploadPics && (
-        <div className="Flex AlignItems ShowMobile">
+        <div className="AlignItems ShowMobileFlex MarginSmall">
           <button
             type='button'
             onClick={() => setUploadPics(true)}

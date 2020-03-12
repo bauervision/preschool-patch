@@ -351,7 +351,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
         <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>My Profile Page</div>
 
         {/* Profile Page Data */}
-        <div className="Flex  WhiteFill SimpleBorder Margins JustifyCenter" >
+        <div className="Flex  WhiteFill SimpleBorder Margins JustifyCenter MarginTopMobileHome" >
           <div>
             <form onSubmit={(e) => handleDataUpdate(e)} >
               <div className="Flex MobileRowToCol AlignItems JustifyCenter">

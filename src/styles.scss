@@ -98,10 +98,9 @@ html{
     background: linear-gradient(0deg, rgba(60,140,84,1) 0%, rgba(32,191,85,1) 69%);
   }
 
-  .PinkBorder {
-    border: solid 1px $PARADISEPINK;
-    
-  }
+  .PinkBorder { border: solid 1px $PARADISEPINK; }
+  .PinkBorderTop { border-top: solid 1px $PARADISEPINK; }
+  .PinkBorderBottom { border-bottom: solid 1px $PARADISEPINK; }
 
   .MessageFrame {
     border-left: solid 1px $PARADISEPINK;
@@ -536,7 +535,7 @@ html{
   }
 
   .MobileMessagesLeft{width: 30%; @include respond(phone){width: 15%}}
-  .MobileMessagesRight{width: 70%; @include respond(phone){width: 100%}}
+  .MobileMessagesRight{width: 70%; @include respond(phone){width: 100%;}}
   .MobileMessagesPadding{padding: 1em; @include respond(phone){padding: 0.5em}}
   .MobileMessages{
     position:fixed;

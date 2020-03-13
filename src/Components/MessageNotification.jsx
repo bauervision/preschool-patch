@@ -15,7 +15,7 @@ const MessageNotification = ({ name, url, lastMessage, activeId, switchMessage, 
         {accepted && <img className='filter-pink Alert' src={Enrolled} alt="enrollment icon" style={{ width: 40, paddingLeft: 10 }}/>}
         <div className="Flex Col" style={{ width: '80%' }}>
           <div className='Col CursiveFont ' style={{ fontSize: 24 }}>{name}</div>
-          <p>{moment(lastMessage.date).fromNow()}</p>
+          <div>{moment(lastMessage.date).fromNow()}</div>
         </div>
 
         <div className="Flex Col" >

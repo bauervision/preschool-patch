@@ -44,13 +44,16 @@
   .modal {
     position: fixed;
     z-index: 1;
-    padding-top: 50px;
+    padding-top: 5em;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.8);
+    @include respond(phone){
+      padding-top: 30em;
+    }
   }
   
   /* Modal Content */
@@ -58,16 +61,30 @@
     margin: auto;
     width: 90%;
     height: 100vh;
-    
+    @include respond(phone){ 
+      // margin-top: 50%;
+    }
   }
   
   .slide { 
+    //position: absolute;
     border-radius: 20px; 
     width:auto;
     max-width: 1000px;
     max-height: 90%;
 
-    @include respond(phone){ max-width: 90%; height: auto;}
+    @include respond(tab){ 
+      max-width: 80%; 
+      height: auto; 
+     
+      }
+    
+
+    @include respond(phone){ 
+      max-width: 90%; 
+      height: auto; 
+     
+      }
     
   }
 
@@ -79,6 +96,9 @@
   }
   .top {
     top: 2.5%;
+    @include respond(phone){
+      top: 7%;
+    }
   }
 
   .margin-bottom{
@@ -88,6 +108,10 @@
   .download {
     color: rgba(255, 255, 255, 0.5);
     right: 5%;
+    @include respond(phone){
+      left: -75%;
+    }
+
   }
   .download:hover {
     color: white;
@@ -98,6 +122,9 @@
     right: 25px;
     font-size: 35px;
     font-weight: bold;
+    @include respond(phone){
+      top: 7%;
+    }
   }
   .cursor {
     cursor: pointer;
@@ -124,6 +151,9 @@
     transition: 0.6s ease;
     user-select: none;
     border: none;
+    @include respond(phone){
+      top: 50%;
+    }
   }
   .prev {
     left: 0;
@@ -142,8 +172,9 @@
   }
   
   .numbertext {
-    font-size: 12px;
-    padding: 20px;
+    font-size: 1em;
+    padding: 0em;
+    z-index: 2;
   }
 
   .thumbContainer {

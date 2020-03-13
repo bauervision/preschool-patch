@@ -142,6 +142,32 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     setKidTotal(kids);
   };
 
+
+  const handleSetBirthYear = (year, index) => {
+    const kids = [...kidTotal];
+    const thisKid = { ...kids[index], year: Number(year) };
+    kids[index] = thisKid;
+    setKidTotal(kids);
+  };
+
+  const handleSetBirthDay = (day, index) => {
+    const kids = [...kidTotal];
+    const thisKid = { ...kids[index], day: Number(day) };
+    kids[index] = thisKid;
+    setKidTotal(kids);
+  };
+
+  const handleSetBirthMonth = (month, index) => {
+    const kids = [...kidTotal];
+    // if user selects None, this will remove the child from the list
+    if (month !== 'Select Month...') {
+      const thisKid = { ...kids[index], month };
+      kids[index] = thisKid;
+    }
+    setKidTotal(kids);
+  };
+
+
   return (
     <div >
       <div>
@@ -246,21 +272,33 @@ export const Login = ({ pageUpdate, handleLogin }) => {
                                   key={kid.name + index.toString()}
                                   location={index}
                                   name={kid.name}
-                                  age={kid.age}
+                                  year={kid.year}
+                                  month={kid.month}
+                                  day={kid.day}
                                   interest={kid.enrollment}
                                   handleSetChildAge={handleSetChildAge}
                                   handleSetChildName={handleSetChildName}
                                   handleSetChildInterest={handleSetChildInterest}
+                                  handleSetBirthYear={handleSetBirthYear}
+                                  handleSetBirthMonth={handleSetBirthMonth}
+                                  handleSetBirthDay={handleSetBirthDay}
                                 />
                               ))}
 
                               {/* Add new Kid Info */}
                               {kidTotal.length <= 4 ? (
-                                <button id={kidTotal.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
-                                  <div> Add Additonal Child?</div>
-                                  <img src={Add} alt="Add new child info" />
-                                </button>
+                                <>
+                                  <button id={kidTotal.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
+                                    <div> Add Additonal Child?</div>
+                                    <img src={Add} alt="Add new child info" />
+                                  </button>
 
+                                  {kidTotal.length > 0 && <div >
+                                    <div> Set Enrollment Level to None to remove a child from the list </div>
+
+                                  </div>
+                                  }
+                                </>
                               )
                                 // Once we hit our kid limit, disable adding more
                                 : (

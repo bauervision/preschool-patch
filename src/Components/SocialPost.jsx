@@ -98,13 +98,10 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
   return (
     <>
       <div className={'SocialPost'} >
-        {/* Post Author and date */}
+        {/* Post Author name and date  HEADER*/}
         <div className="Flex AlignItems LightPinkFill PaddingLite SocialPostHeader Between">
           <div className="CursiveFont MediumFont MarginHSmall">{name}</div>
-
           <div className="MobileFontSmall WhiteFont">{moment(date).fromNow()}</div>
-
-
         </div>
 
         {/* Post Data */}
@@ -142,7 +139,7 @@ const SocialPost = ({ post, userId, loggedInUser, index, updatePost }) => {
 
             {/* Only if this is our message, or we are the leader can we edit it */}
             {(myMessage || loggedInUser.isLeader)
-        && <div className="cursor HideMobile" >
+        && <div className="cursor " >
 
           {/* If we are currently editing or trying to delete, dont show the dropdown icon */}
           {(!edit && !deleted) && (

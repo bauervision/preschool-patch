@@ -123,7 +123,6 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       };
     }
 
-
     // now that we have updated data, push it up to our database
     database
       .ref(`${isLeader ? 'leaders' : 'users'}/${userId}/public`)

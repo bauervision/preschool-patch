@@ -160,7 +160,7 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
               <img src={UploadPic} alt="pic uploader"/>
             </button>
 
-            <button type="button" onClick={handleSubmitPost}className="NoMargin" >Submit</button>
+            <button type="button" onClick={handleSubmitPost}className="NoMargin" >Post</button>
           </div>
 
         )}
@@ -204,13 +204,13 @@ const NewPost = ({ loggedInUser, userId, handleNewPost }) => {
           >
             <img src={UploadPic} alt="pic uploader"/>
           </button>
-          <button type="button" onClick={handleSubmitPost}className="NoMargin" >Submit</button>
+          <button type="button" onClick={handleSubmitPost}className="NoMargin" >Post</button>
         </div>
       )}
 
       {uploadPics && (
         <>
-          {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Submit</button>) : (
+          {!uploading ? (<button type="button" style={{ margin: 0 }} onClick={handleSubmitPost}>Post</button>) : (
             <div className="Flex Col JustifyCenter AlignItems">
               <img src={Corner} alt='corner' className='filter-green Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
             </div>

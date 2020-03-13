@@ -45,9 +45,14 @@ const LightBox = ({ images }) => {
   );
 
   // Component that opens in the lightbox
-  const FullsizeSlide = ({ image, isShown }) => (
+  const FullsizeSlide = ({ image, isShown, length, index }) => (
     <>
-      {isShown && <img src={image} className="slide" alt="gallery"/>}
+      {isShown
+      && <>
+        <div className="numbertext whiteFont absolute">
+          {index}/{length}
+        </div><img src={image} className="slide" alt="gallery"/>
+      </>}
     </>
   );
 
@@ -71,7 +76,7 @@ const LightBox = ({ images }) => {
         <div className="modal">
 
           <a
-            href={images[slideIndex].image}
+            href={images[slideIndex]?.image}
             download
             className="cursor absolute top download"
             title="Download this image"
@@ -95,6 +100,8 @@ const LightBox = ({ images }) => {
                   key={index.toString()}
                   image={elem.image}
                   isShown={slideIndex === index}
+                  index={index + 1}
+                  length={images.length}
                 />
               ))}
 

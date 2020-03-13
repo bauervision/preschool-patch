@@ -4,7 +4,7 @@ import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Ratings } from './Components';
 
-import { DecorFlat, Logo, Elegant, NoPic } from './images';
+import { DecorFlat, Logo, Elegant, NoPic, Contact } from './images';
 import LightBox from './Components/LightBox';
 
 export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
@@ -25,7 +25,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
   } = data;
 
   const herName = name.replace(/ .*/, '');
-  const buttonLabel = loggedInUser ? (`Contact ${herName}`) : (`Login to contact ${herName}`);
+  const buttonLabel = loggedInUser ? (`${herName}`) : (`Login to contact ${herName}`);
 
   return (
     <div>
@@ -59,7 +59,7 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                 <div className="MarginTopSmall">
 
                   <div className="textMargin">
-                    <span className="Price SuperFont FullSize PinkFill">{available && 'Enrolling!'}</span>
+                    <div className="Price SuperFont FullSize PinkFill">{available && 'Enrolling!'}</div>
                   </div>
 
 
@@ -104,11 +104,23 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
               <p className="MediumFont PinkFont Raleway SimpleBorder">{aboutMe}</p>
 
               {/* Contact Button: If loggedInUser, otherwise notify to login*/}
-              <button
-                onClick={() => pageUpdate(!loggedInUser ? 1 : 6)}
-                className="CursiveFont LargeFont">
-                {buttonLabel}
-              </button>
+              <div className="FullSize">
+                <button
+                  onClick={() => pageUpdate(!loggedInUser ? 1 : 6)}
+                  className="transparent NoMargin">
+                  <div className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder" style={{ borderLeft: 'none', borderRight: 'none' }}>
+
+                    {loggedInUser && (
+                      <>
+                        <div>Contact</div>
+                        <img src={Contact} alt="contact"/>
+                      </>
+                    )}
+
+                    {buttonLabel}
+                  </div>
+                </button>
+              </div>
 
             </div>
 

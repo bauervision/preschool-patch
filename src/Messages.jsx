@@ -3,7 +3,7 @@ import { default as UUID } from 'uuid/v1';
 import moment from 'moment';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
-import { SingleMessage, EditField, MessageNotification } from './Components';
+import { SingleMessage, MessageNotification } from './Components';
 
 import { Logo, Elegant, Send, Return } from './images';
 
@@ -462,10 +462,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
             {/*  Left side Message Notifcations Hidden on Mobile*/}
-            <div className=" CursiveFont LargeFont PinkFont HideMobile">
+            <div className="CursiveFont LargeFont PinkFont HideMobile" style={{ width: '30%' }}>
 
-              {activeMessages.length > 0 && (<div className="HideMobile">All Messages </div>)}
-              { unReadMessages && <button className="HideMobile" type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
+              {activeMessages.length > 0 && (<div>All Messages </div>)}
+              { unReadMessages && <button type='button' onClick={() => setSilence(true)}>Clear All Unread Notifications</button>}
 
 
               <div className={'OverFlow '}>
@@ -559,7 +559,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
             </div>
 
             {/* Right Side Client Messages Hidden on Mobile */}
-            <div className="Flex Col MobileMessagesRight HideMobile" >
+            <div className="Flex Col HideMobile" style={{ width: '70%' }}>
 
               {/* If we are a leader, show the buttons */}
               {isLeader && (
@@ -596,15 +596,15 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
               )}
 
               {/* Message Data */}
-              <div className="MessageFrame" >
+              <div >
                 {showingThread && (
-                  <div className="Flex AlignItems Between">
+                  <div className="Flex AlignItems Between PinkBorder">
 
                     <div className="Flex AlignItems">
                       {/* Enrollment Button */}
-                      {(showingThread && showEnrollmentButton)
+                      {(showingThread && showEnrollmentButton && !disableEnrollment)
                         && <button
-                          type="button" disabled={disableEnrollment}
+                          type="button"
                           title={`${submitEnrollment
                             ? 'Revoking Enrollment will remove the request from this teacher'
                             : 'Submitting Enrollment will notify the teacher that you have selected her!'}`}
@@ -614,8 +614,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                       }
 
                       <div className="CursiveFont LargeFont PinkFont Padding HideMobile">{activeThreadName}</div>
-                      <div className="CursiveFont LargeFont PinkFont Padding ShowMobile">{activeThreadName?.replace(/ .*/, '')}</div>
-
                     </div>
 
                     {!isLeader && (
@@ -665,22 +663,21 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     </div>
 
                     {/* Desktop Messenger */}
-                    <div className="HideMobile">
-                      <EditField
-                        isTextArea
-                        isMessage
-                        small
-                        title=""
+                    <div className="Flex FullSize AlignItems WhiteFill PinkBorder">
+                      <input
+                        className="Flex FullSize InputStyle Buffer"
                         placeholder="What would you like to say?"
                         type="text"
-                        forLabel="NewMessage"
-                        onChange={setNewMessage}
+                        name="NewMessage"
                         value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
                       />
-
                       <button
-                        type="button"
-                        onClick={handleNewMessage} >Send New Message
+                        title="Send Message"
+                        className='transparent NoMargin'
+                        style={{ marginRight: '2em' }}
+                        type="button "
+                        onClick={handleNewMessage} ><img src={Send} alt='send email' />
                       </button>
                     </div>
 
@@ -718,11 +715,13 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
             {/* Right Side Client Messages Shown on Mobile */}
             {!showLeftMobile && (
-              <div className="Flex Col MobileMessagesRight" >
+              <div className="Flex Col ShowMobile MobileMessagesRight" >
 
 
                 {/* We need a fixed header on mobile */}
-                <div className="MobileMessageHeader WhiteFill FullSize PinkBorder PaddingLite " style={{ height: 45 }}>
+                <div
+                  className="MobileMessageHeader WhiteFill FullSize PinkBorderBottom PaddingLite "
+                  style={{ height: 45, paddingLeft: '2em', paddingRight: '2em' }}>
 
                   {/* Return Button Row*/}
                   <div className="Flex Between AlignItems">
@@ -747,7 +746,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                       </>
 
                     )}
-                    <div className="CursiveFont LargeFont PinkFont ShowMobile NoMargins" style={{ marginRight: '1em' }}>{activeThreadName?.replace(/ .*/, '')}</div>
+                    <div className="CursiveFont LargeFont PinkFont ShowMobile NoMargins" style={{ marginRight: '3em' }}>{activeThreadName?.replace(/ .*/, '')}</div>
                   </div>
 
                   {/* If we are a leader, show the Client buttons */}
@@ -816,7 +815,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
 
                     {/* Shown Mobile */}
-                    <div className="ShowMobile" style={{ marginTop: '5em', marginBottom: '9em' }}>
+                    <div className="ShowMobile" style={{ marginTop: '5em', marginBottom: '9em', paddingLeft: '2em', paddingRight: '2em' }}>
                       {/* Display all the messages if any */}
                       {activeThread.map((elem, index) => (<SingleMessage
                         key={index.toString()}
@@ -831,7 +830,9 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                     </div>
 
                     {/* Mobile New Message Input */}
-                    <div className="ShowMobileFlex MobileMessages FullSize AlignItems WhiteFill PinkBorder">
+                    <div
+                      className="ShowMobileFlex MobileMessages FullSize AlignItems WhiteFill PinkBorderTop "
+                      style={{ paddingLeft: '3em', paddingRight: '3em' }}>
                       <input
                         className="Flex FullSize InputStyle Buffer"
                         placeholder="What would you like to say?"
@@ -841,6 +842,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
                         onChange={(e) => setNewMessage(e.target.value)}
                       />
                       <button
+                        style={{ paddingRight: '3em' }}
                         className='transparent NoMargin'
                         type="button "
                         onClick={handleNewMessage} ><img src={Send} alt='send email' />

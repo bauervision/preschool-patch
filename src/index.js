@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 
 import './styles.scss';
@@ -14,6 +15,8 @@ import { ClientAdmin } from './ClientAdmin';
 import { Messages } from './Messages';
 import { Admin } from './Admin';
 import { TeacherSocialPage } from './TeacherSocialPage';
+import ScrollToTop from './Components/ScrollToTop';
+import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 
 import { f, database } from './config';
 
@@ -499,150 +502,163 @@ const App = () => {
 
     // reset window scroll position with each page change
     // window.scrollTo(0, 0);
-
-    switch (page) {
-      case 8:
-        return (
-          <TeacherSocialPage
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            launchToast={toast}
-            clientData={clientData && clientData}
-            userId={userId}
-            myMessages={myMessages && myMessages}
-            isLeader={isLeader}
-            loadingSocial={loadingSocial}
-            socialPosts={socialPosts}
-            handlePostUpdates={handlePostUpdates}
-
-          />
-        );
-      case 7:
-        return (
-          <Admin
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            userId={userId}
-            myMessages={myMessages && myMessages}
-            isLeader={isLeader}
-            handleMessageUpdates={handleMessageUpdates}
-            patchData={patchData}
-
-          />
-        );
-      case 6:
-        return (
-          <Messages
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            clientData={clientData && clientData}
-            userId={userId}
-            myMessages={myMessages && myMessages}
-            isLeader={isLeader}
-            handleMessageUpdates={handleMessageUpdates}
-            currentSelection={selection}
-          />
-        );
-      case 5:
-        return (
-          <ClientAdmin
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            launchToast={toast}
-            clientData={clientData}
-            userId={userId}
-            myMessages={myMessages && myMessages}
-            isLeader={isLeader}
-            handleMessageUpdates={handleMessageUpdates}
-            loadingClients={loadingClients}
-            handleMemberSelection={handleMemberSelection}
-          />
-        );
-      case 4:
-        return (
-          <MyProfilePage
-            pageUpdate={handlePageUpdate}
-            loggedInUser={loggedInUser}
-            handleLogOut={handleLogOut}
-            updateSuccess={updateSuccess}
-            isLeader={isLeader}
-            clientData={clientData}
-            myMessages={myMessages && myMessages}
-            launchToast={toast}
-            userId={userId}
-          />
-        );
-      case 3:
-        return (
-          <ProfilePage
-            pageUpdate={handlePageUpdate}
-            data={selection}
-            loggedInUser={loggedInUser}
-            clientData={clientData}
-            myMessages={myMessages && myMessages}
-            isLeader={isLeader}
-          />
-        );
-      case 2:
-        return (
-          <CreateAccount
-            pageUpdate={handlePageUpdate}
-            leaderData={leaderData}
-            handleLogin={handleLogin}
-            loggedInUser={loggedInUser}
-            isLeader={isLeader}
-            clientData={clientData}
-            myMessages={myMessages && myMessages}
-          />
-        );
-      case 1:
-        return (
-          <Login
-            pageUpdate={handlePageUpdate}
-            leaderData={leaderData}
-            handleLogin={handleLogin}
-            handleLogOut={handleLogOut}
-            loggedInUser={loggedInUser}
-            kidTotal={kidTotal}
-            addNewChildInfo={addNewChildInfo}
-            clientData={clientData}
-          />
-        );
-      default:
-        return (
-          <PublicLanding
-            pageUpdate={handlePageUpdate}
-            leaderData={leaderData}
-            handleMemberSelection={handleMemberSelection}
-            handleLogin={handleLogin}
-            handleLogOut={handleLogOut}
-            loggedInUser={loggedInUser}
-            launchToast={toast}
-            isLeader={isLeader}
-            clientData={clientData}
-            myMessages={myMessages && myMessages}
-            userId={userId}
-
-          />
-        );
-    }
   };
 
 
   // BIG TODO:  add in proper routing so page doesnt update on refresh so bad
   return (
-    <div className="App">
-      {/* Handle which page to load based on state page value */}
-      {onPage(currentPage)}
-    </div>
+    <Router>
+      <div className="App">
+        <ScrollToTop />
+        <Switch>
+          <Route
+            path="/createAccount"
+            render={() => <CreateAccount
+              pageUpdate={handlePageUpdate}
+              leaderData={leaderData}
+              handleLogin={handleLogin}
+              loggedInUser={loggedInUser}
+              isLeader={isLeader}
+              clientData={clientData}
+              myMessages={myMessages && myMessages}
+            />}
+          />
+
+          <Route
+            path="/profile*"
+            render={() => <ProfilePage
+              pageUpdate={handlePageUpdate}
+              data={selection}
+              loggedInUser={loggedInUser}
+              clientData={clientData}
+              myMessages={myMessages && myMessages}
+              isLeader={isLeader}
+            />}
+          />
+
+          <Route
+            path="/myProfile*"
+            render={() => <MyProfilePage
+              pageUpdate={handlePageUpdate}
+              loggedInUser={loggedInUser}
+              handleLogOut={handleLogOut}
+              updateSuccess={updateSuccess}
+              isLeader={isLeader}
+              clientData={clientData}
+              myMessages={myMessages && myMessages}
+              launchToast={toast}
+              userId={userId}
+            /> }
+          />
+
+          <Route
+            path="/clientAdmin*"
+            render={() => <ClientAdmin
+              pageUpdate={handlePageUpdate}
+              loggedInUser={loggedInUser}
+              handleLogOut={handleLogOut}
+              updateSuccess={updateSuccess}
+              launchToast={toast}
+              clientData={clientData}
+              userId={userId}
+              myMessages={myMessages && myMessages}
+              isLeader={isLeader}
+              handleMessageUpdates={handleMessageUpdates}
+              loadingClients={loadingClients}
+              handleMemberSelection={handleMemberSelection}
+            />}
+          />
+
+          <Route
+            path="/messages*"
+            render={() => <Messages
+              pageUpdate={handlePageUpdate}
+              loggedInUser={loggedInUser}
+              handleLogOut={handleLogOut}
+              updateSuccess={updateSuccess}
+              clientData={clientData && clientData}
+              userId={userId}
+              myMessages={myMessages && myMessages}
+              isLeader={isLeader}
+              handleMessageUpdates={handleMessageUpdates}
+              currentSelection={selection}
+            />}
+          />
+
+          <Route
+            path="/admin"
+            render={() => <Admin
+              pageUpdate={handlePageUpdate}
+              loggedInUser={loggedInUser}
+              handleLogOut={handleLogOut}
+              updateSuccess={updateSuccess}
+              userId={userId}
+              myMessages={myMessages && myMessages}
+              isLeader={isLeader}
+              handleMessageUpdates={handleMessageUpdates}
+              patchData={patchData}
+
+            />}
+          />
+
+          <Route
+            path="/teacherSocial*"
+            render={() => <TeacherSocialPage
+              pageUpdate={handlePageUpdate}
+              loggedInUser={loggedInUser}
+              handleLogOut={handleLogOut}
+              updateSuccess={updateSuccess}
+              launchToast={toast}
+              clientData={clientData && clientData}
+              userId={userId}
+              myMessages={myMessages && myMessages}
+              isLeader={isLeader}
+              loadingSocial={loadingSocial}
+              socialPosts={socialPosts}
+              handlePostUpdates={handlePostUpdates}
+
+            />}
+          />
+
+
+          <Route path="/aboutUs" component={About} />
+          <Route path="/contact" component={Contact} />
+          <Route path="/faq" component={FAQ} />
+          <Route path="/privacyPolicy" component={Privacy} />
+          <Route path="/safety" component={Safety} />
+          <Route path="/terms" component={Terms} />
+
+          <Route
+            path="/login" render={() => <Login
+              pageUpdate={handlePageUpdate}
+              leaderData={leaderData}
+              handleLogin={handleLogin}
+              handleLogOut={handleLogOut}
+              loggedInUser={loggedInUser}
+              kidTotal={kidTotal}
+              addNewChildInfo={addNewChildInfo}
+              clientData={clientData}
+            />}/>
+
+
+          <Route
+            path='/'
+            render={() => <PublicLanding
+              pageUpdate={handlePageUpdate}
+              leaderData={leaderData}
+              handleMemberSelection={handleMemberSelection}
+              handleLogin={handleLogin}
+              handleLogOut={handleLogOut}
+              loggedInUser={loggedInUser}
+              launchToast={toast}
+              isLeader={isLeader}
+              clientData={clientData}
+              myMessages={myMessages && myMessages}
+              userId={userId}
+            />} />
+        </Switch>
+      </div>
+    </Router>
   );
 };
 

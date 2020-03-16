@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { FacebookIcon, InstagramIcon } from '../images';
 
@@ -12,32 +13,32 @@ export const Footer = () => {
       {/* Prefooter */}
       <div className="PreFooter Flex JustifyCenter AlignItems">
         <div className="Flex Col">
-          <a href="#AboutUs">About Us</a>
-          <a href="#Terms of Use">Terms of Use</a>
-          <a href="#Privacy Policy">Privacy Policy</a>
+          <Link to="/aboutUs">About Us</Link>
+          <Link to="/terms">Terms of Use</Link>
+          <Link to="/privacyPolicy">Privacy Policy</Link>
         </div>
         <div className="Flex Col">
-          <a href="#Contact">Contact</a>
-          <a href="#Safety">Safety</a>
-          <a href="#FAW">FAQs</a>
+          <Link to="/contact">Contact</Link>
+          <Link to="/safety">Safety</Link>
+          <Link to="/faq">FAQs</Link>
         </div>
 
 
         <div className="HideMobile ">
-          <button
+          <a
             className="Social"
-            onClick={() => handleWindowChange('https://www.facebook.com/preschoolpatchchesapeake/')
-            }
+            href="https://www.facebook.com/preschoolpatchchesapeake/"
+
           >
             <img src={FacebookIcon} alt="facebook icon" />
-          </button>
-          <button
+          </a>
+          <a
             className="Social"
-            onClick={() => handleWindowChange('https://www.instagram.com/preschoolpatch/')
-            }
+            href='https://www.instagram.com/preschoolpatch/'
+
           >
             <img src={InstagramIcon} alt="instagram icon" />
-          </button>
+          </a>
         </div>
 
 

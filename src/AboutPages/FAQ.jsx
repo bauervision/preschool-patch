@@ -7,14 +7,14 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 
-export const FAQ = ({ pageUpdate, loggedInUser }) => {
+const FAQ = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
         <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} />
 
         {/* Top Left Title */}
-        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Frequently Asked Questions</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>
 
         {/* Page Data*/}
         <div
@@ -29,7 +29,7 @@ export const FAQ = ({ pageUpdate, loggedInUser }) => {
           {/* Page Title */}
           <div className="Flex Col Buffer MarginTop">
             <div>
-              <div className="CursiveFont SuperFont PinkFont">About Us</div>
+              <div className="CursiveFont SuperFont PinkFont">Frequently Asked Questions</div>
 
             </div>
 
@@ -55,3 +55,4 @@ export const FAQ = ({ pageUpdate, loggedInUser }) => {
     </div>
   );
 };
+export default FAQ;

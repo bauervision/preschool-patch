@@ -7,7 +7,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 
-export const PrivacyPolicy = ({ pageUpdate, loggedInUser }) => {
+const PrivacyPolicy = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
@@ -55,3 +55,4 @@ export const PrivacyPolicy = ({ pageUpdate, loggedInUser }) => {
     </div>
   );
 };
+export default PrivacyPolicy;

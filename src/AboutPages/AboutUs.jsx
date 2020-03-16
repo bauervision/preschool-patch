@@ -7,7 +7,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 
-export const AboutUs = ({ pageUpdate, loggedInUser }) => {
+const AboutUs = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
@@ -55,3 +55,4 @@ export const AboutUs = ({ pageUpdate, loggedInUser }) => {
     </div>
   );
 };
+export default AboutUs;

@@ -7,7 +7,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 
-export const TermsOfUse = ({ pageUpdate, loggedInUser }) => {
+const TermsOfUse = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
@@ -55,3 +55,4 @@ export const TermsOfUse = ({ pageUpdate, loggedInUser }) => {
     </div>
   );
 };
+export default TermsOfUse;

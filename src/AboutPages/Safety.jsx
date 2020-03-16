@@ -7,7 +7,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 
-export const Safety = ({ pageUpdate, loggedInUser }) => {
+const Safety = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
@@ -55,3 +55,4 @@ export const Safety = ({ pageUpdate, loggedInUser }) => {
     </div>
   );
 };
+export default Safety;

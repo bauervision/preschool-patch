@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Home, MessageIcon, Enrolled } from '../images';
 
@@ -99,20 +100,19 @@ export const Header = ({
 
         {/* Show Home Icon, if we're not on home page' */}
         {!isHome && (
-          <div>
+          <Link to="/">
             <img
               src={Home}
               alt="Home icon"
-              onClick={() => pageUpdate(0)}
             />
-          </div>
+          </Link>
         )}
 
 
         {/* If we are not logged in, the only option we should see on the header is to signup */}
         {!loggedInUser ? (
           <>
-            {!isLogin && <button className='HeaderButton' onClick={() => pageUpdate(1)}>Login / Signup</button>}
+            {!isLogin && <Link className='HeaderButton' to="/login">Login / Signup</Link>}
           </>
         ) : (
         // we are now logged in
@@ -120,7 +120,7 @@ export const Header = ({
 
             {/* Show Teachers Social page Icon, if we're not already there */}
             {(!isSocial && currentlyEnrolled) && (
-              <div>
+              <Link to={`/teacherSocial/${loggedInUser.enrollment.patchName}`}>
                 <img
                   src={Enrolled}
                   alt="Enrolled Home Icon"
@@ -128,38 +128,38 @@ export const Header = ({
                   onClick={() => pageUpdate(8)}
                   title="Go to your teachers social page"
                 />
-              </div>
+              </Link>
             )}
 
             {/* Only show this button if we arent a leader, and not on the create page */}
             {(isHome && !isLeader) && (
               <div className="HideMobile">
-                <button className='HeaderButton' onClick={() => pageUpdate(2)}>
+                <Link className='HeaderButton' to="/createAccount" >
                     Become a Patch Leader!
-                </button>
+                </Link>
               </div>
             )}
 
             {/* Not on the Messages page */}
             {!isMessages && (
-              <button className="Header_MessageBtn" type="button" onClick={() => pageUpdate(6)}>
+              <Link className="Header_MessageBtn" type="button" to={`/messages/${userId}`}>
                 <img className={`${newMessageAlert ? 'filter-pink' : ' filter-darkgreen'}`} src={MessageIcon} alt="message icon" style={{ width: 30, height: 'auto' }} />
-              </button>
+              </Link>
             )}
 
 
             {/* Not on MyProfile page */}
             {!myProfile && (
-              <div
+              <Link
                 className="SocialMessageBtnHeader Flex AlignItems JustifyCenter"
                 key={loggedInUser && loggedInUser.name}
                 type="button"
-                onClick={() => pageUpdate(4)} >
+                to={`/myProfile/${userId}`} >
                 <img style={{ width: 50, borderRadius: 50 }} src={loggedInUser && loggedInUser.photoUrl} alt='client pic' />
-              </div>
+              </Link>
             )}
 
-            {(!isAdmin && isLeader) && <button className='HeaderButton' onClick={() => pageUpdate(5)}>Client Admin</button>}
+            {(!isAdmin && isLeader) && <Link className='HeaderButton' to="/clientAdmin">Client Admin</Link>}
 
             {/* If we are logged in, always show logout */}
             <button className='HeaderButton' onClick={LogOut}>Logout</button>

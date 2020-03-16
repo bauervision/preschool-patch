@@ -7,7 +7,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 
-export const Contact = ({ pageUpdate, loggedInUser }) => {
+const Contact = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
@@ -55,3 +55,4 @@ export const Contact = ({ pageUpdate, loggedInUser }) => {
     </div>
   );
 };
+export default Contact;

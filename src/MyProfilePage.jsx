@@ -12,7 +12,7 @@ import { f, storage, database } from './config';
 import { Add, Elegant, Corner } from './images';
 
 
-export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, launchToast, userId }) => {
+export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, userId }) => {
   const now = moment().toDate().getTime();
 
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
@@ -72,6 +72,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   const [imageUrlArray, setImageUrlArray] = useState([]);
   const [uploading, setUploading] = useState(false);
 
+  const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
+
 
   const handleDataUpdate = (e) => {
     e.preventDefault();
@@ -128,7 +130,8 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       .ref(`${isLeader ? 'leaders' : 'users'}/${userId}/public`)
       .set(updatedData)
       .then(() => {
-        updateSuccess(true, 'Save Successful!');
+        setToast({ value: true, message: 'Save Success!' });
+        setTimeout(() => setToast({ value: false, message: '' }), 3000);
       });
   };
 
@@ -702,7 +705,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
       </div>
       <PatchLogo />
       <Footer />
-      <Toast showToast={launchToast.value} message={launchToast.message} />
+      <Toast showToast={toast.value} message={toast.message} />
 
     </div>
   );

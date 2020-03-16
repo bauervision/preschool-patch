@@ -10,22 +10,20 @@ export const Footer = () => {
   return (
     <>
       {/* Prefooter */}
-      <div className="PreFooter">
-        <div>
-          <h4>About Preschool Patch</h4>
-          <div>About Us</div>
-          <div>Terms of Use</div>
-          <div>Privacy Policy</div>
+      <div className="PreFooter Flex JustifyCenter AlignItems">
+        <div className="Flex Col">
+          <a href="#AboutUs">About Us</a>
+          <a href="#Terms of Use">Terms of Use</a>
+          <a href="#Privacy Policy">Privacy Policy</a>
         </div>
-        <div>
-          <h4>Help</h4>
-          <div>Contact</div>
-          <div>Safety</div>
-          <div>FAQs</div>
+        <div className="Flex Col">
+          <a href="#Contact">Contact</a>
+          <a href="#Safety">Safety</a>
+          <a href="#FAW">FAQs</a>
         </div>
 
 
-        <div className="PreFooter_Social">
+        <div className="HideMobile ">
           <button
             className="Social"
             onClick={() => handleWindowChange('https://www.facebook.com/preschoolpatchchesapeake/')
@@ -44,8 +42,27 @@ export const Footer = () => {
 
 
       </div>
+
+      <div className="ShowMobile PreFooter">
+        <button
+          className="Social"
+          onClick={() => handleWindowChange('https://www.facebook.com/preschoolpatchchesapeake/')
+          }
+        >
+          <img src={FacebookIcon} alt="facebook icon" />
+        </button>
+        <button
+          className="Social"
+          onClick={() => handleWindowChange('https://www.instagram.com/preschoolpatch/')
+          }
+        >
+          <img src={InstagramIcon} alt="instagram icon" />
+        </button>
+      </div>
+
+
       <footer className="Footer">
-        <div className="SmallFont">
+        <p >
           Preschool Patch is the world's first and largest online destination
           for at-home preschool services. We connect families with local
           teachers who have turned their homes into warm, inviting, educational
@@ -62,7 +79,7 @@ export const Footer = () => {
           providers and preschool seekers themselves and is not information
           generated or verified by Preschool Patch.Preschool Patch does not
           engage in any conduct that requires a professional license.
-        </div>
+        </p>
         <p>
           Preschool Patch and "Love Learning Early" are service marks or
           registered service marks of Preschool Patch, Inc.© 2020 - 2027

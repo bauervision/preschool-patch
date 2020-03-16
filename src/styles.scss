@@ -197,9 +197,12 @@ html{
   }
 
   .PreFooter {
-    background-color: rgb(233, 233, 233);
+    background-color: rgb(29, 37, 32);
     div {
       margin: 3em;
+    }
+    button{
+      margin:0;
     }
   }
 
@@ -930,6 +933,11 @@ html{
   
   }
 
+  a{
+    margin: 1em;
+    color: $PARADISEPINK;
+    text-decoration: none;
+  }
 
   // Color Filters for tweaking image colors
   // based on original image being black!
@@ -1035,7 +1043,7 @@ html{
   position: fixed; /* Sit on top of the screen */
   z-index: 1; /* Add a z-index if needed */
   left: 50%; /* Center the snackbar */
-  bottom: 2em; /* 2em from the bottom */
+  top: 2em; /* 2em from the bottom */
 
   
 }

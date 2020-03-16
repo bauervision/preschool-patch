@@ -1,20 +1,20 @@
 import React from 'react';
 
-import { Header } from './Components/Header';
-import { Footer } from './Components/Footer';
-import { Ratings, SimpleTable } from './Components';
-
-import { Logo, Elegant } from './images';
+import { Header } from '../Components/Header';
+import { Footer } from '../Components/Footer';
 
 
-export const NewPage = ({ pageUpdate, loggedInUser, data }) => {
+import { Logo, Elegant } from '../images';
+
+
+export const Safety = ({ pageUpdate, loggedInUser }) => {
   return (
     <div>
       <div>
         <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} />
 
         {/* Top Left Title */}
-        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Page Name</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>
 
         {/* Page Data*/}
         <div
@@ -29,7 +29,7 @@ export const NewPage = ({ pageUpdate, loggedInUser, data }) => {
           {/* Page Title */}
           <div className="Flex Col Buffer MarginTop">
             <div>
-              <div className="CursiveFont SuperFont PinkFont">My Messages</div>
+              <div className="CursiveFont SuperFont PinkFont">Safety</div>
 
             </div>
 

@@ -12,7 +12,7 @@ import { f, storage, database } from './config';
 import { Add, Elegant, Corner } from './images';
 
 
-export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeader, myMessages, userId }) => {
+export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessages, userId }) => {
   const now = moment().toDate().getTime();
 
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
@@ -348,7 +348,7 @@ export const MyProfilePage = ({ pageUpdate, loggedInUser, updateSuccess, isLeade
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} myProfile loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} userId={userId} />
+        <Header myProfile loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} userId={userId} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>My Profile Page</div>
 

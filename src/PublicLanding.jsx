@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 
-import { ProfileCard } from './ProfileCard';
+import ProfileCard from './ProfileCard';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Toast, Loader } from './Components';
 
 import { Logo, Elegant, Corner, IvyHeart } from './images';
 
-export const PublicLanding = ({
-  pageUpdate,
+const PublicLanding = ({
   leaderData,
   handleMemberSelection,
   handleLogOut,
@@ -16,7 +16,8 @@ export const PublicLanding = ({
   launchToast,
   isLeader,
   myMessages,
-  userId
+  userId,
+  history
 }) => {
   // handle local state
   const [filteredData, setFilteredData] = useState(null);
@@ -94,7 +95,6 @@ export const PublicLanding = ({
   return (
     <div className="PublicLanding">
       <Header
-        pageUpdate={pageUpdate}
         isHome
         loggedInUser={loggedInUser}
         handleLogOut={handleLogOut}
@@ -279,7 +279,7 @@ export const PublicLanding = ({
                 <h3>{'No Patch Leaders yet. :('}</h3>
                 <div>Maybe you can be the first.....?</div>
                 <div>
-                  <button onClick={() => pageUpdate(2)}>Become a Patch Leader!</button>
+                  <button onClick={() => history.push('/createAccount')}>Become a Patch Leader!</button>
                 </div>
               </div>
             )}
@@ -302,3 +302,4 @@ export const PublicLanding = ({
     </div>
   );
 };
+export default withRouter(PublicLanding);

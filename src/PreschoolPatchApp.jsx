@@ -1,28 +1,27 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useHistory, withRouter } from 'react-router-dom';
 
 
 import './styles.scss';
 import moment from 'moment';
-import PublicLanding from './PublicLanding';
+import { PublicLanding } from './PublicLanding';
 import { CreateAccount } from './CreateAccount';
 import Login from './Login';
-import ProfilePage from './ProfilePage';
+import { ProfilePage } from './ProfilePage';
 import { MyProfilePage } from './MyProfilePage';
-import ClientAdmin from './ClientAdmin';
+import { ClientAdmin } from './ClientAdmin';
 import { Messages } from './Messages';
 import { Admin } from './Admin';
 import { TeacherSocialPage } from './TeacherSocialPage';
 import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 
-
 import { f, database } from './config';
 
 
-const App = () => {
+const PreschoolPatchApp = () => {
   const [patchData, setPatchData] = useState(null); // all user data for admin
   const [leaderData, setLeaderData] = useState([]);// raw data from DB
   const [clientData, setClientData] = useState(null);// raw data from DB
@@ -39,6 +38,7 @@ const App = () => {
   const [socialPosts, setSocialPosts] = useState(null);
   const [socialPostId, setSocialPostId] = useState(null);
 
+  const history = useHistory();
 
   // keep messages updated
   useEffect(() => {
@@ -192,7 +192,7 @@ const App = () => {
 
   const handleMemberSelection = (member) => {
     setSelection(member);
-    // history.push(`/profile/${member.id}`);
+    history.push(`/profile/${member.id}`);
   };
 
 
@@ -299,7 +299,7 @@ const App = () => {
           });
 
           setPatchData(data);
-          // history.push('/admin');
+          history.push('/admin');
         }
       }
     });
@@ -336,10 +336,10 @@ const App = () => {
           fetchSocialActivity(user.uid);
           // if leader has new client requests go to client admin first
           if (unAcceptedClient) {
-            // history.push(`/clientAdmin/${curUser.id}`);
+            history.push(`/clientAdmin/${curUser.id}`);
           } else {
             // otherwise go to social page
-            // history.push(`/teacherSocial/${curUser.patchName}`);
+            history.push(`/teacherSocial/${curUser.patchName}`);
           }
         }
       });
@@ -361,7 +361,7 @@ const App = () => {
               // grab social feed which is the ID of the leader we're enrolled with
               setSocialPostId(curUser.public.enrollment.submittedTo);// social postID will always be the leaders ID
               fetchSocialActivity(curUser.public.enrollment.submittedTo);
-              // history.push(`/teacherSocial/${curUser.public.enrollment.patchName}`);
+              history.push(`/teacherSocial/${curUser.public.enrollment.patchName}`);
             }
           }
         });
@@ -639,5 +639,4 @@ const App = () => {
   );
 };
 
-const rootElement = document.getElementById('root');
-ReactDOM.render(<App/>, rootElement);
+export default withRouter(PreschoolPatchApp);

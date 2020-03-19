@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
+
 import moment from 'moment';
 import { database } from '../config';
 import { Checked, Unchecked } from '../images';
 
-const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleSelection, pageUpdate, userId }) => {
+const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleSelection, userId, history }) => {
   const [unEnrolling, setUnEnrolling] = useState(false);
 
   const { clientData: { children, enrollment, email, phone, photoUrl, name, zipcode } } = selection;
@@ -65,7 +67,7 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
 
   const messageClient = () => {
     handleSelection(selection);
-    pageUpdate(6);
+    history.push('/messages');
   };
 
 
@@ -184,4 +186,4 @@ const DetailViewClient = ({ selection, enrollmentData, handleEnrollment, handleS
     </div >
   );
 };
-export default DetailViewClient;
+export default withRouter(DetailViewClient);

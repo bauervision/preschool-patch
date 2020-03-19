@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { withRouter } from 'react-router-dom';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Ratings } from './Components';
@@ -7,7 +8,7 @@ import { Ratings } from './Components';
 import { DecorFlat, Logo, Elegant, NoPic, Contact } from './images';
 import LightBox from './Components/LightBox';
 
-export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
+const ProfilePage = ({ data, loggedInUser, history }) => {
   // pull out public data
   const {
     aboutMe,
@@ -30,14 +31,13 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
   return (
     <div>
       <div className="MarginTopMobile">
-        <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} />
+        <Header loggedInUser={loggedInUser} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>Profile Page</div>
 
         {/* Profile Pic and Data Section*/}
         <div className="MarginTop">
           <div className="Flex MobileRowToCol JustifyCenter AlignItems SeeThru RoundBorder SimpleBorder Margins BoxShadow MarginTopMobileHome" >
-
 
             {/* Data Row */}
             <div className="Buffer MobileHalfToFull">
@@ -62,7 +62,6 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                     <div className="Price SuperFont FullSize PinkFill">{available && 'Enrolling!'}</div>
                   </div>
 
-
                   <div className="textMargin">
                     <span className="profileText">Years of Experience:</span>
                     <strong className="profileText PinkFont">{experience}</strong>
@@ -78,12 +77,10 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                     <strong className="profileText PinkFont">{infants ? 'Yes!' : 'Not at this time'}</strong>
                   </div>
 
-
                   <div className="textMargin">
                     <span className="profileText">Age:</span>
                     <strong className="profileText PinkFont">{age}</strong>
                   </div>
-
 
                 </div>
 
@@ -93,7 +90,6 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
                   <div className="MarginHSmall">Part-Time<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.pt}</span></div>
                   <div className="MarginHSmall">Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.di}</span></div>
                 </div>
-
               </div>
 
             </div>
@@ -106,7 +102,13 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
               {/* Contact Button: If loggedInUser, otherwise notify to login*/}
               <div className="FullSize">
                 <button
-                  onClick={() => pageUpdate(!loggedInUser ? 1 : 6)}
+                  onClick={() => {
+                    if (loggedInUser) {
+                      history.push('/messages');
+                    } else {
+                      history.push('/');
+                    }
+                  }}
                   className="transparent NoMargin">
                   <div className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder" style={{ borderLeft: 'none', borderRight: 'none' }}>
 
@@ -173,3 +175,4 @@ export const ProfilePage = ({ pageUpdate, data, loggedInUser }) => {
     </div>
   );
 };
+export default withRouter(ProfilePage);

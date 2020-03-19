@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
@@ -10,7 +11,7 @@ import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection } fro
 import { RegisterUser, LoginUserEmailPassword } from './helpers/auth';
 import { Add, Elegant, Corner } from './images';
 
-export const Login = ({ pageUpdate, handleLogin }) => {
+const Login = ({ pageUpdate, handleLogin, history }) => {
   // handle local state
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
@@ -38,9 +39,9 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     } else {
       // otherwise we had a successful login
       handleLogin(status.user);
-      pageUpdate(0);
+      history.push('/');
     }
-  }, [email, handleLogin, pageUpdate, password]);
+  }, [email, handleLogin, history, password]);
 
 
   useEffect(() => {
@@ -393,3 +394,4 @@ export const Login = ({ pageUpdate, handleLogin }) => {
     </div >
   );
 };
+export default withRouter(Login);

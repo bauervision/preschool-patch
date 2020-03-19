@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { Header } from "./Components/Header";
-import { Footer } from "./Components/Footer";
+import { Header } from './Components/Header';
+import { Footer } from './Components/Footer';
 
-import { BasicInput, PasswordInput, Error, PatchLogo } from "./Components";
+import { BasicInput, PasswordInput, Error, PatchLogo } from './Components';
 
-import { RegisterUser } from "./helpers/auth";
-import { Elegant } from "./images"
+import { RegisterUser } from './helpers/auth';
+import { Elegant } from './images';
 // import { f, storage } from "./config";
 
 export const CreateAccount = ({
-  pageUpdate,
   loggedInUser,
   handleLogin,
   newMessageAlert,
@@ -20,14 +19,14 @@ export const CreateAccount = ({
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
   const [loginError, setLoginError] = useState(null);
-  const [email, setEmailLogin] = useState("");
-  const [password, setPasswordLogin] = useState("");
-  const [name, setNameLogin] = useState("");
+  const [email, setEmailLogin] = useState('');
+  const [password, setPasswordLogin] = useState('');
+  const [name, setNameLogin] = useState('');
   const [age, setAge] = useState(18);
-  const [phone, setPhoneLogin] = useState("");
-  const [zipcode, setZipcodeLogin] = useState("");
+  const [phone, setPhoneLogin] = useState('');
+  const [zipcode, setZipcodeLogin] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordType, setPasswordType] = useState("password");
+  const [passwordType, setPasswordType] = useState('password');
   // Leader specific data
   const [experience, setExperience] = useState(0);
   const [background, setBackground] = useState(true);
@@ -53,10 +52,10 @@ export const CreateAccount = ({
       backgroundCheck: background,
       infants,
       photoUrl:
-        "https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490"
+        'https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490'
     };
 
-    let status = await RegisterUser(email, password);
+    const status = await RegisterUser(email, password);
 
     if (!status.user) {
       const errorMessage = status.error.message;
@@ -68,7 +67,7 @@ export const CreateAccount = ({
   };
 
   const setEmail = (email) => {
-    const error = validEmailRegex.test(email) ? "" : "Email is not valid!";
+    const error = validEmailRegex.test(email) ? '' : 'Email is not valid!';
     setEmailError(error);
     setEmailLogin(email);
   };
@@ -80,7 +79,7 @@ export const CreateAccount = ({
   };
 
   const handlePasswordVisibility = () => {
-    setPasswordType(!showPassword ? "text" : "password");
+    setPasswordType(!showPassword ? 'text' : 'password');
     setShowPassword(!showPassword);
   };
 
@@ -89,7 +88,6 @@ export const CreateAccount = ({
       <div>
         <Header
           isCreate
-          pageUpdate={pageUpdate}
           loggedInUser={loggedInUser}
           isLeader={isLeader}
           myMessages={myMessages && myMessages}
@@ -101,12 +99,12 @@ export const CreateAccount = ({
         <div
           className="Flex Col FixedBG MarginTop"
           style={{
-            justifyContent: "space-evenly",
+            justifyContent: 'space-evenly',
             marginLeft: 40,
             marginRight: 40,
-            border: "solid",
+            border: 'solid',
             borderWidth: 1,
-            borderColor: "green",
+            borderColor: 'green',
             borderRadius: 50,
             padding: 30
           }}
@@ -114,7 +112,7 @@ export const CreateAccount = ({
           <div className="Flex JustifyCenter AlignItems Tab PinkFill" style={{ marginBottom: 0 }}>
             <h2>What you get as a Patch Leader</h2>
 
-            <ul style={{ textAlign: "left", marginTop: 50 }}>
+            <ul style={{ textAlign: 'left', marginTop: 50 }}>
               <li>Great earning potential by working from home!</li>
               <li>
                 Free public profile that presents your school to local families
@@ -136,33 +134,33 @@ export const CreateAccount = ({
           <div className="Flex JustifyCenter AlignItems RoundBorder BoxShadow WhiteFill PinkFont">
             <h2>Typical Earning Potential</h2>
 
-            <ul style={{ textAlign: "left", marginTop: 50 }}>
+            <ul style={{ textAlign: 'left', marginTop: 50 }}>
               <li>
-                {" "}
-                {"$35   - Average price for a Full time student ( per day )"}
+                {' '}
+                {'$35   - Average price for a Full time student ( per day )'}
               </li>
               <li>
-                {" "}
-                {"3     - number of FT students enrolled ( recommended )"}{" "}
+                {' '}
+                {'3     - number of FT students enrolled ( recommended )'}{' '}
               </li>
-              <li> {"5     - days a week"} </li>
-              <li> {"$525  - weekly"} </li>
-              <li> {"$2100 - monthly"} </li>
+              <li> {'5     - days a week'} </li>
+              <li> {'$525  - weekly'} </li>
+              <li> {'$2100 - monthly'} </li>
             </ul>
           </div>
 
           <div className="Flex JustifyCenter AlignItems Buffer GreenFill RoundBorder Margins" style={{ margin: 70 }}>
             <h2>Additional Revenue Options</h2>
 
-            <ul style={{ textAlign: "left", marginTop: 50 }}>
+            <ul style={{ textAlign: 'left', marginTop: 50 }}>
               <li>
                 {
-                  "$45   - Part Time rate ( students enrolled between 3 to 4 days a week)"
+                  '$45   - Part Time rate ( students enrolled between 3 to 4 days a week)'
                 }
               </li>
               <li>
                 {
-                  "$55   - Drop-in rate ( students who attend 1 to 2 days a week, or as needed)"
+                  '$55   - Drop-in rate ( students who attend 1 to 2 days a week, or as needed)'
                 }
               </li>
             </ul>
@@ -269,17 +267,17 @@ export const CreateAccount = ({
                       Enter Valid Email and Password
                     </div>
                   ) : (
-                      <button type="submit" className="RegisterButton">
+                    <button type="submit" className="RegisterButton">
                         Register
                     </button>
-                    )}
+                  )}
                 </div>
                 {loginError && <Error errorMessage={loginError} />}
               </div>
             </form>
 
             <div className="PinkFill Margins BoxShadow RoundBorder PaddingBoost">
-              * <strong>Please Note!</strong> While a background check is{" "}
+              * <strong>Please Note!</strong> While a background check is{' '}
               <strong>not required</strong> to become a Preschool Patch leader,
               <br />
               it does help potential families feel at ease leaving their
@@ -288,7 +286,7 @@ export const CreateAccount = ({
             <br />
 
             <p>
-              * While we limit <strong>5 children</strong> per Patch Leader,{" "}
+              * While we limit <strong>5 children</strong> per Patch Leader,{' '}
               <br /> if you have, or can acquire an assistant, <br />
               you may double that limit and still run a successful home
               business.

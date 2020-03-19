@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import { withRouter } from 'react-router-dom';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Toast, Ratings, SimpleTable, DetailViewClient } from './Components';
@@ -8,7 +9,7 @@ import { Toast, Ratings, SimpleTable, DetailViewClient } from './Components';
 import { Corner, Logo, Elegant } from './images';
 import { database } from './config';
 
-export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection, userId, launchToast, updateSuccess }) => {
+const ClientAdmin = ({ loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection, userId, launchToast, updateSuccess }) => {
   const [clientState, setClientState] = useState([]);
   const [clientDataState, setClientDataState] = useState([]);
   const [selection, setSelection] = useState(null);
@@ -70,7 +71,7 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} userId={userId} />
+        <Header isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} userId={userId} />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Client Admin</div>
 
@@ -118,7 +119,6 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
                         selection={selection}
                         handleEnrollment={handleEnrollment}
                         handleSelection={handleMemberSelection}
-                        pageUpdate={pageUpdate}
                         userId={userId} />
                     ) : (
                       <div>Make a selection from the table to view specific details about the client</div>
@@ -149,3 +149,4 @@ export const ClientAdmin = ({ pageUpdate, loggedInUser, myMessages, loadingClien
     </div>
   );
 };
+export default withRouter(ClientAdmin);

@@ -1,7 +1,9 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+
 import { Ratings } from './Components';
 
-export const ProfileCard = ({ data, handleSelection }) => {
+const ProfileCard = ({ data, handleSelection, history }) => {
   // pull out data
   const {
     available,
@@ -15,6 +17,7 @@ export const ProfileCard = ({ data, handleSelection }) => {
 
   const getSelection = () => {
     handleSelection(data);
+    history.push(`/profile/${name}`);
   };
 
   return (
@@ -29,17 +32,14 @@ export const ProfileCard = ({ data, handleSelection }) => {
             <Ratings rating={rating} />
           </div>
         </div>
-
       </div>
 
       {/* Data row 1*/}
       <div className=" Flex AlignItems JustifyCenter">
-
         <div className="textMargin">
           <span className="SmallFont">Years of Experience with Children:</span>
           <strong className="PinkFont">{experience}</strong>
         </div>
-
         {infants && (
           <div className="textMargin">
             <span className="SmallFont">Infants?:</span>{' '}
@@ -48,24 +48,22 @@ export const ProfileCard = ({ data, handleSelection }) => {
         )}
       </div>
 
-
       {/* Rates*/}
       <div className="Flex JustifyCenter HideMobile">
-        <div className="MarginHSmall "> Full-time<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.ft}</span></div>
-        <div className="MarginHSmall">Part-Time<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.pt}</span></div>
-        <div className="MarginHSmall">Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.di}</span></div>
+        <div className="MarginHSmall "> Full-time<span className="Price LargeFont PinkFont MarginHSmall">${rates?.ft}</span></div>
+        <div className="MarginHSmall">Part-Time<span className="Price LargeFont PinkFont MarginHSmall">${rates?.pt}</span></div>
+        <div className="MarginHSmall">Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates?.di}</span></div>
       </div>
 
       <div className="Flex JustifyCenter ShowMobile">
-        FT<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.ft}</span>
-        PT<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.pt}</span>
-        Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates && rates.di}</span>
+        FT<span className="Price LargeFont PinkFont MarginHSmall">${rates?.ft}</span>
+        PT<span className="Price LargeFont PinkFont MarginHSmall">${rates?.pt}</span>
+        Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates?.di}</span>
       </div>
 
       {/* Show Ribbon if they are enrolling */}
-      {available && (
-        <div className="ribbon ribbon-top-left mobile-top-left"><span>Enrolling</span></div>
-      )}
+      {available && <div className="ribbon ribbon-top-left mobile-top-left"><span>Enrolling</span></div>}
     </div>
   );
 };
+export default withRouter(ProfileCard);

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { withRouter } from 'react-router-dom';
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Ratings } from './Components';
 
@@ -106,11 +106,11 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
                     if (loggedInUser) {
                       history.push('/messages');
                     } else {
-                      history.push('/');
+                      history.push('/login');
                     }
                   }}
                   className="transparent NoMargin">
-                  <div className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder" style={{ borderLeft: 'none', borderRight: 'none' }}>
+                  <div className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder PaddingLite" style={{ borderLeft: 'none', borderRight: 'none' }}>
 
                     {loggedInUser && (
                       <>

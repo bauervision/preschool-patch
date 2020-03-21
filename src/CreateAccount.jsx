@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { Header } from './Components/Header';
+import { Link } from 'react-router-dom';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 
 import { BasicInput, PasswordInput, Error, PatchLogo } from './Components';
@@ -66,16 +67,16 @@ export const CreateAccount = ({
     }
   };
 
-  const setEmail = (email) => {
-    const error = validEmailRegex.test(email) ? '' : 'Email is not valid!';
+  const setEmail = (e) => {
+    const error = validEmailRegex.test(e) ? '' : 'Email is not valid!';
     setEmailError(error);
-    setEmailLogin(email);
+    setEmailLogin(e);
   };
 
-  const setPassword = (password) => {
-    const error = password.length < 6;
+  const setPassword = (pw) => {
+    const error = pw.length < 6;
     setPasswordError(error);
-    setPasswordLogin(password);
+    setPasswordLogin(pw);
   };
 
   const handlePasswordVisibility = () => {
@@ -97,62 +98,39 @@ export const CreateAccount = ({
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Create Leader Account</div>
 
         <div
-          className="Flex Col FixedBG MarginTop"
-          style={{
-            justifyContent: 'space-evenly',
-            marginLeft: 40,
-            marginRight: 40,
-            border: 'solid',
-            borderWidth: 1,
-            borderColor: 'green',
-            borderRadius: 50,
-            padding: 30
-          }}
-        >
-          <div className="Flex JustifyCenter AlignItems Tab PinkFill" style={{ marginBottom: 0 }}>
-            <h2>What you get as a Patch Leader</h2>
+          className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter Margins"
 
-            <ul style={{ textAlign: 'left', marginTop: 50 }}>
-              <li>Great earning potential by working from home!</li>
-              <li>
-                Free public profile that presents your school to local families
-              </li>
-              <li>
-                Free access to Preschool Patch Mentors to help you become
-                successful
-              </li>
-              <li>Free curriculum guidelines</li>
-              <li>Free seasonal activity examples</li>
-              <li>
-                Free app that allows you to communicate with your student's
-                parents
-              </li>
+        >
+          <div className="Flex Col JustifyCenter AlignItems Tab PinkFill FullSize" >
+            <div className="CursiveFont SuperFont">What you get as a Patch Leader</div>
+
+            <ul className="TextLeft">
+              <li>{'Great earning potential by working from home!'}</li>
+              <li>{'Free public profile that presents your school to local families'}</li>
+              <li>{' Free access to Preschool Patch Mentors to help you become successful'}</li>
+              <li>{'Free curriculum guidelines'}</li>
+              <li>{'Free seasonal activity examples'}</li>
+              <li>{"Free app that allows you to communicate with your student's parents"}</li>
             </ul>
           </div>
 
 
-          <div className="Flex JustifyCenter AlignItems RoundBorder BoxShadow WhiteFill PinkFont">
-            <h2>Typical Earning Potential</h2>
+          <div className="Flex Col JustifyCenter AlignItems RoundBorder WhiteFill PinkFont Margins">
+            <div className="CursiveFont SuperFont">Typical Earning Potential</div>
 
-            <ul style={{ textAlign: 'left', marginTop: 50 }}>
-              <li>
-                {' '}
-                {'$35   - Average price for a Full time student ( per day )'}
-              </li>
-              <li>
-                {' '}
-                {'3     - number of FT students enrolled ( recommended )'}{' '}
-              </li>
+            <ul className="TextLeft">
+              <li>{'$35   - Average price for a Full time student ( per day )'}</li>
+              <li>{'3     - number of FT students enrolled ( recommended )'}</li>
               <li> {'5     - days a week'} </li>
               <li> {'$525  - weekly'} </li>
               <li> {'$2100 - monthly'} </li>
             </ul>
           </div>
 
-          <div className="Flex JustifyCenter AlignItems Buffer GreenFill RoundBorder Margins" style={{ margin: 70 }}>
-            <h2>Additional Revenue Options</h2>
+          <div className="Flex Col JustifyCenter AlignItems Buffer FullSize GreenFill RoundBorder Margins">
+            <div className="CursiveFont SuperFont">Additional Revenue Options</div>
 
-            <ul style={{ textAlign: 'left', marginTop: 50 }}>
+            <ul className="TextLeft">
               <li>
                 {
                   '$45   - Part Time rate ( students enrolled between 3 to 4 days a week)'
@@ -168,8 +146,8 @@ export const CreateAccount = ({
 
           <br />
 
-          <div className="Flex Col JustifyCenter AlignItems Tab PinkFill " >
-            <h1>Are you ready to earn an extra $2000+ a month?!!</h1>
+          <div className="Flex Col JustifyCenter AlignItems" >
+            <div className="CursiveFont SuperFont">Are you ready to earn an extra $2000+ a month?!!</div>
             <p>
               Realize that the above rates are just examples! <br />
               Depending on your location, experience, and how marketable you are
@@ -262,6 +240,12 @@ export const CreateAccount = ({
                     passwordError={passwordError}
                   />
 
+
+                  <div className="Margins SmallFont">By clicking "Register," you agree to our:
+                    <br/>
+                    <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
+                  </div>
+
                   {emailError || passwordError ? (
                     <div className="FakeButton">
                       Enter Valid Email and Password
@@ -283,19 +267,12 @@ export const CreateAccount = ({
               it does help potential families feel at ease leaving their
               children with you and is <strong>highly recommended</strong>
             </div>
-            <br />
 
-            <p>
-              * While we limit <strong>5 children</strong> per Patch Leader,{' '}
-              <br /> if you have, or can acquire an assistant, <br />
-              you may double that limit and still run a successful home
-              business.
-            </p>
           </div>
         </div>
       </div>
 
-      <img src={Elegant} alt="decorative" className="filter-green Margins" />
+      <img src={Elegant} alt="decorative" className="filter-green responsive" />
 
       <PatchLogo />
 

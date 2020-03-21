@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import moment from 'moment';
 
 import { EditField, KidSection, PatchLogo, Toast, SimpleImage } from './Components';
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 
 

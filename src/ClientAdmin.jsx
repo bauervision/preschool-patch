@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { withRouter } from 'react-router-dom';
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Toast, Ratings, SimpleTable, DetailViewClient } from './Components';
 

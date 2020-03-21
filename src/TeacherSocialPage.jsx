@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { SocialPost, NewPost, Toast } from './Components';
 

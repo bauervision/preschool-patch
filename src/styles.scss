@@ -148,7 +148,8 @@ html{
 
   // Components
   .Header {
-    background-color: $PATCHGREEN;
+    background: rgb(11,142,81);
+background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%, rgba(129,73,98,1) 91%, rgba(255,0,117,1) 100%);
     position: fixed;
     z-index: 2;
     top: 0;
@@ -305,7 +306,7 @@ html{
   .SeeThru{ background-color: rgba(255,255,255,0.8); }
 
   .SmallFont { font-size: 0.8em; @include respond(phone){font-size:1.2em;}}
-  .MediumFont { font-size: 1.2em; @include respond(phone){font-size:2em;}}
+  .MediumFont { font-size: 2em;}
   .LargeFont { font-size:2em; @include respond(phone){font-size:3em;}}
   .SuperFont { font-size: 3em; @include respond(phone){font-size:4em;}}
   .RedicFont{ font-size: 4em; }
@@ -849,9 +850,13 @@ html{
     background-color: transparent;
     border: none;
     position: absolute;
-    top: 0;
-    right: 0.2em;
+    top: 1em;
+    right: 0.5em;
     cursor: pointer;
+    @include respond(phone){
+      top: 0.2em;
+      right: 0.1em;
+    }
   }
 
 .OverFlow{
@@ -1038,13 +1043,14 @@ html{
   /// Toast
 .Toast {
   visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 23em; /* Set a default minimum width */
-  margin-left: -120.5em; /* Divide value of min-width by 2 */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
-  top: 2em; /* 2em from the bottom */
-
+  width: 15em; 
+  position: fixed; 
+  z-index: 1; 
+  right: 40%; 
+  bottom: 2em; 
+  @include respond(phone){
+   right: 30%; 
+  }
   
 }
 

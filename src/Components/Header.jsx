@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { Home, MessageIcon, Enrolled } from '../images';
 
 import { SignUserOut } from '../helpers/auth';
 
-export const Header = ({
-  pageUpdate,
+const Header = ({
   myProfile,
   isHome,
   isLeader,
@@ -16,7 +15,8 @@ export const Header = ({
   isMessages,
   loggedInUser,
   myMessages,
-  userId
+  userId,
+  history
 }) => {
   const [newMessageAlert, setNewMessageAlert] = useState(false);
 
@@ -79,8 +79,8 @@ export const Header = ({
   }, [myMessages, userId]);
 
   const LogOut = () => {
+    history.push('/');
     SignUserOut();
-    pageUpdate(0);
   };
 
 
@@ -120,12 +120,11 @@ export const Header = ({
 
             {/* Show Teachers Social page Icon, if we're not already there */}
             {(!isSocial && currentlyEnrolled) && (
-              <Link to={`/teacherSocial/${loggedInUser.enrollment.patchName}`}>
+              <Link to={`/teacherSocial/${loggedInUser.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName}`}>
                 <img
                   src={Enrolled}
                   alt="Enrolled Home Icon"
                   className="filter-white"
-                  onClick={() => pageUpdate(8)}
                   title="Go to your teachers social page"
                 />
               </Link>
@@ -172,3 +171,4 @@ export const Header = ({
     </header >
   );
 };
+export default withRouter(Header);

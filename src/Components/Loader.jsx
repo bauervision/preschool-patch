@@ -2,7 +2,8 @@ import React from 'react';
 import { Corner } from '../images';
 
 const Loader = () => (
-  <div className="Flex Col JustifyCenter AlignItems">
+  <div className="Flex JustifyCenter AlignItems PinkFont CursiveFont LargeFont">
+    Loading...
     <img
       src={Corner}
       alt='corner'

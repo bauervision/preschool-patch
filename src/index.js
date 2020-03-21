@@ -24,7 +24,6 @@ import { f, database } from './config';
 
 const App = () => {
   const [patchData, setPatchData] = useState(null); // all user data for admin
-  const [leaderData, setLeaderData] = useState([]);// raw data from DB
   const [clientData, setClientData] = useState(null);// raw data from DB
   const [selection, setSelection] = useState(null); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
@@ -38,6 +37,7 @@ const App = () => {
   const [loadingSocial, setLoadingSocial] = useState(true);
   const [socialPosts, setSocialPosts] = useState(null);
   const [socialPostId, setSocialPostId] = useState(null);
+  const [redirect, setRedirect] = useState({ to: '/' });
 
 
   // keep messages updated
@@ -178,9 +178,9 @@ const App = () => {
   };
 
   const handleLogOut = () => {
+    setRedirect({ to: '/' });
     setPatchData(null);
     setClientData(null);
-    setLeaderData(null);
     setLoggedInUser(null);
     setUserId('');
     setIsLeader(false);
@@ -190,10 +190,7 @@ const App = () => {
     setLoadingClients(true);
   };
 
-  const handleMemberSelection = (member) => {
-    setSelection(member);
-    // history.push(`/profile/${member.id}`);
-  };
+  const handleMemberSelection = (member) => setSelection(member);
 
 
   const getClientData = (clientId) => {
@@ -299,7 +296,7 @@ const App = () => {
           });
 
           setPatchData(data);
-          // history.push('/admin');
+          setRedirect({ to: '/admin' });
         }
       }
     });
@@ -336,10 +333,10 @@ const App = () => {
           fetchSocialActivity(user.uid);
           // if leader has new client requests go to client admin first
           if (unAcceptedClient) {
-            // history.push(`/clientAdmin/${curUser.id}`);
+            setRedirect({ to: `/clientAdmin/${curUser.id}` });
           } else {
             // otherwise go to social page
-            // history.push(`/teacherSocial/${curUser.patchName}`);
+            setRedirect({ to: `/teacherSocial/${curUser.patchName}` });
           }
         }
       });
@@ -361,7 +358,7 @@ const App = () => {
               // grab social feed which is the ID of the leader we're enrolled with
               setSocialPostId(curUser.public.enrollment.submittedTo);// social postID will always be the leaders ID
               fetchSocialActivity(curUser.public.enrollment.submittedTo);
-              // history.push(`/teacherSocial/${curUser.public.enrollment.patchName}`);
+              setRedirect({ to: `/teacherSocial/${curUser.public.enrollment.patchName}` });
             }
           }
         });
@@ -469,30 +466,6 @@ const App = () => {
   };
 
 
-  const getLeaderData = () => {
-    // grab ref to the data
-    const leaderdata = database.ref('leaders');
-    // now get the data stored there, and use "on value" to make the data live
-    leaderdata.on('value', (snapshot) => {
-      if (snapshot.val()) {
-        setLeaderData(snapshot.val());
-      }
-    });
-  };
-
-  /* On Mount, fetch ALL leader data, this is for the public viewing of teachers */
-  useEffect(() => {
-    handleLoginCheck();
-    if (leaderData.length === 0) {
-      getLeaderData();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => { getLeaderData(); }, []);
-
-  // BIG TODO:  add in proper routing so page doesnt update on refresh so bad
   return (
     <Router>
       <div className="App">
@@ -501,7 +474,6 @@ const App = () => {
           <Route
             path="/createAccount"
             render={() => <CreateAccount
-              leaderData={leaderData}
               handleLogin={handleLogin}
               loggedInUser={loggedInUser}
               isLeader={isLeader}
@@ -610,7 +582,6 @@ const App = () => {
 
           <Route
             path="/login" render={() => <Login
-              leaderData={leaderData}
               handleLogin={handleLogin}
               handleLogOut={handleLogOut}
               loggedInUser={loggedInUser}
@@ -622,7 +593,6 @@ const App = () => {
           <Route
             path='/'
             render={() => <PublicLanding
-              leaderData={leaderData}
               handleMemberSelection={handleMemberSelection}
               handleLogin={handleLogin}
               handleLogOut={handleLogOut}
@@ -632,6 +602,7 @@ const App = () => {
               clientData={clientData}
               myMessages={myMessages && myMessages}
               userId={userId}
+              redirect={redirect}
             />} />
         </Switch>
       </div>

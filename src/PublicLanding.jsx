@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import ProfileCard from './ProfileCard';
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Toast, Loader } from './Components';
 
 import { Logo, Elegant, Corner, IvyHeart } from './images';
+
+import { database } from './config';
 
 const PublicLanding = ({
   leaderData,
@@ -17,7 +19,8 @@ const PublicLanding = ({
   isLeader,
   myMessages,
   userId,
-  history
+  history,
+  redirect
 }) => {
   // handle local state
   const [filteredData, setFilteredData] = useState(null);
@@ -26,22 +29,26 @@ const PublicLanding = ({
   const [showTeacher, setShowTeacher] = useState(false);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
 
+  /* On Mount, fetch leader data for searching */
   useEffect(() => {
-    if (filteredData) {
-      setLoadingLeaders(false);
+    if (!filteredData) {
+      // now get the data stored there, and use "on value" to make the data live
+      database.ref('leaders').on('value', (snapshot) => {
+        if (snapshot.val()) {
+          const leadersArray = Object.entries(snapshot.val());
+          const newData = [];
+          leadersArray.forEach((elem) => { newData.push(elem[1].public); });
+          setFilteredData(newData);
+          setLoadingLeaders(false);
+        }
+      });
     }
   }, [filteredData]);
 
-  /* On Mount, fetch data, check login */
+  // handle initial login re-directs
   useEffect(() => {
-    // incoming data is an obj, so lets convert it to a useable array
-    if (leaderData) {
-      const leadersArray = Object.entries(leaderData);
-      const newData = [];
-      leadersArray.forEach((elem) => { newData.push(elem[1].public); });
-      setFilteredData(newData);
-    }
-  }, [leaderData]);
+    history.push(redirect.with);
+  }, [history, redirect]);
 
   useEffect(() => {
     if (loggedInUser) {
@@ -103,7 +110,7 @@ const PublicLanding = ({
         userId={userId}
       />
 
-      {/* Top Left Title */}
+      {/* Top Left Title if we're logged in*/}
       {loggedInUser
       && <div className="CursiveFont SuperFont TextLeft Buffer HideMobile">Preschool Patch</div>
       }
@@ -181,8 +188,8 @@ const PublicLanding = ({
                       <br />
                     </p>
                     <div>
-                      <div className="CursiveFont LargeFont">Keys to success: </div>
-                      <ul style={{ textAlign: 'left' }}>
+                      <div className="CursiveFont LargeFont ">Keys to success: </div>
+                      <ul className='SimpleBorder TextLeft'>
                         <li>
                 Convert a space in your home to a warm preschool
                 environment, take pictures and upload them to your profile

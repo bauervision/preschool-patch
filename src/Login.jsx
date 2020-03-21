@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 
 // Components
-import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection } from './Components';
+import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection, Loader } from './Components';
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword } from './helpers/auth';
-import { Add, Elegant, Corner } from './images';
+import { Add, Elegant } from './images';
 
-const Login = ({ pageUpdate, handleLogin, history }) => {
+const Login = ({ handleLogin, history }) => {
   // handle local state
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
@@ -80,6 +80,7 @@ const Login = ({ pageUpdate, handleLogin, history }) => {
     } else if (status) {
       // otherwise we had a successful login
       handleLogin(status.user, newUserData);
+      history.push('/');
     }
   };
 
@@ -172,7 +173,7 @@ const Login = ({ pageUpdate, handleLogin, history }) => {
   return (
     <div >
       <div>
-        <Header pageUpdate={pageUpdate} isLogin />
+        <Header isLogin />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Login / Sign-up!</div>
 
@@ -208,7 +209,7 @@ const Login = ({ pageUpdate, handleLogin, history }) => {
                           Are you a Parent?
                         </button>
 
-                        <button type="button" onClick={() => pageUpdate(2)}>
+                        <button type="button"onClick={() => history.push('/createAccount')}>
                           Do you want to be a Teacher?
                         </button>
 
@@ -319,6 +320,10 @@ const Login = ({ pageUpdate, handleLogin, history }) => {
                               />
                             </div>
 
+                            <div className="Margins SmallFont">By clicking "Register," you agree to our:
+                              <br/>
+                              <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
+                            </div>
 
                             {emailError || passwordError ? (
                               <div className="FakeButton">
@@ -340,9 +345,7 @@ const Login = ({ pageUpdate, handleLogin, history }) => {
                 // Existing User
                   <>
                     {loadingUser ? (
-                      <div className="Flex Col JustifyCenter AlignItems">
-                        <img src={Corner} alt='corner' className='filter-pink Rotate Alert' style={{ width: 50, height: 'auto', zIndex: 0, paddingRight: 10 }} />
-                      </div>
+                      <Loader/>
                     ) : (
                       <form onSubmit={() => setLoadingUser(true)}>
                         <div className="Flex Col JustifyCenter AlignItems">
@@ -363,6 +366,7 @@ const Login = ({ pageUpdate, handleLogin, history }) => {
                               passwordType={passwordType}
                               passwordError={passwordError}
                             />
+
 
                             {emailError || passwordError ? (
                               <div className="FakeButton">

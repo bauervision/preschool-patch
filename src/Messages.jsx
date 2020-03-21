@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { default as UUID } from 'uuid/v1';
 import moment from 'moment';
-import { Header } from './Components/Header';
+import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { SingleMessage, MessageNotification } from './Components';
 

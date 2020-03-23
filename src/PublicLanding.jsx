@@ -31,19 +31,18 @@ const PublicLanding = ({
 
   /* On Mount, fetch leader data for searching */
   useEffect(() => {
-    if (!filteredData) {
-      // now get the data stored there, and use "on value" to make the data live
-      database.ref('leaders').on('value', (snapshot) => {
-        if (snapshot.val()) {
-          const leadersArray = Object.entries(snapshot.val());
-          const newData = [];
-          leadersArray.forEach((elem) => { newData.push(elem[1].public); });
-          setFilteredData(newData);
-          setLoadingLeaders(false);
-        }
-      });
-    }
-  }, [filteredData]);
+    console.log('Mounted');
+    // now get the data stored there, and use "on value" to make the data live
+    database.ref('leaders').on('value', (snapshot) => {
+      if (snapshot.val()) {
+        const leadersArray = Object.entries(snapshot.val());
+        const newData = [];
+        leadersArray.forEach((elem) => { newData.push(elem[1].public); });
+        setFilteredData(newData);
+        setLoadingLeaders(false);
+      }
+    });
+  }, []);
 
   // handle initial login re-directs
   useEffect(() => {

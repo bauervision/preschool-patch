@@ -112,7 +112,7 @@ const ClientAdmin = ({ loggedInUser, myMessages, loadingClients, clientData, han
                 </div>
 
                 {clientState.length > 0 && (
-                  <div className="Flex JustifyCenter PinkBorder MarginTop">
+                  <div className={`Flex JustifyCenter  MarginTop ${selection ? 'PinkBorder' : ''}`}>
                     {selection ? (
                       <DetailViewClient
                         enrollmentData={clientState}

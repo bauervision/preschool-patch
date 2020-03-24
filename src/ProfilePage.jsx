@@ -21,8 +21,8 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
     kidTotal,
     name,
     rating,
-    photoUrl
-
+    photoUrl,
+    patchName,
   } = data;
 
   const herName = name.replace(/ .*/, '');
@@ -110,7 +110,9 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
                     }
                   }}
                   className="transparent NoMargin">
-                  <div className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder PaddingLite" style={{ borderLeft: 'none', borderRight: 'none' }}>
+                  <div
+                    className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder PaddingLite"
+                    style={{ borderLeft: 'none', borderRight: 'none', fontSize: '2em' }}>
 
                     {loggedInUser && (
                       <>
@@ -135,7 +137,7 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
         <div
           className="Flex Col AlignItems PinkFill SimpleBorder Margins" >
 
-          <div className="CursiveFont LargeFont Buffer">Gallery</div>
+          <div className="CursiveFont SuperFont Buffer" title="The name of this teacher's preschool. Each teacher can set their own name">{patchName || 'Un-named patch'}</div>
 
           <div className="MediumFont Raleway">
             {`" ${gallery && gallery.description} "`}

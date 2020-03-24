@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
+
 
 import ProfileCard from './ProfileCard';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
-import { Toast, Loader } from './Components';
+import { Toast, Loader, EditField } from './Components';
 
 import { Logo, Elegant, Corner, IvyHeart } from './images';
 
 import { database } from './config';
 
 const PublicLanding = ({
-  leaderData,
   handleMemberSelection,
   handleLogOut,
   loggedInUser,
@@ -23,26 +24,49 @@ const PublicLanding = ({
   redirect
 }) => {
   // handle local state
+  const [leaderData, setLeaderData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
+  const [filterZip, setFilterZip] = useState(false);
   const [showTeacher, setShowTeacher] = useState(false);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
+  const [userZip, setUserZip] = useState('00000');
+
+  const getZip = async () => {
+    axios
+      .get('https://ipinfo.io?token=dda6c95f86991f')
+      .then((response) => {
+        // handle success
+        setUserZip(response.data.postal);
+      })
+      .catch((error) => {
+        // handle error
+        console.log(error);
+      })
+      .finally(() => {
+        // always executed
+      });
+  };
 
   /* On Mount, fetch leader data for searching */
   useEffect(() => {
-    console.log('Mounted');
-    // now get the data stored there, and use "on value" to make the data live
+    // get the data stored there, and use "on value" to make the data live
     database.ref('leaders').on('value', (snapshot) => {
       if (snapshot.val()) {
         const leadersArray = Object.entries(snapshot.val());
         const newData = [];
-        leadersArray.forEach((elem) => { newData.push(elem[1].public); });
+        leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
         setFilteredData(newData);
+        setLeaderData(newData);
         setLoadingLeaders(false);
       }
     });
+
+    // also let's get the zipcode for the current user while we're in mount
+    getZip();
   }, []);
+
 
   // handle initial login re-directs
   useEffect(() => {
@@ -56,8 +80,8 @@ const PublicLanding = ({
   }, [loggedInUser]);
 
   // handleFilters
-  const filterAvailable = (e) => {
-    const { checked } = e.target;
+  const filterAvailable = () => {
+    const checked = !filterAvail;
     setFilterAvail(checked);
 
     if (checked) {
@@ -76,8 +100,8 @@ const PublicLanding = ({
     }
   };
 
-  const filterInfants = (e) => {
-    const { checked } = e.target;
+  const filterInfants = () => {
+    const checked = !filterAcceptingInfants;
     setFilterInfants(checked);
 
     if (checked) {
@@ -91,6 +115,20 @@ const PublicLanding = ({
       setFilteredData(leaderData);
     }
   };
+
+  const filterZipcode = () => {
+    const checked = !filterZip;
+    setFilterZip(checked);
+
+    if (checked) {
+      const update = filteredData.filter((elem) => elem.zipcode === Number(userZip));
+      setFilteredData(update);
+    } else {
+      // no filters so
+      setFilteredData(leaderData);
+    }
+  };
+
 
   const handleSelection = (memberData) => {
     // Pass current selection up to parent in order to render profile page
@@ -186,19 +224,19 @@ const PublicLanding = ({
                       <br />
                       <br />
                     </p>
-                    <div>
+                    <div className="Flex Col AlignItems JustifyCenter">
                       <div className="CursiveFont LargeFont ">Keys to success: </div>
-                      <ul className='SimpleBorder TextLeft'>
+                      <ul className=" SimpleBorder TextLeft HalfSize">
                         <li>
                 Convert a space in your home to a warm preschool
                 environment, take pictures and upload them to your profile
                 to impress prospective clients. This is the best thing you
                 can do to create interest in your business!
                         </li>
-                        <li>
+                        {/* <li>
                 Complete a simple background check. It costs $20 and
                 offers some valuable peace of mind for parents.
-                        </li>
+                        </li> */}
                         <li>
                 Post your profile on local Social Media Mom pages to
                 further spread the word about your availability!
@@ -246,23 +284,50 @@ const PublicLanding = ({
               </div>
 
               {/* Filter data by zipcode */}
-              <div>
+              <div className="Flex JustifyCenter AlignItems">
+                <div className="Flex AlignItems">
+                Show only Teachers in your zipcode?
+                  <EditField
+                    isCheck
+                    type="checkbox"
+                    forLabel="Available"
+                    onChange={(e) => filterZipcode(e)}
+                    value={filterZip}
+                  />
+                </div>
+                <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
                 <input
-                  placeholder="Enter Zipcode"
-                  style={{ width: 100 }}
+                  placeholder="Want to change the Zipcode?"
+                  style={{ width: 200 }}
                   className="InputStyle"
+                  onChange={(e) => setUserZip(e.target.value)}
+                  maxLength="5"
                 />
               </div>
 
-              <label>
-                Show Only Available
-                <input type="checkbox" onChange={(e) => filterAvailable(e)} />
-              </label>
+              <div className="Flex JustifyCenter AlignItems Padding">
+                <div className="Flex AlignItems Padding">
+                  <label> Show Only Available Teachers?</label>
+                  <EditField
+                    isCheck
+                    type="checkbox"
+                    forLabel="Available"
+                    onChange={() => filterAvailable()}
+                    value={filterAvail}
+                  />
+                </div>
+                <div className="Flex AlignItems Padding">
+                  <label>Teachers Accepting Infants?</label>
+                  <EditField
+                    isCheck
+                    type="checkbox"
+                    forLabel="Available"
+                    onChange={() => filterInfants()}
+                    value={filterAcceptingInfants}
+                  />
+                </div>
 
-              <label>
-                Accepting Infants
-                <input type="checkbox" onChange={(e) => filterInfants(e)} />
-              </label>
+              </div>
             </>
           ) : (
             <div className="CursiveFont SuperFont Buffer">
@@ -299,7 +364,7 @@ const PublicLanding = ({
         <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />
       </div>
 
-      <div className="CursiveFont RedicFont Margins PinkFont">Love Learning Early!</div>
+      <div className="CursiveFont RedicFont PinkFont" style={{ marginBottom: '1.3em' }}>Love Learning Early!</div>
 
       <Footer />
 

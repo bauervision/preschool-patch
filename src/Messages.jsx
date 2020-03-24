@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { default as UUID } from 'uuid/v1';
 import moment from 'moment';
 import Header from './Components/Header';
-import { Footer } from './Components/Footer';
 import { SingleMessage, MessageNotification } from './Components';
 
-import { Logo, Elegant, Send, Return } from './images';
+import { Send, Return } from './images';
 
 import { database } from './config';
 
@@ -70,7 +69,6 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
     if (index !== -1) {
       // if the last message was written by me...
       const myMessage = activeMessages[index].lastMessage.author === userId;
-
 
       // but the last "seen" person was them...
       const lastSeen = activeMessages[index].lastMessage.seen !== userId;
@@ -362,7 +360,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
       setSubmitEnrollment(enrolling);
 
       // now hit DB with updates
-      const submittedToId = activeMessages[0].fromName === activeThreadName ? activeMessages[0].from : activeMessages[0].to;
+
+      // first find the id of current thread within activeMessages
+      const index = activeMessages.findIndex((message) => message.messagesId === activeThreadId);
+      const submittedToId = activeMessages[index].fromName === activeThreadName ? activeMessages[index].from : activeMessages[index].to;
 
       let patchName = '';
       // we need to query the DB to pull the patchName from the leader
@@ -381,9 +382,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
         submitted: true,
         submittedTo: submittedToId,
         submittedToName: activeThreadName,
-        patchName
+        patchName,
       } : { submitted: false };
 
+      console.log(enrollment);
       database.ref(`users/${userId}/public/enrollment`).set(enrollment);
 
       // set our info into the teachers client data
@@ -444,7 +446,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   const myTeacher = !isLeader && (loggedInUser.enrollment.submitted && (loggedInUser.enrollment.submittedToName === activeThreadName));
   const showEnrollmentDetails = (showEnrollmentButton && !loggedInUser.enrollment.accepted) && (myTeacher);
   const disableEnrollment = (showEnrollmentButton && submitEnrollment) && (!myTeacher);
-  const messageWindowHeight = isLeader ? 350 : 400;
+  const messageWindowHeight = isLeader ? 450 : 500;
   const unReadMessages = activeMessages.some((elem) => (elem.lastMessage.author !== userId));
 
   return (
@@ -885,16 +887,10 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins responsive HideMobile" />
 
       </div>
 
-      <div className="Buffer HideMobile">
-        <img src={Logo} alt="logo" className="responsive" />
-      </div>
-      <div className="HideMobile">
-        <Footer />
-      </div>
+
     </div >
   );
 };

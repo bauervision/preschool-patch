@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import moment from 'moment';
 
+import { withRouter } from 'react-router-dom';
 import { EditField, KidSection, PatchLogo, Toast, SimpleImage } from './Components';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
@@ -9,10 +10,10 @@ import { Footer } from './Components/Footer';
 
 import { f, storage, database } from './config';
 
-import { Add, Elegant, Corner } from './images';
+import { Add, Elegant, Corner, Cancel, Accept } from './images';
 
 
-export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessages, userId }) => {
+const MyProfilePage = ({ loggedInUser, history, isLeader, myMessages, userId }) => {
   const now = moment().toDate().getTime();
 
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
@@ -71,6 +72,7 @@ export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessage
   const [thumbArray, setThumbArray] = useState([]);
   const [imageUrlArray, setImageUrlArray] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [deleteAccount, setDeleteAccount] = useState(false);
 
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
@@ -344,6 +346,35 @@ export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessage
     setThumbArray(thumbs);
   };
 
+  const confirmDelete = () => {
+    // user has confirmed they want to be deleted so we set their active property to false
+    const updatedUser = { ...loggedInUser, active: false };
+    // database.ref(`${loggedInUser.isLeader ? 'leaders' : 'users'}/${userId}/public`).set(updatedUser);
+
+    // if this was a leader, we need to loop through all of their clients and reset their enrollments
+    if (loggedInUser.isLeader) {
+      updatedUser.clients.forEach((client) => {
+        // database.ref(`users/${client.clientId}/public/enrollment`).set({ submitted: false });
+        // and remove this person from their messages
+        // const messageIdArray = loggedInUser.messages;
+        console.log(client);
+      });
+    }
+
+    // TODO: now we need to delete / archive? the messages and social page content
+
+    // const user = f.auth().currentUser;
+
+    // user.delete().then(() => {
+    //   // User deleted.
+    //   // finally push user back to home page
+    //   history.push('/');
+    // }).catch((error) => {
+    //   // An error happened.
+    //   console.log(error);
+    //   history.push('/');
+    // });
+  };
 
   return (
     <div>
@@ -409,10 +440,24 @@ export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessage
                   </div>
                 </div>)}
 
+                <div className={deleteAccount ? 'PinkBorder RoundBorder Padding' : ''}>
+                  {!deleteAccount
+                  && <button type="button" onClick={() => setDeleteAccount(!deleteAccount)}>{deleteAccount ? 'Cancel Delete' : 'Delete Account'}</button>}
+                  {deleteAccount && (
+                    <div>
+                      <div className="PinkFont  MediumFont"> Are you Sure?</div>
+                      <div>This cannot be undone.</div>
+                      <button title={ 'Remove my account'} className="transparent NoMargin" type='button' onClick={confirmDelete}><img src={Accept} alt="accept change"/></button>
+                      <button title={'Cancel Removal' } className="transparent NoMargin" type='button' onClick={() => setDeleteAccount(!deleteAccount)}><img src={Cancel} alt="deny change"/></button>
+                    </div>
+                  )}
+                </div>
 
               </div>
 
               <div className="Buffer PinkFont">Last Update: {lastDataUpdate}</div>
+              <hr/>
+
               <div className="CursiveFont LargeFont Buffer PinkFont">My Data</div>
               <div className="Flex MobileRowToCol AlignItems SimpleBorder JustifyCenter">
                 <EditField
@@ -580,40 +625,33 @@ export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessage
                 </div>)}
 
               <div>
-                <div className="CursiveFont LargeFont Buffer PinkFont">{isLeader ? 'About Me' : 'Important Info about my children'}</div>
-                <EditField
-                  isTextArea
-                  title=""
-                  placeholder={userData.aboutMe}
-                  type="text"
-                  forLabel="aboutMe"
-                  onChange={setAboutMe}
+                <div className="CursiveFont LargeFont Buffer PinkFont ">{isLeader ? 'About Me' : 'Important Info about my children'}</div>
+                <textarea
+                  className="ThreeQuarters"
+                  name="aboutMe"
+                  onChange={(e) => setAboutMe(e.target.value)}
                   value={updatedAboutMe}
+                  rows={4}
                 />
+
+
               </div>
 
               {/* Update Photo Gallery */}
               {isLeader && (
                 <div>
                   <div className="CursiveFont LargeFont Buffer PinkFont">Home Gallery</div>
-                  <EditField
-                    isTextArea
-                    small
-                    title="Description"
+
+                  <textarea
+                    className="ThreeQuarters"
                     placeholder="Enter a simple description for your home preschool"
-                    type="text"
-                    forLabel="aboutMe"
-                    onChange={setGalleryDescription}
+                    name="aboutMe"
+                    onChange={(e) => setGalleryDescription(e.target.value)}
                     value={updatedGalleryDesription}
+                    rows={4}
                   />
-                  {/* <EditField
-                    isFile
-                    multiple
-                    title="Upload Pictures"
-                    type="file"
-                    forLabel="homeGallery"
-                    onChange={handleGalleryUpdate}
-                  /> */}
+
+
                 </div>)}
 
               {/* Photo Gallery */}
@@ -666,19 +704,18 @@ export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessage
                   <div className="CursiveFont LargeFont Buffer PinkFont">Home Features</div>
                   <p>NOTE: To add multiple bullet points to your features list, simply add a comma! This will signify a new item in your list.</p>
 
-                  <EditField
-                    isTextArea
-                    small
-                    title=""
+                  <textarea
+                    className="ThreeQuarters"
                     placeholder="Enter a simple description for a feature in your home preschool"
-                    type="text"
-                    forLabel="Features"
-                    onChange={handleGalleryFeatureUpdate}
+                    name="features"
+                    onChange={(e) => handleGalleryFeatureUpdate(e.target.value)}
                     value={updatedGalleryFeatures}
+                    rows={4}
                   />
 
+
                   <div className="CursiveFont LargeFont Buffer ">Special Features of my Preschool</div>
-                  <div className="PinkBorder HalfSize MarginAuto">
+                  <div className=" HalfSize MarginAuto">
                     <ul className="TextLeft">
                       {updatedGalleryFeatures && updatedGalleryFeatures.map((feature) => (
                         <li key={feature} className="Raleway">{feature}</li>
@@ -710,3 +747,5 @@ export const MyProfilePage = ({ loggedInUser, updateSuccess, isLeader, myMessage
     </div>
   );
 };
+
+export default withRouter(MyProfilePage);

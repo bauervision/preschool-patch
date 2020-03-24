@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
-import { Home, MessageIcon, Enrolled } from '../images';
+import { Home, MessageIcon, Enrolled, Table } from '../images';
 
 import { SignUserOut } from '../helpers/auth';
 
@@ -100,7 +100,7 @@ const Header = ({
 
         {/* Show Home Icon, if we're not on home page' */}
         {!isHome && (
-          <Link to="/">
+          <Link to="/" title="Return to Home page">
             <img
               src={Home}
               alt="Home icon"
@@ -125,7 +125,7 @@ const Header = ({
                   src={Enrolled}
                   alt="Enrolled Home Icon"
                   className="filter-white"
-                  title="Go to your teachers social page"
+                  title="Go to your social page"
                 />
               </Link>
             )}
@@ -141,8 +141,11 @@ const Header = ({
 
             {/* Not on the Messages page */}
             {!isMessages && (
-              <Link className="Header_MessageBtn" type="button" to={`/messages/${userId}`}>
-                <img className={`${newMessageAlert ? 'filter-pink' : ' filter-darkgreen'}`} src={MessageIcon} alt="message icon" style={{ width: 30, height: 'auto' }} />
+              <Link
+                className="Header_MessageBtn"
+                to={`/messages/${userId}`}
+                title="Go to your messages">
+                <img className={`${newMessageAlert ? 'filter-pink' : ' filter-darkgreen'}`} src={MessageIcon} alt="message icon" />
               </Link>
             )}
 
@@ -152,13 +155,14 @@ const Header = ({
               <Link
                 className="SocialMessageBtnHeader Flex AlignItems JustifyCenter"
                 key={loggedInUser && loggedInUser.name}
-                type="button"
-                to={`/myProfile/${userId}`} >
+                to={`/myProfile/${userId}`}
+                title="Your Profile">
                 <img style={{ width: 50, borderRadius: 50 }} src={loggedInUser && loggedInUser.photoUrl} alt='client pic' />
               </Link>
             )}
 
-            {(!isAdmin && isLeader) && <Link className='HeaderButton' to="/clientAdmin">Client Admin</Link>}
+            {(!isAdmin && isLeader) && <Link className="Header_MessageBtn" to="/clientAdmin" title="Client Admin">
+              <img src={Table} alt='client admin' className="filter-white"/></Link>}
 
             {/* If we are logged in, always show logout */}
             <button className='HeaderButton' onClick={LogOut}>Logout</button>

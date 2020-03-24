@@ -10,7 +10,7 @@ import PublicLanding from './PublicLanding';
 import { CreateAccount } from './CreateAccount';
 import Login from './Login';
 import ProfilePage from './ProfilePage';
-import { MyProfilePage } from './MyProfilePage';
+import MyProfilePage from './MyProfilePage';
 import ClientAdmin from './ClientAdmin';
 import { Messages } from './Messages';
 import { Admin } from './Admin';
@@ -398,6 +398,7 @@ const App = () => {
             public: {
               aboutMe:
                 'I am brand new to Preschool Patch!  I will update my profile ASAP.',
+              active: true,
               age: newUserData.age,
               available: true,
               email: newUserData.email,
@@ -433,6 +434,7 @@ const App = () => {
               lastLogin: user.metadata.lastSignInTime
             },
             public: {
+              active: true,
               email: newUserData.email,
               enrollment: { submitted: false },
               id: user.uid,

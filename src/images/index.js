@@ -38,3 +38,4 @@ export { default as SmallLeaves } from './leavesSmall.png';
 export { default as Return } from './return.png';
 export { default as Contact } from './contact.png';
 export { default as Table } from './table.png';
+export { default as Pay } from './payments.png';

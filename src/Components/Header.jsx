@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
-import { Home, MessageIcon, Enrolled, Table } from '../images';
+import { Home, MessageIcon, Enrolled, Table, Pay } from '../images';
 
 import { SignUserOut } from '../helpers/auth';
 
@@ -13,6 +13,7 @@ const Header = ({
   isSocial,
   isAdmin,
   isMessages,
+  isPayment,
   loggedInUser,
   myMessages,
   userId,
@@ -130,6 +131,19 @@ const Header = ({
               </Link>
             )}
 
+            {/* Show Payment page Icon, if we're not already there */}
+            {(!isPayment && currentlyEnrolled) && (
+              <Link to={`/payments/${userId}`}>
+                <img
+                  src={Pay}
+                  alt="Payments Home Icon"
+                  className="filter-white"
+                  title="Go to your payments page"
+                />
+              </Link>
+            )}
+
+            {/* TODO: need to figure out how to best handle converting parent accounts to teacher accounts */}
             {/* Only show this button if we arent a leader, and not on the create page */}
             {(isHome && !isLeader) && (
               <div className="HideMobile">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Checked, Unchecked } from '../images';
 
-const SimpleTable = ({ data, headerData, handleSelection }) => {
+const SimpleTable = ({ data, headerData, handleSelection, isParent }) => {
   const [childData, setChildData] = useState([]);
 
 
@@ -18,25 +18,41 @@ const SimpleTable = ({ data, headerData, handleSelection }) => {
   const setNewEntries = () => {
     const childUpdate = [];
     if (data) {
+      // if a teacher
+      if (!isParent) {
       // for each parent in client data...
-      data.forEach((parent) => {
+        data.forEach((parent) => {
         // loop through each child and create a new entry
-        if (parent.clientData?.children.length > 0) {
-          parent.clientData.children.forEach((child) => {
-            const childAge = getChildAge(child.year, child.month, child.day);
-            const newEntry = {
-              name: child.name,
-              age: childAge,
-              parent: parent.clientData.name,
-              phone: parent.clientData.phone,
-              enrollment: child.enrollment,
-              active: parent.clientData.enrollment.accepted
-            };
-            // push this child onto array
-            childUpdate.push(newEntry);
-          });
-        }
-      });
+          if (parent.clientData?.children.length > 0) {
+            parent.clientData.children.forEach((child) => {
+              const childAge = getChildAge(child.year, child.month, child.day);
+              const newEntry = {
+                name: child.name,
+                age: childAge,
+                parent: parent.clientData.name,
+                phone: parent.clientData.phone,
+                enrollment: child.enrollment,
+                active: parent.clientData.enrollment.accepted
+              };
+              // push this child onto array
+              childUpdate.push(newEntry);
+            });
+          }
+        });
+      } else {
+        // is a parent
+        data.forEach((child) => {
+          const childAge = getChildAge(child.year, child.month, child.day);
+          const newEntry = {
+            name: child.name,
+            age: childAge,
+            enrollment: child.enrollment,
+            weekly: child.weekly
+          };
+          // push this child onto array
+          childUpdate.push(newEntry);
+        });
+      }
 
       setChildData(childUpdate);
     }

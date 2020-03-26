@@ -17,6 +17,7 @@ import { Admin } from './Admin';
 import { TeacherSocialPage } from './TeacherSocialPage';
 import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
+import Payments from './Payments';
 
 
 import { f, database } from './config';
@@ -589,6 +590,14 @@ const App = () => {
               loggedInUser={loggedInUser}
               kidTotal={kidTotal}
               addNewChildInfo={addNewChildInfo}
+              clientData={clientData}
+            />}/>
+
+          <Route
+            path="/payments/*" render={() => <Payments
+              handleLogin={handleLogin}
+              handleLogOut={handleLogOut}
+              loggedInUser={loggedInUser}
               clientData={clientData}
             />}/>
 

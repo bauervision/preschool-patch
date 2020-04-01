@@ -121,7 +121,9 @@ const Header = ({
 
             {/* Show Teachers Social page Icon, if we're not already there */}
             {(!isSocial && currentlyEnrolled) && (
-              <Link to={`/teacherSocial/${loggedInUser.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName}`}>
+              <Link
+                to={`/teacherSocial/${loggedInUser.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName}`}
+                className="Header_MessageBtn">
                 <img
                   src={Enrolled}
                   alt="Enrolled Home Icon"
@@ -133,7 +135,7 @@ const Header = ({
 
             {/* Show Payment page Icon, if we're not already there */}
             {(!isPayment && currentlyEnrolled) && (
-              <Link to={`/payments/${userId}`}>
+              <Link to={`/payments/${userId}`} className="Header_MessageBtn">
                 <img
                   src={Pay}
                   alt="Payments Home Icon"
@@ -145,13 +147,13 @@ const Header = ({
 
             {/* TODO: need to figure out how to best handle converting parent accounts to teacher accounts */}
             {/* Only show this button if we arent a leader, and not on the create page */}
-            {(isHome && !isLeader) && (
+            {/* {(isHome && !isLeader) && (
               <div className="HideMobile">
                 <Link className='HeaderButton' to="/createAccount" >
                     Become a Patch Leader!
                 </Link>
               </div>
-            )}
+            )} */}
 
             {/* Not on the Messages page */}
             {!isMessages && (

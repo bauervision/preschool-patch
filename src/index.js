@@ -17,6 +17,7 @@ import { Admin } from './Admin';
 import { TeacherSocialPage } from './TeacherSocialPage';
 import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
+import { NotFound } from './NotFound';
 import Payments from './Payments';
 
 
@@ -603,6 +604,7 @@ const App = () => {
 
           <Route
             path='/'
+            exact
             render={() => <PublicLanding
               handleMemberSelection={handleMemberSelection}
               handleLogin={handleLogin}
@@ -614,7 +616,10 @@ const App = () => {
               myMessages={myMessages && myMessages}
               userId={userId}
               redirect={redirect}
-            />} />
+            />
+            } />
+
+          <Route component={NotFound}/>
         </Switch>
       </div>
     </Router>

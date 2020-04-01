@@ -917,30 +917,49 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
     padding: 1.3em;
     border-radius: 1.3em;
     border: 1px solid $PATCHGREEN;
-  }
-  tr{
-    padding: 1em;
-  }
-  tr:hover{ background-color:$MALACHITE; color:$GHOSTWHITE}
-  tr:nth-child(even){background-color: #f2f2f2;}
-  tr:nth-child(even):hover{background-color: $MALACHITE;color:$GHOSTWHITE}
 
-  thead{
-    border-collapse: collapse;
-  }
-  th{
-    padding: 1em;
-    text-align: left;
-    background-color: $PARADISEPINK;
-    color: white;
-  
-  }
+    
+    tbody{
 
+      tr{
+        font-size: 1em;
+
+        &:hover{ background-color:$MALACHITE; color:$GHOSTWHITE}
+      &:nth-child(even){background-color: #f2f2f2;}
+      &:nth-child(even):hover{background-color: $MALACHITE;color:$GHOSTWHITE}
+      }
+    }
+   
+
+    thead{
+      border-collapse: collapse;
+    }
+    th{
+      padding: 1em;
+      text-align: left;
+      background-color: $PARADISEPINK;
+      color: white;
+
+      &:first-child{
+        border-top-left-radius: 1em;
+      }
+
+      &:last-child{
+        border-top-right-radius: 1em;
+      }
+    }
+
+   
+   
+  }
+ 
   a{
     margin: 1em;
     color: $PARADISEPINK;
     text-decoration: none;
   }
+
+ 
 
   // Color Filters for tweaking image colors
   // based on original image being black!
@@ -991,7 +1010,7 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
     transition: all 0.3s ease-in-out;
     &:hover{
       background-color: transparent;
-      transform: scale(1.5);
+      transform: scale(1.25);
     }
   }
 

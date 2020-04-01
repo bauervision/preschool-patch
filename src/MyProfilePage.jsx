@@ -13,11 +13,12 @@ import { f, storage, database } from './config';
 import { Add, Elegant, Corner, Cancel, Accept } from './images';
 
 
-const MyProfilePage = ({ loggedInUser, history, isLeader, myMessages, userId }) => {
+const MyProfilePage = ({ loggedInUser, isLeader, myMessages, userId }) => {
   const now = moment().toDate().getTime();
 
   // Depending on if this is a leader, or a user, we need to grab and setup our page data
   let userData = {};
+
 
   if (isLeader) {
     userData = {

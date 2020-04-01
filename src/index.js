@@ -20,6 +20,7 @@ import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 import { NotFound } from './NotFound';
 import Payments from './Payments';
 
+import PrivateRoute from './authRoutes/PrivateRoute';
 
 import { f, database } from './config';
 
@@ -497,84 +498,98 @@ const App = () => {
             />}
           />
 
-          <Route
-            path="/myProfile*"
-            render={() => <MyProfilePage
-              loggedInUser={loggedInUser}
-              handleLogOut={handleLogOut}
-              updateSuccess={updateSuccess}
-              isLeader={isLeader}
-              clientData={clientData}
-              myMessages={myMessages && myMessages}
-              launchToast={toast}
-              userId={userId}
-            /> }
-          />
+          <PrivateRoute path = '/myProfile*' >
+            <Route
+              path="/myProfile*"
+              render={() => <MyProfilePage
+                loggedInUser={loggedInUser}
+                handleLogOut={handleLogOut}
+                updateSuccess={updateSuccess}
+                isLeader={isLeader}
+                clientData={clientData}
+                myMessages={myMessages && myMessages}
+                launchToast={toast}
+                userId={userId}
+              /> }
+            />
+          </PrivateRoute>
 
-          <Route
-            path="/clientAdmin*"
-            render={() => <ClientAdmin
-              loggedInUser={loggedInUser}
-              handleLogOut={handleLogOut}
-              updateSuccess={updateSuccess}
-              launchToast={toast}
-              clientData={clientData}
-              userId={userId}
-              myMessages={myMessages && myMessages}
-              isLeader={isLeader}
-              handleMessageUpdates={handleMessageUpdates}
-              loadingClients={loadingClients}
-              handleMemberSelection={handleMemberSelection}
-            />}
-          />
 
-          <Route
-            path="/messages*"
-            render={() => <Messages
-              loggedInUser={loggedInUser}
-              handleLogOut={handleLogOut}
-              updateSuccess={updateSuccess}
-              clientData={clientData && clientData}
-              userId={userId}
-              myMessages={myMessages && myMessages}
-              isLeader={isLeader}
-              handleMessageUpdates={handleMessageUpdates}
-              currentSelection={selection}
-            />}
-          />
+          <PrivateRoute path = '/clientAdmin*' >
+            <Route
+              path="/clientAdmin*"
+              render={() => <ClientAdmin
+                loggedInUser={loggedInUser}
+                handleLogOut={handleLogOut}
+                updateSuccess={updateSuccess}
+                launchToast={toast}
+                clientData={clientData}
+                userId={userId}
+                myMessages={myMessages && myMessages}
+                isLeader={isLeader}
+                handleMessageUpdates={handleMessageUpdates}
+                loadingClients={loadingClients}
+                handleMemberSelection={handleMemberSelection}
+              />}
+            />
 
-          <Route
-            path="/admin"
-            render={() => <Admin
-              loggedInUser={loggedInUser}
-              handleLogOut={handleLogOut}
-              updateSuccess={updateSuccess}
-              userId={userId}
-              myMessages={myMessages && myMessages}
-              isLeader={isLeader}
-              handleMessageUpdates={handleMessageUpdates}
-              patchData={patchData}
+          </PrivateRoute>
 
-            />}
-          />
 
-          <Route
-            path="/teacherSocial*"
-            render={() => <TeacherSocialPage
-              loggedInUser={loggedInUser}
-              handleLogOut={handleLogOut}
-              updateSuccess={updateSuccess}
-              launchToast={toast}
-              clientData={clientData && clientData}
-              userId={userId}
-              myMessages={myMessages && myMessages}
-              isLeader={isLeader}
-              loadingSocial={loadingSocial}
-              socialPosts={socialPosts}
-              handlePostUpdates={handlePostUpdates}
+          <PrivateRoute path = '/messages*' >
+            <Route
+              path="/messages*"
+              render={() => <Messages
+                loggedInUser={loggedInUser}
+                handleLogOut={handleLogOut}
+                updateSuccess={updateSuccess}
+                clientData={clientData && clientData}
+                userId={userId}
+                myMessages={myMessages && myMessages}
+                isLeader={isLeader}
+                handleMessageUpdates={handleMessageUpdates}
+                currentSelection={selection}
+              />}
+            />
+          </PrivateRoute>
 
-            />}
-          />
+
+          <PrivateRoute path = '/admin' >
+            <Route
+              path="/admin"
+              render={() => <Admin
+                loggedInUser={loggedInUser}
+                handleLogOut={handleLogOut}
+                updateSuccess={updateSuccess}
+                userId={userId}
+                myMessages={myMessages && myMessages}
+                isLeader={isLeader}
+                handleMessageUpdates={handleMessageUpdates}
+                patchData={patchData}
+
+              />}
+            />
+          </PrivateRoute>
+
+          <PrivateRoute path = '/teacherSocial*' >
+            <Route
+              path="/teacherSocial*"
+              render={() => <TeacherSocialPage
+                loggedInUser={loggedInUser}
+                handleLogOut={handleLogOut}
+                updateSuccess={updateSuccess}
+                launchToast={toast}
+                clientData={clientData && clientData}
+                userId={userId}
+                myMessages={myMessages && myMessages}
+                isLeader={isLeader}
+                loadingSocial={loadingSocial}
+                socialPosts={socialPosts}
+                handlePostUpdates={handlePostUpdates}
+
+              />}
+            />
+          </PrivateRoute>
 
 
           <Route path="/aboutUs" component={About} />
@@ -594,13 +609,15 @@ const App = () => {
               clientData={clientData}
             />}/>
 
-          <Route
-            path="/payments/*" render={() => <Payments
-              handleLogin={handleLogin}
-              handleLogOut={handleLogOut}
-              loggedInUser={loggedInUser}
-              clientData={clientData}
-            />}/>
+          <PrivateRoute path = '/payments/*' >
+            <Route
+              path="/payments/*" render={() => <Payments
+                handleLogin={handleLogin}
+                handleLogOut={handleLogOut}
+                loggedInUser={loggedInUser}
+                clientData={clientData}
+              />}/>
+          </PrivateRoute>
 
           <Route
             path='/'

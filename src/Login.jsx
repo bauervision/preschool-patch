@@ -8,8 +8,9 @@ import { Footer } from './Components/Footer';
 import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection, Loader } from './Components';
 
 // import { SignUp } from "./SignUp";
-import { RegisterUser, LoginUserEmailPassword } from './helpers/auth';
+import { RegisterUser, LoginUserEmailPassword, PasswordReset, SendValidationEmail } from './helpers/auth';
 import { Add, Elegant } from './images';
+
 
 const Login = ({ handleLogin, history }) => {
   // handle local state
@@ -27,6 +28,8 @@ const Login = ({ handleLogin, history }) => {
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
   const [kidTotal, setKidTotal] = useState([]);
   const [loadingUser, setLoadingUser] = useState(false);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
 
   const handleSubmitLogin = useCallback(async () => {
     setLoadingUser(true);
@@ -80,6 +83,7 @@ const Login = ({ handleLogin, history }) => {
       setLoginError(errorMessage);
     } else if (status) {
       // otherwise we had a successful login
+      SendValidationEmail(status.user);
       handleLogin(status.user, newUserData);
       history.push('/');
     }
@@ -170,6 +174,13 @@ const Login = ({ handleLogin, history }) => {
     setKidTotal(kids);
   };
 
+  const sendPasswordReset = async (e) => {
+    e.preventDefault();
+    if (!emailError) {
+      PasswordReset(email);
+      setResetSuccess(true);
+    }
+  };
 
   return (
     <div >
@@ -321,7 +332,7 @@ const Login = ({ handleLogin, history }) => {
                               />
                             </div>
 
-                            <div className="Margins SmallFont">By clicking "Register," you agree to our:
+                            <div className="Margins SmallFont">{"By clicking 'Register,' you agree to our:"}
                               <br/>
                               <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
                             </div>
@@ -348,41 +359,91 @@ const Login = ({ handleLogin, history }) => {
                     {loadingUser ? (
                       <Loader/>
                     ) : (
-                      <form onSubmit={() => setLoadingUser(true)}>
-                        <div className="Flex Col JustifyCenter AlignItems">
-                          <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
-                          <div className="Flex Col LoginForm BoxShadow">
-                            <BasicInput
-                              title="Email"
-                              type="email"
-                              forLabel="email"
-                              onChange={setEmail}
-                              value={email}
-                            />
+                      <>
+                        {/* Login Form */}
+                        {!forgotPassword
+                          ? (
+                            <form onSubmit={() => setLoadingUser(true)}>
+                              <div className="Flex Col JustifyCenter AlignItems">
+                                <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
+                                <div className="Flex Col LoginForm BoxShadow">
+                                  <BasicInput
+                                    title="Email"
+                                    type="email"
+                                    forLabel="email"
+                                    onChange={setEmail}
+                                    value={email}
+                                  />
 
-                            <PasswordInput
-                              handlePasswordVisibility={handlePasswordVisibility}
-                              setPassword={setPassword}
-                              password={password}
-                              passwordType={passwordType}
-                              passwordError={passwordError}
-                            />
+                                  <PasswordInput
+                                    handlePasswordVisibility={handlePasswordVisibility}
+                                    setPassword={setPassword}
+                                    password={password}
+                                    passwordType={passwordType}
+                                    passwordError={passwordError}
+                                  />
 
 
-                            {emailError || passwordError ? (
-                              <div className="FakeButton">
+                                  {emailError || passwordError ? (
+                                    <div className="FakeButton">
                               Enter Valid Email and Password
+                                    </div>
+                                  ) : (
+                                    <button type="submit">Login</button>
+                                  )}
+                                </div>
+
+                                <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
+
+                                {loginError && (
+                                  <div className="LoginError">{loginError}</div>
+                                )}
                               </div>
-                            ) : (
-                              <button type="submit">Login</button>
-                            )}
-                          </div>
-                          {loginError && (
-                            <div className="LoginError">{loginError}</div>
+                            </form>)
+                          : (
+
+                        // Password Reset Form
+                            <>
+                              {!resetSuccess ? (
+                                <form onSubmit={sendPasswordReset}>
+                                  <div className="Flex Col JustifyCenter AlignItems">
+                                    <div className="CursiveFont PinkFont LargeFont">Request Password Reset</div>
+                                    <div className="Flex Col LoginForm BoxShadow">
+                                      <BasicInput
+                                        title="Email"
+                                        type="email"
+                                        forLabel="email"
+                                        onChange={setEmail}
+                                        value={email}
+                                      />
+
+                                      {emailError || passwordError ? (
+                                        <div className="FakeButton">
+                              Enter Valid Email and Password
+                                        </div>
+                                      ) : (
+                                        <button type="submit">Reset Password</button>
+                                      )}
+                                    </div>
+
+                                    <button type="button" onClick={() => setForgotPassword(!forgotPassword)}>Oh! I remember it now!</button>
+
+                                  </div>
+                                </form>
+                              ) : (
+                                <>
+                                  <div className="PinkFont CursiveFont LargeFont"> Password has been reset!</div>
+                                  <p>Please check your email</p>
+                                </>
+                              )}
+
+
+                            </>
                           )}
-                        </div>
-                      </form>
+
+                      </>
                     )}
+
                   </>
                 )}
               </>

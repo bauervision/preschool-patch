@@ -19,6 +19,7 @@ import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 import { NotFound } from './NotFound';
 import Payments from './Payments';
+import PasswordReset from './Components/PasswordReset';
 
 import PrivateRoute from './authRoutes/PrivateRoute';
 
@@ -592,6 +593,7 @@ const App = () => {
           </PrivateRoute>
 
 
+          {/* <Route path="/passwordReset" exact component={PasswordReset} /> */}
           <Route path="/aboutUs" component={About} />
           <Route path="/contact" component={Contact} />
           <Route path="/faq" component={FAQ} />

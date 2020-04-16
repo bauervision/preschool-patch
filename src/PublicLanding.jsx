@@ -21,7 +21,8 @@ const PublicLanding = ({
   myMessages,
   userId,
   history,
-  redirect
+  redirect,
+  emailVerified
 }) => {
   // handle local state
   const [leaderData, setLeaderData] = useState(null);
@@ -145,6 +146,7 @@ const PublicLanding = ({
         isLeader={isLeader}
         myMessages={myMessages && myMessages}
         userId={userId}
+        emailVerified={emailVerified}
       />
 
       {/* Top Left Title if we're logged in*/}

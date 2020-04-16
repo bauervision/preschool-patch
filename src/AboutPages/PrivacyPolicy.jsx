@@ -1099,71 +1099,70 @@ provide you with the &quot;categories&quot; of personal information we collect
 as defined by California law. The categories we collect depending on the types
 of services you use are:</span></p>
 
-                <p className="MsoNormal"><span><span >o</span></span><span
-                >identifiers (such as name, address, email
+                <p className="MsoNormal"><span><span >&rsaquo;</span></span><span>identifiers (such as name, address, email
 address);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >commercial information (such as transaction
 data);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >financial data (such as payment method details
 and billing address);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >internet or other network or device activity
 (such as browsing history or usage information);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >geolocation information (e.g., your
 approximate location based on IP address, or precise location with your
 consent);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >inference data about you (e.g., the additional
 services or advertising we think would be of most interest to you based on your
 interactions with us);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >professional or employment-related data (e.g.,
 if you are a Preschool Provider, your references and employment history);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >education information (e.g., if you are a Preschool
 Provider, your level of education);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >legally protected classifications (such as
 gender or information obtained from a background check, where applicable);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >physical characteristics or description (e.g.,
 photos you choose to upload to your job postings or profile);</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >sensory or visual information (e.g. if you
 provide us this information in connection with senior Preschool planning or
 child Preschool)</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >medical information (e.g. if you provide us
 this information in connection with senior Preschool planning or child Preschool);
 and</span></p>
 
                 <p className="MsoNormal"><span
-                ><span >o<span > </span></span></span><span
+                ><span >&rsaquo;<span > </span></span></span><span
                 >other information that identifies or can be
 reasonably associated with you (e.g., registration and log-in information).</span></p>
 

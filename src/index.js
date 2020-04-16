@@ -32,6 +32,7 @@ const App = () => {
   const [selection, setSelection] = useState(null); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
   const [userId, setUserId] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);// make sure user has verified email before allowing things
   const [isLeader, setIsLeader] = useState(false); // set based on who logs in
   const [toast, setToast] = useState({ value: false, message: 'Welcome Back!' });
 
@@ -372,12 +373,13 @@ const App = () => {
 
 
   // check login status
-  const handleLoginCheck = () => {
+  const handleLoginCheck = (userLogData) => {
     f.auth().onAuthStateChanged((user) => {
       if (user) {
         // make sure we arent already logged in
         if (!loggedInUser) {
           getUserData(user);
+          setEmailVerified(user.emailVerified);
           updateSuccess(true, 'Welcome!');
         }
       } else {
@@ -459,7 +461,7 @@ const App = () => {
           .set(newUser).then(() => setLoggedInUser(newUser));
       }
       // regardless of who logged in...
-      handleLoginCheck();
+      handleLoginCheck(user);
     }
   };
 
@@ -496,6 +498,7 @@ const App = () => {
               clientData={clientData}
               myMessages={myMessages && myMessages}
               isLeader={isLeader}
+              emailVerified={emailVerified}
             />}
           />
 
@@ -625,6 +628,7 @@ const App = () => {
             path='/'
             exact
             render={() => <PublicLanding
+              emailVerified={emailVerified}
               handleMemberSelection={handleMemberSelection}
               handleLogin={handleLogin}
               handleLogOut={handleLogOut}

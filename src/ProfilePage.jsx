@@ -23,10 +23,11 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
     rating,
     photoUrl,
     patchName,
+    emailVerified
   } = data;
 
   const herName = name.replace(/ .*/, '');
-  const buttonLabel = loggedInUser ? (`${herName}`) : (`Login to contact ${herName}`);
+  const buttonLabel = loggedInUser ? (`${emailVerified ? herName : 'Please Verify Your Email First'}`) : (`Login to contact ${herName}`);
 
   return (
     <div>
@@ -99,13 +100,15 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
               <div className="CursiveFont SuperFont">About Me</div>
               <p className="MediumFont PinkFont Raleway SimpleBorder">{aboutMe}</p>
 
-              {/* Contact Button: If loggedInUser, otherwise notify to login*/}
+              {/* Contact Button: If loggedInUser and email verified, otherwise notify to login,*/}
               <div className="FullSize">
+
                 <button
+                  disabled={loggedInUser && !emailVerified}// disable if logged in user hasnt yet verified email
                   onClick={() => {
                     if (loggedInUser) {
                       history.push('/messages');
-                    } else {
+                    } else if (!loggedInUser) {
                       history.push('/login');
                     }
                   }}
@@ -116,12 +119,20 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
 
                     {loggedInUser && (
                       <>
-                        <div>Contact</div>
-                        <img src={Contact} alt="contact"/>
+                        {emailVerified ? (
+                          <>
+                            <div>Contact</div>
+                            <img src={Contact} alt="contact"/>
+                            {buttonLabel}
+                          </>
+                        ) : (
+                          <div> { buttonLabel }</div>
+                        )}
+
                       </>
                     )}
 
-                    {buttonLabel}
+
                   </div>
                 </button>
               </div>

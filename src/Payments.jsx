@@ -10,7 +10,7 @@ import { Logo, Elegant } from './images';
 import { database } from './config';
 
 
-const Payments = ({ loggedInUser }) => {
+const Payments = ({ loggedInUser, emailVerified }) => {
   const [rates, setRates] = useState(null);
   const [payments, setPayments] = useState(null);
   const [childrenUpdated, setChildrenUpdated] = useState([]);
@@ -65,7 +65,7 @@ const Payments = ({ loggedInUser }) => {
   return (
     <div>
       <div>
-        <Header isPayment loggedInUser={loggedInUser} isLeader={loggedInUser.isLeader} />
+        <Header isPayment loggedInUser={loggedInUser} isLeader={loggedInUser.isLeader} emailVerified={emailVerified}/>
 
         {/* Top Left Title */}
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Preschool Patch</div>

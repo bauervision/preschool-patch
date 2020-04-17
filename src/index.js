@@ -480,6 +480,8 @@ const App = () => {
       <div className="App">
         <ScrollToTop />
         <Switch>
+
+          {/* Create account for teachers */}
           <Route
             path="/createAccount"
             render={() => <CreateAccount
@@ -516,6 +518,7 @@ const App = () => {
                 myMessages={myMessages && myMessages}
                 launchToast={toast}
                 userId={userId}
+                emailVerified={emailVerified}
               /> }
             />
           </PrivateRoute>
@@ -535,6 +538,7 @@ const App = () => {
                 handleMessageUpdates={handleMessageUpdates}
                 loadingClients={loadingClients}
                 handleMemberSelection={handleMemberSelection}
+                emailVerified={emailVerified}
               />}
             />
 
@@ -553,6 +557,7 @@ const App = () => {
                 isLeader={isLeader}
                 handleMessageUpdates={handleMessageUpdates}
                 currentSelection={selection}
+                emailVerified={emailVerified}
               />}
             />
           </PrivateRoute>
@@ -569,7 +574,6 @@ const App = () => {
                 isLeader={isLeader}
                 handleMessageUpdates={handleMessageUpdates}
                 patchData={patchData}
-
               />}
             />
           </PrivateRoute>
@@ -589,7 +593,7 @@ const App = () => {
                 loadingSocial={loadingSocial}
                 socialPosts={socialPosts}
                 handlePostUpdates={handlePostUpdates}
-
+                emailVerified={emailVerified}
               />}
             />
           </PrivateRoute>
@@ -620,6 +624,7 @@ const App = () => {
                 handleLogOut={handleLogOut}
                 loggedInUser={loggedInUser}
                 clientData={clientData}
+                emailVerified={emailVerified}
               />}/>
           </PrivateRoute>
 

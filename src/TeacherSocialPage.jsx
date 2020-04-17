@@ -7,7 +7,7 @@ import { SocialPost, NewPost, Toast } from './Components';
 import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
 
 
-export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts, updateSuccess, launchToast }) => {
+export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts, updateSuccess, launchToast }) => {
   const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
   const [thisPatchName, setThisPatchName] = useState(null);
 
@@ -50,7 +50,7 @@ export const TeacherSocialPage = ({ pageUpdate, loggedInUser, isLeader, myMessag
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} isSocial loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} userId={userId}/>
+        <Header pageUpdate={pageUpdate} isSocial loggedInUser={loggedInUser} isLeader={isLeader} myMessages={myMessages} userId={userId} emailVerified={emailVerified}/>
 
         {/* Top Left Title */}
         <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>Preschool Patch</div>

@@ -9,7 +9,7 @@ import { Toast, Ratings, SimpleTable, DetailViewClient } from './Components';
 import { Corner, Logo, Elegant } from './images';
 import { database } from './config';
 
-const ClientAdmin = ({ loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection, userId, launchToast, updateSuccess }) => {
+const ClientAdmin = ({ emailVerified, loggedInUser, myMessages, loadingClients, clientData, handleMemberSelection, userId, launchToast, updateSuccess }) => {
   const [clientState, setClientState] = useState([]);
   const [clientDataState, setClientDataState] = useState([]);
   const [selection, setSelection] = useState(null);
@@ -71,7 +71,7 @@ const ClientAdmin = ({ loggedInUser, myMessages, loadingClients, clientData, han
   return (
     <div>
       <div>
-        <Header isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} userId={userId} />
+        <Header isAdmin loggedInUser={loggedInUser} isLeader={true} myMessages={myMessages} userId={userId} emailVerified={emailVerified}/>
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Client Admin</div>
 

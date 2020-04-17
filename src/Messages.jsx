@@ -23,7 +23,7 @@ const defaultMessage = {
   toUrl: null
 };
 
-export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates, currentSelection }) => {
+export const Messages = ({ emailVerified, pageUpdate, loggedInUser, clientData, myMessages, userId, isLeader, handleMessageUpdates, currentSelection }) => {
   const now = moment().toDate().getTime();
   // mount setup default message
   useEffect(() => {
@@ -452,7 +452,7 @@ export const Messages = ({ pageUpdate, loggedInUser, clientData, myMessages, use
   return (
     <div>
       <div>
-        <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} isLeader={isLeader} isMessages />
+        <Header pageUpdate={pageUpdate} loggedInUser={loggedInUser} isLeader={isLeader} isMessages emailVerified={emailVerified}/>
 
         <div className="CursiveFont SuperFont TextLeft Buffer" style={{ marginLeft: 30 }}>Messenger</div>
 

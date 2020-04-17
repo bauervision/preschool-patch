@@ -5,6 +5,8 @@ import { Home, MessageIcon, Enrolled, Table, Pay } from '../images';
 
 import { SignUserOut } from '../helpers/auth';
 
+const defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490';
+
 const Header = ({
   myProfile,
   isHome,
@@ -17,7 +19,8 @@ const Header = ({
   loggedInUser,
   myMessages,
   userId,
-  history
+  history,
+  emailVerified
 }) => {
   const [newMessageAlert, setNewMessageAlert] = useState(false);
 
@@ -70,7 +73,6 @@ const Header = ({
       if ((isShow || atTop) !== hideOnScroll) setHideOnScroll(isShow);
     }
   }, [hideOnScroll]);
-
 
   useEffect(() => {
     if (myMessages?.length > 0) {
@@ -156,7 +158,7 @@ const Header = ({
             )} */}
 
             {/* Not on the Messages page */}
-            {!isMessages && (
+            {(!isMessages && emailVerified) && (
               <Link
                 className="Header_MessageBtn"
                 to={`/messages/${userId}`}
@@ -169,11 +171,11 @@ const Header = ({
             {/* Not on MyProfile page */}
             {!myProfile && (
               <Link
-                className="SocialMessageBtnHeader Flex AlignItems JustifyCenter"
-                key={loggedInUser && loggedInUser.name}
+                className={`SocialMessageBtnHeader Flex AlignItems JustifyCenter ${!emailVerified && 'greyBorder'}`}
+                key={loggedInUser?.name}
                 to={`/myProfile/${userId}`}
-                title="Your Profile">
-                <img style={{ width: 50, borderRadius: 50 }} src={loggedInUser && loggedInUser.photoUrl} alt='client pic' />
+                title={!emailVerified ? 'Remember to verify your email!' : 'Your Profile'}>
+                <img style={{ width: 50, borderRadius: 50 }} src={loggedInUser?.photoUrl || defaultImageUrl} alt='client pic' />
               </Link>
             )}
 
@@ -181,13 +183,16 @@ const Header = ({
               <img src={Table} alt='client admin' className="filter-white"/></Link>}
 
             {/* If we are logged in, always show logout */}
-            <button className='HeaderButton' onClick={LogOut}>Logout</button>
+            <button className='HeaderButton' onClick={LogOut} title="Log out from Preschool Patch">Logout</button>
 
           </>
         )}
 
 
       </div >
+      {loggedInUser && !emailVerified && (
+        <div className="TextRight">Email not verified: Messaging is disabled</div>
+      )}
     </header >
   );
 };

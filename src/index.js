@@ -373,7 +373,7 @@ const App = () => {
 
 
   // check login status
-  const handleLoginCheck = (userLogData) => {
+  const handleLoginCheck = () => {
     f.auth().onAuthStateChanged((user) => {
       if (user) {
         // make sure we arent already logged in
@@ -388,6 +388,7 @@ const App = () => {
       }
     });
   };
+
 
   const handleLogin = (user, newUserData, isaLeader) => {
     if (!loggedInUser) {
@@ -499,10 +500,11 @@ const App = () => {
               myMessages={myMessages && myMessages}
               isLeader={isLeader}
               emailVerified={emailVerified}
+              handleLoginCheck={handleLoginCheck}
             />}
           />
 
-          <PrivateRoute path = '/myProfile*' >
+          <PrivateRoute path = '/myProfile*' loggedInUser={loggedInUser} >
             <Route
               path="/myProfile*"
               render={() => <MyProfilePage
@@ -518,8 +520,7 @@ const App = () => {
             />
           </PrivateRoute>
 
-
-          <PrivateRoute path = '/clientAdmin*' >
+          <PrivateRoute path = '/clientAdmin*' loggedInUser={loggedInUser}>
             <Route
               path="/clientAdmin*"
               render={() => <ClientAdmin
@@ -539,8 +540,7 @@ const App = () => {
 
           </PrivateRoute>
 
-
-          <PrivateRoute path = '/messages*' >
+          <PrivateRoute path = '/messages*' loggedInUser={loggedInUser}>
             <Route
               path="/messages*"
               render={() => <Messages
@@ -557,8 +557,7 @@ const App = () => {
             />
           </PrivateRoute>
 
-
-          <PrivateRoute path = '/admin' >
+          <PrivateRoute path = '/admin' loggedInUser={loggedInUser}>
             <Route
               path="/admin"
               render={() => <Admin
@@ -575,7 +574,7 @@ const App = () => {
             />
           </PrivateRoute>
 
-          <PrivateRoute path = '/teacherSocial*' >
+          <PrivateRoute path = '/teacherSocial*' loggedInUser={loggedInUser}>
             <Route
               path="/teacherSocial*"
               render={() => <TeacherSocialPage
@@ -614,7 +613,7 @@ const App = () => {
               clientData={clientData}
             />}/>
 
-          <PrivateRoute path = '/payments/*' >
+          <PrivateRoute path = '/payments/*' loggedInUser={loggedInUser}>
             <Route
               path="/payments/*" render={() => <Payments
                 handleLogin={handleLogin}

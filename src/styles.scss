@@ -392,6 +392,11 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
     padding: 0.5em;
   }
 
+
+  .greyBorder{
+    border-color:grey ;
+    //border-width: 0.5em;
+  }
   .Add {
     background-color: transparent;
     border-radius: 4em;

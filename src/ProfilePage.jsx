@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { withRouter } from 'react-router-dom';
 import Header from './Components/Header';
@@ -8,7 +8,15 @@ import { Ratings } from './Components';
 import { DecorFlat, Logo, Elegant, NoPic, Contact } from './images';
 import LightBox from './Components/LightBox';
 
-const ProfilePage = ({ data, loggedInUser, history }) => {
+const ProfilePage = (props) => {
+  // make sure user gets pushed back to home if page loses user data
+  if (!props.data) {
+    props.history.push('/');
+    return null;
+  }
+
+
+  const { loggedInUser, history, emailVerified } = props;
   // pull out public data
   const {
     aboutMe,
@@ -23,11 +31,12 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
     rating,
     photoUrl,
     patchName,
-    emailVerified
-  } = data;
+
+  } = props.data;
+
 
   const herName = name.replace(/ .*/, '');
-  const buttonLabel = loggedInUser ? (`${emailVerified ? herName : 'Please Verify Your Email First'}`) : (`Login to contact ${herName}`);
+  const buttonLabel = loggedInUser ? herName : (`Login to contact ${herName}`);
 
   return (
     <div>
@@ -106,13 +115,15 @@ const ProfilePage = ({ data, loggedInUser, history }) => {
                 <button
                   disabled={loggedInUser && !emailVerified}// disable if logged in user hasnt yet verified email
                   onClick={() => {
-                    if (loggedInUser) {
+                    if (loggedInUser && emailVerified) {
                       history.push('/messages');
                     } else if (!loggedInUser) {
                       history.push('/login');
                     }
                   }}
-                  className="transparent NoMargin">
+                  className="transparent NoMargin"
+                  title={(loggedInUser && emailVerified) ? 'Message this teacher' : 'Verify your email first!'}
+                >
                   <div
                     className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder PaddingLite"
                     style={{ borderLeft: 'none', borderRight: 'none', fontSize: '2em' }}>

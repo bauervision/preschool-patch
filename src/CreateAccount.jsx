@@ -240,7 +240,6 @@ export const CreateAccount = ({
                     passwordError={passwordError}
                   />
 
-
                   <div className="Margins SmallFont">By clicking "Register," you agree to our:
                     <br/>
                     <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>

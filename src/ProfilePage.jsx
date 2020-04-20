@@ -41,7 +41,7 @@ const ProfilePage = (props) => {
   return (
     <div>
       <div className="MarginTopMobile">
-        <Header loggedInUser={loggedInUser} />
+        <Header loggedInUser={loggedInUser} emailVerified={emailVerified}/>
 
         <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>Profile Page</div>
 

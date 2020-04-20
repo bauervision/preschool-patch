@@ -834,6 +834,10 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
     color: $GHOSTWHITE;
   }
 
+  .italic{
+    font-style: italic;
+  }
+  
   .LoginError {
     margin: 1em;
     border: solid 1px red;

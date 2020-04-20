@@ -9,6 +9,9 @@ import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection, Load
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword, PasswordReset, SendValidationEmail } from './helpers/auth';
+
+import Verify from './Components/Verify';
+
 import { Add, Elegant } from './images';
 
 
@@ -30,6 +33,9 @@ const Login = ({ handleLogin, history }) => {
   const [loadingUser, setLoadingUser] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [newUserUnVerified, setNewUserUnVerified] = useState(false);
+  const [isHuman, setIsHuman] = useState(false);
+  const [formComplete, setFormComplete] = useState(false);
 
   const handleSubmitLogin = useCallback(async () => {
     setLoadingUser(true);
@@ -43,10 +49,23 @@ const Login = ({ handleLogin, history }) => {
     } else {
       // otherwise we had a successful login
       handleLogin(status.user);
-      history.push('/');
+      if (status.user.emailVerified) {
+        history.push('/');
+      } else {
+        setNewUserUnVerified(true);
+      }
     }
   }, [email, handleLogin, history, password]);
 
+
+  // verify when we have all the data we need
+  useEffect(() => {
+    if (email && name && phone && zipcode) {
+      setFormComplete(true);
+    } else {
+      setFormComplete(false);
+    }
+  }, [email, name, phone, zipcode]);
 
   useEffect(() => {
     if (loadingUser) {
@@ -82,10 +101,14 @@ const Login = ({ handleLogin, history }) => {
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
     } else if (status) {
-      // otherwise we had a successful login
+      // otherwise successful account creation so send the email
       SendValidationEmail(status.user);
+      // and inform the user they need to verify that email before they can get into the site
+      setNewUserUnVerified(true);
+      // TODO: not sure we want to do this
+      // still want to process the user account...?
       handleLogin(status.user, newUserData);
-      history.push('/');
+      // history.push('/');
     }
   };
 
@@ -185,196 +208,149 @@ const Login = ({ handleLogin, history }) => {
   return (
     <div >
       <div>
-        <Header isLogin />
+        {!newUserUnVerified
+        && <Header isLogin />
+        }
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Login / Sign-up!</div>
 
-        {/* Login Box */}
-        <div className="MarginTop">
-          <div
-            className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter ThreeQuarters MarginAuto"
-          >
-            <div>
-              <PageLogo
-                isLogin
-                title=""
-                handleUserTypeSwitch={handleUserTypeSwitch}
-                userType={userType}
-              />
-            </div>
+        {!newUserUnVerified ? (
+          <>
+            {/* Login Box */}
+            <div className="MarginTop">
+              <div
+                className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter ThreeQuarters MarginAuto"
+              >
+                <div>
+                  <PageLogo
+                    isLogin
+                    title=""
+                    handleUserTypeSwitch={handleUserTypeSwitch}
+                    userType={userType}
+                  />
+                </div>
 
 
-            {userType !== null && (
-              <>
-                {userType === 0 ? (
-                  // New User
+                {userType !== null && (
                   <>
+                    {userType === 0 ? (
+                    // New User
+                      <>
 
-                    {/* Are we wanting to be a Parent, or a Leader? */}
-                    <div className="Flex Col AlignItems JustifyCenter ">
+                        {/* Are we wanting to be a Parent, or a Leader? */}
+                        <div className="Flex Col AlignItems JustifyCenter ">
 
-                      <div className="CursiveFont PinkFont LargeFont">Please Select Account Type</div>
+                          <div className="CursiveFont PinkFont LargeFont">Please Select Account Type</div>
 
-                      <div className="Col">
-                        <button
-                          type="button" onClick={() => setChoice(1)}>
+                          <div className="Col">
+                            <button
+                              type="button" onClick={() => setChoice(1)}>
                           Are you a Parent?
-                        </button>
+                            </button>
 
-                        <button type="button"onClick={() => history.push('/createAccount')}>
+                            <button type="button"onClick={() => history.push('/createAccount')}>
                           Do you want to be a Teacher?
-                        </button>
+                            </button>
 
-                      </div>
+                          </div>
 
 
-                    </div>
+                        </div>
 
-                    {/* Display the proper form based on their choice */}
-                    {/* New User Enrolling */}
-                    {choice === 1 && (
-                      <form onSubmit={handleSubmitNew}>
-                        <div className="Flex Col JustifyCenter AlignItems">
-                          <h3>Thank you for Joining Preschool Patch!!</h3>
-                          <p>
+                        {/* Display the proper form based on their choice */}
+                        {/* New User Enrolling */}
+                        {choice === 1 && (
+                          <form onSubmit={handleSubmitNew}>
+                            <div className="Flex Col JustifyCenter AlignItems">
+                              <h3>Thank you for Joining Preschool Patch!!</h3>
+                              <p>
                             This will create your basic account so you can search and submit
                             requests to local Patch Leaders.
-                          </p>
+                              </p>
 
-                          <div className="Flex Col LoginForm BoxShadow FullSize">
+                              <div className="Flex Col LoginForm BoxShadow FullSize">
 
-                            <BasicInput
-                              title="Full Name"
-                              type="text"
-                              forLabel="name"
-                              onChange={setNameLogin}
-                              value={name}
-                            />
-
-                            <BasicInput
-                              title="Email"
-                              type="email"
-                              forLabel="email"
-                              onChange={setEmail}
-                              value={email}
-                            />
-
-                            <BasicInput
-                              title="Phone"
-                              type="text"
-                              forLabel="phone"
-                              onChange={setPhoneLogin}
-                              value={phone}
-                            />
-
-                            <BasicInput
-                              title="Zipcode"
-                              type="number"
-                              forLabel="postal-code"
-                              onChange={setZipcodeLogin}
-                              value={zipcode}
-                            />
-
-
-                            {/* Kid section */}
-                            <div className="Flex Col AlignItems SimpleBorder JustifyCenter" >
-
-                              <div className="PinkFont CursiveFont LargeFont">Children Info</div>
-
-                              {kidTotal && kidTotal.map((kid, index) => (
-                                <KidSection
-                                  key={kid.name + index.toString()}
-                                  location={index}
-                                  name={kid.name}
-                                  year={kid.year}
-                                  month={kid.month}
-                                  day={kid.day}
-                                  interest={kid.enrollment}
-                                  handleSetChildAge={handleSetChildAge}
-                                  handleSetChildName={handleSetChildName}
-                                  handleSetChildInterest={handleSetChildInterest}
-                                  handleSetBirthYear={handleSetBirthYear}
-                                  handleSetBirthMonth={handleSetBirthMonth}
-                                  handleSetBirthDay={handleSetBirthDay}
+                                <BasicInput
+                                  title="Full Name"
+                                  type="text"
+                                  forLabel="name"
+                                  onChange={setNameLogin}
+                                  value={name}
                                 />
-                              ))}
 
-                              {/* Add new Kid Info */}
-                              {kidTotal.length <= 4 ? (
-                                <>
-                                  <button id={kidTotal.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
-                                    <div> Add Additonal Child?</div>
-                                    <img src={Add} alt="Add new child info" />
-                                  </button>
+                                <BasicInput
+                                  title="Email"
+                                  type="email"
+                                  forLabel="email"
+                                  onChange={setEmail}
+                                  value={email}
+                                />
 
-                                  {kidTotal.length > 0 && <div >
-                                    <div> Set Enrollment Level to None to remove a child from the list </div>
+                                <BasicInput
+                                  title="Phone"
+                                  type="text"
+                                  forLabel="phone"
+                                  onChange={setPhoneLogin}
+                                  value={phone}
+                                />
 
-                                  </div>
-                                  }
-                                </>
-                              )
-                                // Once we hit our kid limit, disable adding more
-                                : (
-                                  <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
-                                )}
+                                <BasicInput
+                                  title="Zipcode"
+                                  type="number"
+                                  forLabel="postal-code"
+                                  onChange={setZipcodeLogin}
+                                  value={zipcode}
+                                />
 
 
-                            </div>
+                                {/* Kid section */}
+                                <div className="Flex Col AlignItems SimpleBorder JustifyCenter" >
 
-                            <div>
-                              <PasswordInput
-                                handlePasswordVisibility={handlePasswordVisibility}
-                                setPassword={setPassword}
-                                password={password}
-                                passwordType={passwordType}
-                                passwordError={passwordError}
-                              />
-                            </div>
+                                  <div className="PinkFont CursiveFont LargeFont">Children Info</div>
+                                  <p className="italic SmallFont">You can fill this out later.</p>
 
-                            <div className="Margins SmallFont">{"By clicking 'Register,' you agree to our:"}
-                              <br/>
-                              <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
-                            </div>
+                                  {kidTotal && kidTotal.map((kid, index) => (
+                                    <KidSection
+                                      key={kid.name + index.toString()}
+                                      location={index}
+                                      name={kid.name}
+                                      year={kid.year}
+                                      month={kid.month}
+                                      day={kid.day}
+                                      interest={kid.enrollment}
+                                      handleSetChildAge={handleSetChildAge}
+                                      handleSetChildName={handleSetChildName}
+                                      handleSetChildInterest={handleSetChildInterest}
+                                      handleSetBirthYear={handleSetBirthYear}
+                                      handleSetBirthMonth={handleSetBirthMonth}
+                                      handleSetBirthDay={handleSetBirthDay}
+                                    />
+                                  ))}
 
-                            {emailError || passwordError ? (
-                              <div className="FakeButton">
-                                Enter Valid Email and Password
-                              </div>
-                            ) : (
-                              <button type="submit" className="RegisterButton">
-                                  Register
-                              </button>
-                            )}
-                          </div>
-                          {loginError && <Error errorMessage={loginError} />}
-                        </div>
-                      </form>
-                    )}
+                                  {/* Add new Kid Info */}
+                                  {kidTotal.length <= 4 ? (
+                                    <>
+                                      <button id={kidTotal.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
+                                        <div> Add Additonal Child?</div>
+                                        <img src={Add} alt="Add new child info" />
+                                      </button>
 
-                  </>
-                ) : (
-                // Existing User
-                  <>
-                    {loadingUser ? (
-                      <Loader/>
-                    ) : (
-                      <>
-                        {/* Login Form */}
-                        {!forgotPassword
-                          ? (
-                            <form onSubmit={() => setLoadingUser(true)}>
-                              <div className="Flex Col JustifyCenter AlignItems">
-                                <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
-                                <div className="Flex Col LoginForm BoxShadow">
-                                  <BasicInput
-                                    title="Email"
-                                    type="email"
-                                    forLabel="email"
-                                    onChange={setEmail}
-                                    value={email}
-                                  />
+                                      {kidTotal.length > 0 && <div >
+                                        <div> Set Enrollment Level to None to remove a child from the list </div>
 
+                                      </div>
+                                      }
+                                    </>
+                                  )
+                                  // Once we hit our kid limit, disable adding more
+                                    : (
+                                      <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
+                                    )}
+
+
+                                </div>
+
+                                <div>
                                   <PasswordInput
                                     handlePasswordVisibility={handlePasswordVisibility}
                                     setPassword={setPassword}
@@ -382,32 +358,62 @@ const Login = ({ handleLogin, history }) => {
                                     passwordType={passwordType}
                                     passwordError={passwordError}
                                   />
-
-
-                                  {emailError || passwordError ? (
-                                    <div className="FakeButton">
-                              Enter Valid Email and Password
-                                    </div>
-                                  ) : (
-                                    <button type="submit">Login</button>
-                                  )}
                                 </div>
 
-                                <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
+                                <div className="Margins SmallFont">{"By clicking 'Register,' you agree to our:"}
+                                  <br/>
+                                  <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
+                                </div>
 
-                                {loginError && (
-                                  <div className="LoginError">{loginError}</div>
+
+                                {formComplete && (
+                                  <>
+
+                                    {!isHuman
+                                && <Verify handleVerify={setIsHuman} />
+                                    }
+
+                                    {emailError || passwordError ? (
+                                      <div className="FakeButton">
+                                        Enter Valid Email and Password
+                                      </div>
+                                    ) : (
+                                      <>
+                                        {!isHuman ? (
+                                          <div className="CursiveFont LargeFont">Please complete the Human verification above</div>
+                                        ) : (
+                                          <div className="Flex JustifyCenter AlignItems">
+                                            <button type="submit" className="RegisterButton HalfSize">
+                                            Register
+                                            </button>
+                                          </div>
+                                        )}
+
+                                      </>
+                                    )}
+                                  </>
                                 )}
-                              </div>
-                            </form>)
-                          : (
 
-                        // Password Reset Form
-                            <>
-                              {!resetSuccess ? (
-                                <form onSubmit={sendPasswordReset}>
+                              </div>
+                              {loginError && <Error errorMessage={loginError} />}
+                            </div>
+                          </form>
+                        )}
+
+                      </>
+                    ) : (
+                    // Existing User
+                      <>
+                        {loadingUser ? (
+                          <Loader/>
+                        ) : (
+                          <>
+                            {/* Login Form */}
+                            {!forgotPassword
+                              ? (
+                                <form onSubmit={() => setLoadingUser(true)}>
                                   <div className="Flex Col JustifyCenter AlignItems">
-                                    <div className="CursiveFont PinkFont LargeFont">Request Password Reset</div>
+                                    <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
                                     <div className="Flex Col LoginForm BoxShadow">
                                       <BasicInput
                                         title="Email"
@@ -417,46 +423,97 @@ const Login = ({ handleLogin, history }) => {
                                         value={email}
                                       />
 
+                                      <PasswordInput
+                                        handlePasswordVisibility={handlePasswordVisibility}
+                                        setPassword={setPassword}
+                                        password={password}
+                                        passwordType={passwordType}
+                                        passwordError={passwordError}
+                                      />
+
+
                                       {emailError || passwordError ? (
                                         <div className="FakeButton">
                               Enter Valid Email and Password
                                         </div>
                                       ) : (
-                                        <button type="submit">Reset Password</button>
+                                        <button type="submit">Login</button>
                                       )}
                                     </div>
 
-                                    <button type="button" onClick={() => setForgotPassword(!forgotPassword)}>Oh! I remember it now!</button>
+                                    <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
 
+                                    {loginError && (
+                                      <div className="LoginError">{loginError}</div>
+                                    )}
                                   </div>
-                                </form>
-                              ) : (
+                                </form>)
+                              : (
+
+                            // Password Reset Form
                                 <>
-                                  <div className="PinkFont CursiveFont LargeFont"> Password has been reset!</div>
-                                  <p>Please check your email</p>
+                                  {!resetSuccess ? (
+                                    <form onSubmit={sendPasswordReset}>
+                                      <div className="Flex Col JustifyCenter AlignItems">
+                                        <div className="CursiveFont PinkFont LargeFont">Request Password Reset</div>
+                                        <div className="Flex Col LoginForm BoxShadow">
+                                          <BasicInput
+                                            title="Email"
+                                            type="email"
+                                            forLabel="email"
+                                            onChange={setEmail}
+                                            value={email}
+                                          />
+
+                                          {emailError || passwordError ? (
+                                            <div className="FakeButton">
+                              Enter Valid Email and Password
+                                            </div>
+                                          ) : (
+                                            <button type="submit">Reset Password</button>
+                                          )}
+                                        </div>
+
+                                        <button type="button" onClick={() => setForgotPassword(!forgotPassword)}>Oh! I remember it now!</button>
+
+                                      </div>
+                                    </form>
+                                  ) : (
+                                    <>
+                                      <div className="PinkFont CursiveFont LargeFont"> Password has been reset!</div>
+                                      <p>Please check your email</p>
+                                    </>
+                                  )}
+
+
                                 </>
                               )}
 
-
-                            </>
-                          )}
+                          </>
+                        )}
 
                       </>
                     )}
-
                   </>
                 )}
-              </>
-            )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="Flex JustifyCenter AlignItems">
+            <div className="PinkFont CursiveFont LargeFont SimpleBorder SeeThru ThreeQuarters">Please Check your email and verify your account before continuing</div>
           </div>
+        )
+        }
 
-        </div>
 
       </div>
 
       <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
       <PatchLogo />
+
       <Footer />
+
     </div >
   );
 };

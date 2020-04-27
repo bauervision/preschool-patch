@@ -1,13 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import Axios from 'axios';
 
 import Header from '../Components/Header';
 import { Footer } from '../Components/Footer';
 
 
 import { Logo, Elegant } from '../images';
+import ContactForm from './ContactForm';
 
 
 const Contact = ({ pageUpdate, loggedInUser }) => {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleFormData = (formData) => {
+    const data = {
+      email: formData.email,
+      message: formData.comments,
+      firstName: formData.firstName,
+      lastName: formData.lastName
+    };
+
+    Axios.post('https://us-central1-preschoolpatch-f04be.cloudfunctions.net/submit', data)
+      .then((res) => {
+        setSubmitted(true);
+        return null;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div>
       <div>
@@ -34,7 +57,18 @@ const Contact = ({ pageUpdate, loggedInUser }) => {
             </div>
 
             <div className="MarginTop">
-              <div>Message Data here</div>
+              {submitted ? (
+                <div className="CursiveFont LargeFont PinkFont">
+                  Thank you for reaching out!<br/><br/>
+                   Someone will be in contact with you within 24 hours</div>
+
+              ) : (
+                <>
+                  <div>Questions regarding our service please complete the following form</div>
+                  <ContactForm handleFormData={handleFormData}/>
+                </>
+              )}
+
             </div>
 
 

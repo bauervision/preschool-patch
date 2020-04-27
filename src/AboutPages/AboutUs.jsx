@@ -5,6 +5,7 @@ import { Footer } from '../Components/Footer';
 
 
 import { Logo, Elegant } from '../images';
+import { Us } from '../images/photos';
 
 
 const AboutUs = ({ pageUpdate, loggedInUser }) => {
@@ -33,8 +34,18 @@ const AboutUs = ({ pageUpdate, loggedInUser }) => {
 
             </div>
 
-            <div className="MarginTop">
-              <div>Message Data here</div>
+            <div className="MarginTop SmallFont">
+              <p>We started Preschool Patch because we felt that there was a need to offer a better option for preschool services, and we wanted
+                to provide valuable stay at home moms with an opportunity to earn sustainable income.  By encouraging a class size limit of around 5,
+                not only do we believe that we keep the work manageable, but also we promote a healthy learning environment for the children.
+              <br/>
+              <br/>
+                Thank you for visiting our page and expressing interest in our business, we hope that you find a warm place in our patch and that
+                we can begin continue to grow together!
+              </p>
+
+
+              <img src={Us} alt="family" className="responsive" style={{ width: '25%' }}/>
             </div>
 
 

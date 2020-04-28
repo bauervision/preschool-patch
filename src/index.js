@@ -28,6 +28,7 @@ import { f, database } from './config';
 
 const App = () => {
   const [patchData, setPatchData] = useState(null); // all user data for admin
+  const [leaderData, setLeaderData] = useState(null);
   const [clientData, setClientData] = useState(null);// raw data from DB
   const [selection, setSelection] = useState(null); // whose profile are we viewing?
   const [loggedInUser, setLoggedInUser] = useState(null); // logged in user data
@@ -44,6 +45,17 @@ const App = () => {
   const [socialPostId, setSocialPostId] = useState(null);
   const [redirect, setRedirect] = useState({ to: '/' });
 
+  // make sure we always load the teachers
+  useEffect(() => {
+    database.ref('leaders').once('value', (snapshot) => {
+      if (snapshot.val() !== null) {
+        const leadersArray = Object.entries(snapshot.val());
+        const newData = [];
+        leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
+        setLeaderData(newData);
+      }
+    });
+  }, []);
 
   // keep messages updated
   useEffect(() => {
@@ -643,6 +655,7 @@ const App = () => {
               myMessages={myMessages && myMessages}
               userId={userId}
               redirect={redirect}
+              leaderData={leaderData}
             />
             } />
 

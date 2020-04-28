@@ -10,7 +10,6 @@ import { Toast, Loader, EditField } from './Components';
 
 import { Logo, Elegant, Corner, IvyHeart } from './images';
 
-import { database } from './config';
 
 const PublicLanding = ({
   handleMemberSelection,
@@ -22,10 +21,11 @@ const PublicLanding = ({
   userId,
   history,
   redirect,
-  emailVerified
+  emailVerified,
+  leaderData
 }) => {
   // handle local state
-  const [leaderData, setLeaderData] = useState(null);
+
   const [filteredData, setFilteredData] = useState(null);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
@@ -50,23 +50,18 @@ const PublicLanding = ({
       });
   };
 
-  /* On Mount, fetch leader data for searching */
+  /* make sure we fetch leader data for searching */
   useEffect(() => {
-    // get the data stored there, and use "on value" to make the data live
-    database.ref('leaders').on('value', (snapshot) => {
-      if (snapshot.val()) {
-        const leadersArray = Object.entries(snapshot.val());
-        const newData = [];
-        leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
-        setFilteredData(newData);
-        setLeaderData(newData);
-        setLoadingLeaders(false);
-      }
-    });
+    if (!leaderData) {
+      setLoadingLeaders(true);
+    } else {
+      setLoadingLeaders(false);
+      setFilteredData(leaderData);
+    }
 
     // also let's get the zipcode for the current user while we're in mount
     getZip();
-  }, []);
+  }, [leaderData]);
 
 
   // handle initial login re-directs
@@ -167,6 +162,7 @@ const PublicLanding = ({
             />
 
             <div className="HowItWorks PinkFill RoundBorder MarginTopMobileHome Mobile3 Nunito" >
+              {/* TODO all of this needs to be revamped */}
               <h3>How It Works</h3>
 
 

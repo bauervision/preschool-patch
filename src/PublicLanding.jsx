@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 
 
 import ProfileCard from './ProfileCard';
@@ -32,23 +32,23 @@ const PublicLanding = ({
   const [filterZip, setFilterZip] = useState(false);
   const [showTeacher, setShowTeacher] = useState(false);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
-  const [userZip, setUserZip] = useState('00000');
+  const [userZip, setUserZip] = useState('');
 
-  const getZip = async () => {
-    axios
-      .get('https://ipinfo.io?token=dda6c95f86991f')
-      .then((response) => {
-        // handle success
-        setUserZip(response.data.postal);
-      })
-      .catch((error) => {
-        // handle error
-        console.log(error);
-      })
-      .finally(() => {
-        // always executed
-      });
-  };
+  // const getZip = async () => {
+  //   axios
+  //     .get('https://ipinfo.io?token=dda6c95f86991f')
+  //     .then((response) => {
+  //       // handle success
+  //       setUserZip(response.data.postal);
+  //     })
+  //     .catch((error) => {
+  //       // handle error
+  //       console.log(error);
+  //     })
+  //     .finally(() => {
+  //       // always executed
+  //     });
+  // };
 
   /* make sure we fetch leader data for searching */
   useEffect(() => {
@@ -60,7 +60,7 @@ const PublicLanding = ({
     }
 
     // also let's get the zipcode for the current user while we're in mount
-    getZip();
+    // TODO: getZip();
   }, [leaderData]);
 
 
@@ -112,13 +112,20 @@ const PublicLanding = ({
     }
   };
 
+  const handleZipFilter = () => {
+    const update = filteredData.filter((elem) => elem.zipcode === Number(userZip));
+    setFilteredData(update);
+  };
+
+
   const filterZipcode = () => {
     const checked = !filterZip;
     setFilterZip(checked);
 
     if (checked) {
-      const update = filteredData.filter((elem) => elem.zipcode === Number(userZip));
-      setFilteredData(update);
+      if (userZip) {
+        handleZipFilter();
+      }
     } else {
       // no filters so
       setFilteredData(leaderData);
@@ -293,14 +300,20 @@ const PublicLanding = ({
                     value={filterZip}
                   />
                 </div>
-                <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
-                <input
-                  placeholder="Want to change the Zipcode?"
-                  style={{ width: 200 }}
-                  className="InputStyle"
-                  onChange={(e) => setUserZip(e.target.value)}
-                  maxLength="5"
-                />
+                {filterZip
+                && (
+                  <>
+                    <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
+                    <input
+                      placeholder="Enter your Zipcode"
+                      style={{ width: 200 }}
+                      className="InputStyle"
+                      onChange={(e) => setUserZip(e.target.value)}
+                      maxLength="5"
+                    />
+                    <button type="button" onClick={handleZipFilter}>Update</button>
+                  </>)
+                }
               </div>
 
               <div className="Flex JustifyCenter AlignItems Padding">

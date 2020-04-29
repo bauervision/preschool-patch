@@ -9,6 +9,7 @@ const ProfileCard = ({ data, handleSelection, history }) => {
     available,
     experience,
     rates,
+    id,
     infants,
     name,
     rating,
@@ -17,7 +18,7 @@ const ProfileCard = ({ data, handleSelection, history }) => {
 
   const getSelection = () => {
     handleSelection(data);
-    history.push(`/profile/${name}`);
+    history.push(`/profile/${id}`);
   };
 
   return (

@@ -19,7 +19,7 @@ import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 import { NotFound } from './NotFound';
 import Payments from './Payments';
-import PasswordReset from './Components/PasswordReset';
+
 
 import PrivateRoute from './authRoutes/PrivateRoute';
 
@@ -506,7 +506,7 @@ const App = () => {
           />
 
           <Route
-            path="/profile*"
+            path="/profile/*"
             render={() => <ProfilePage
               data={selection}
               loggedInUser={loggedInUser}

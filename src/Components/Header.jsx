@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
 import { Home, MessageIcon, Enrolled, Table, Pay } from '../images';
@@ -24,55 +24,6 @@ const Header = ({
 }) => {
   const [newMessageAlert, setNewMessageAlert] = useState(false);
 
-  function getScrollPosition({ element, useWindow }) {
-    const target = element ? element.current : document.body;
-    const position = target.getBoundingClientRect();
-
-    return useWindow
-      ? { x: window.scrollX, y: window.scrollY }
-      : { x: position.left, y: position.top };
-  }
-
-  function useScrollPosition(effect, deps, element, useWindow, wait) {
-    const position = useRef(getScrollPosition({ useWindow }));
-
-    let throttleTimeout = null;
-
-    const callBack = () => {
-      const currPos = getScrollPosition({ element, useWindow });
-      effect({ prevPos: position.current, currPos });
-      position.current = currPos;
-      throttleTimeout = null;
-    };
-
-    useLayoutEffect(() => {
-      const handleScroll = () => {
-        if (wait) {
-          if (throttleTimeout === null) {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            throttleTimeout = setTimeout(callBack, wait);
-          }
-        } else {
-          callBack();
-        }
-      };
-
-      window.addEventListener('scroll', handleScroll);
-
-      return () => window.removeEventListener('scroll', handleScroll);
-    }, deps);
-  }
-
-  const [hideOnScroll, setHideOnScroll] = useState(true);
-
-  useScrollPosition(({ prevPos, currPos }) => {
-    // we dont want to scroll the header away on the messenger
-    if (!isMessages) {
-      const isShow = currPos.y > prevPos.y;
-      const atTop = currPos.y === 0;
-      if ((isShow || atTop) !== hideOnScroll) setHideOnScroll(isShow);
-    }
-  }, [hideOnScroll]);
 
   useEffect(() => {
     if (myMessages?.length > 0) {
@@ -91,7 +42,7 @@ const Header = ({
   const currentlyEnrolled = (!isLeader ? (loggedInUser?.enrollment?.accepted || false) : true);
 
   return (
-    <header className={`Header LightShadow ${!hideOnScroll && 'HeaderHide'}`}>
+    <header className={'Header LightShadow '}>
       <div className="Flex AlignItems JustifyCenter">
 
         {!loggedInUser && (

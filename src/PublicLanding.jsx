@@ -24,7 +24,7 @@ const PublicLanding = ({
   emailVerified
 }) => {
   // handle local state
-
+  const [leaderData, setLeaderData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterAcceptingInfants, setFilterInfants] = useState(false);
@@ -58,6 +58,7 @@ const PublicLanding = ({
           const leadersArray = Object.entries(snapshot.val());
           const newData = [];
           leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
+          setLeaderData(newData);
           setFilteredData(newData);
         }
       });
@@ -98,7 +99,7 @@ const PublicLanding = ({
       setFilteredData(update);
     } else {
       // not filtering anything so revert to original leader data
-      setFilteredData(filteredData);
+      setFilteredData(leaderData);
     }
   };
 
@@ -114,7 +115,7 @@ const PublicLanding = ({
       setFilteredData(update);
     } else {
       // no filters so
-      setFilteredData(filteredData);
+      setFilteredData(leaderData);
     }
   };
 
@@ -134,7 +135,7 @@ const PublicLanding = ({
       }
     } else {
       // no filters so
-      setFilteredData(filteredData);
+      setFilteredData(leaderData);
     }
   };
 

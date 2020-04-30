@@ -208,9 +208,8 @@ const Login = ({ handleLogin, history }) => {
   return (
     <div >
       <div>
-        {!newUserUnVerified
-        && <Header isLogin />
-        }
+
+        <Header isLogin />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Login / Sign-up!</div>
 
@@ -465,9 +464,9 @@ const Login = ({ handleLogin, history }) => {
                                             value={email}
                                           />
 
-                                          {emailError || passwordError ? (
+                                          {emailError ? (
                                             <div className="FakeButton">
-                              Enter Valid Email and Password
+                                              Enter Valid Email
                                             </div>
                                           ) : (
                                             <button type="submit">Reset Password</button>

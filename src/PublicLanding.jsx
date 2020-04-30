@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 // import axios from 'axios';
 
-
+import { database } from './config';
 import ProfileCard from './ProfileCard';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
@@ -21,8 +21,7 @@ const PublicLanding = ({
   userId,
   history,
   redirect,
-  emailVerified,
-  leaderData
+  emailVerified
 }) => {
   // handle local state
 
@@ -52,16 +51,30 @@ const PublicLanding = ({
 
   /* make sure we fetch leader data for searching */
   useEffect(() => {
-    if (!leaderData) {
+    if (!filteredData) {
+      console.log(filteredData);
       setLoadingLeaders(true);
+      try {
+        database.ref('leaders').once('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            console.log('fetching....', data);
+            const leadersArray = Object.entries(snapshot.val());
+            const newData = [];
+            leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
+            setFilteredData(newData);
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       setLoadingLeaders(false);
-      setFilteredData(leaderData);
     }
 
     // also let's get the zipcode for the current user while we're in mount
     // TODO: getZip();
-  }, [leaderData]);
+  }, [filteredData]);
 
 
   // handle initial login re-directs
@@ -86,13 +99,13 @@ const PublicLanding = ({
       );
       setFilteredData(update);
     } else if (filterAcceptingInfants) {
-      const update = leaderData.filter(
+      const update = filteredData.filter(
         (elem) => elem.infants === true
       );
       setFilteredData(update);
     } else {
       // not filtering anything so revert to original leader data
-      setFilteredData(leaderData);
+      setFilteredData(filteredData);
     }
   };
 
@@ -104,11 +117,11 @@ const PublicLanding = ({
       const update = filteredData.filter((elem) => elem.infants === true);
       setFilteredData(update);
     } else if (filterAvail) {
-      const update = leaderData.filter((elem) => elem.available === true);
+      const update = filteredData.filter((elem) => elem.available === true);
       setFilteredData(update);
     } else {
       // no filters so
-      setFilteredData(leaderData);
+      setFilteredData(filteredData);
     }
   };
 
@@ -128,7 +141,7 @@ const PublicLanding = ({
       }
     } else {
       // no filters so
-      setFilteredData(leaderData);
+      setFilteredData(filteredData);
     }
   };
 

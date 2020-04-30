@@ -52,22 +52,15 @@ const PublicLanding = ({
   /* make sure we fetch leader data for searching */
   useEffect(() => {
     if (!filteredData) {
-      console.log(filteredData);
       setLoadingLeaders(true);
-      try {
-        database.ref('leaders').once('value', (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            console.log('fetching....', data);
-            const leadersArray = Object.entries(snapshot.val());
-            const newData = [];
-            leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
-            setFilteredData(newData);
-          }
-        });
-      } catch (err) {
-        console.error(err);
-      }
+      database.ref('leaders').once('value', (snapshot) => {
+        if (snapshot.val()) {
+          const leadersArray = Object.entries(snapshot.val());
+          const newData = [];
+          leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
+          setFilteredData(newData);
+        }
+      });
     } else {
       setLoadingLeaders(false);
     }

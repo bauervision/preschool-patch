@@ -45,6 +45,7 @@ const App = () => {
   const [socialPostId, setSocialPostId] = useState(null);
   const [redirect, setRedirect] = useState({ to: '/' });
 
+
   // make sure we always load the teachers
   useEffect(() => {
     database.ref('leaders').once('value', (snapshot) => {
@@ -401,6 +402,11 @@ const App = () => {
     });
   };
 
+
+  useEffect(() => {
+    handleLoginCheck();
+    // eslint-disable-next-line
+  }, [loggedInUser]);
 
   const handleLogin = (user, newUserData, isaLeader) => {
     if (!loggedInUser) {

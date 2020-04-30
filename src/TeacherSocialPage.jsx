@@ -5,10 +5,11 @@ import { Footer } from './Components/Footer';
 import { SocialPost, NewPost, Toast } from './Components';
 
 import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
+import { database } from './config';
 
 
 export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts, updateSuccess, launchToast }) => {
-  const [updatedPosts, setUpdatedPosts] = useState(socialPosts);
+  const [updatedPosts, setUpdatedPosts] = useState(null);
   const [thisPatchName, setThisPatchName] = useState(null);
 
 
@@ -16,7 +17,23 @@ export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isL
   useEffect(() => {
     const patchName = loggedInUser?.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName;
     setThisPatchName(patchName);
-  }, [loggedInUser]);
+
+    const patchId = loggedInUser?.isLeader ? loggedInUser.id : loggedInUser?.enrollment.submittedTo;
+
+    // if we dont have posts to view
+    if (!updatedPosts) {
+      // then we also wont have a logged in user
+      const pathId = window.location.pathname.split('/');
+      // grab ref to the data
+      database.ref(`social/${loggedInUser ? patchId : pathId[2]}`).on('value', (snapshot) => {
+        if (snapshot.val()) {
+        // grab the data
+          const data = snapshot.val();
+          setUpdatedPosts(data);
+        }
+      });
+    }
+  }, [loggedInUser, updatedPosts]);
 
   /* Handle local state post updating  */
   useEffect(() => {

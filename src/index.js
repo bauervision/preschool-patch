@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './styles.scss';
 import moment from 'moment';
 import PublicLanding from './PublicLanding';
-import { CreateAccount } from './CreateAccount';
+import CreateAccount from './CreateAccount';
 import Login from './Login';
 import ProfilePage from './ProfilePage';
 import MyProfilePage from './MyProfilePage';
@@ -341,7 +341,7 @@ const App = () => {
             setRedirect({ to: `/clientAdmin/${curUser.id}` });
           } else {
             // otherwise go to social page
-            setRedirect({ to: `/teacherSocial/${curUser.patchName}` });
+            setRedirect({ to: `/teacherSocial/${user.uid}` });
           }
         }
       });
@@ -464,7 +464,9 @@ const App = () => {
         // make sure we check to see if we are storing a leader, or simply a user in doing so
         database
           .ref(`${isaLeader ? 'leaders' : 'users'}/${user.uid}`)
-          .set(newUser).then(() => setLoggedInUser(newUser));
+          .set(newUser).then(() => {
+            setLoggedInUser(newUser);
+          });
       }
       // regardless of who logged in...
       handleLoginCheck(user);

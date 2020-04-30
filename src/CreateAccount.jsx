@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 
-import { BasicInput, PasswordInput, Error, PatchLogo } from './Components';
+import { BasicInput, PasswordInput, Error, PatchLogo, Loader } from './Components';
 
-import { RegisterUser } from './helpers/auth';
+import { RegisterUser, SendValidationEmail } from './helpers/auth';
 import { Elegant } from './images';
 // import { f, storage } from "./config";
 
-export const CreateAccount = ({
+const CreateAccount = ({
   loggedInUser,
   handleLogin,
   newMessageAlert,
   isLeader,
-  myMessages }) => {
+  myMessages,
+  history }) => {
   // handle local state
   const [emailError, setEmailError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
@@ -32,6 +33,7 @@ export const CreateAccount = ({
   const [experience, setExperience] = useState(0);
   const [background, setBackground] = useState(true);
   const [infants, setInfants] = useState(false);
+  const [newUserUnVerified, setNewUserUnVerified] = useState(false);
 
   const validEmailRegex = RegExp(
     // eslint-disable-next-line
@@ -40,6 +42,8 @@ export const CreateAccount = ({
 
   // eslint-disable-next-line
   const handleSubmitNew = async e => {
+
+    setNewUserUnVerified(true);
 
     e.preventDefault();
     const newUserData = {
@@ -62,8 +66,12 @@ export const CreateAccount = ({
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
     } else {
+      SendValidationEmail(status.user);
+      // and inform the user they need to verify that email before they can get into the site
+
       // otherwise we had a successful login
       handleLogin(status.user, newUserData, true);
+      history.push('/');
     }
   };
 
@@ -96,6 +104,7 @@ export const CreateAccount = ({
         />
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Create Leader Account</div>
+
 
         <div
           className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter Margins"
@@ -149,10 +158,10 @@ export const CreateAccount = ({
           <div className="Flex Col JustifyCenter AlignItems" >
             <div className="CursiveFont SuperFont">Are you ready to earn an extra $2000+ a month?!!</div>
             <p>
-              Realize that the above rates are just examples! <br />
-              Depending on your location, experience, and how marketable you are
-              to prospective families, <br />
-              those rates can be as high as you are willing to push them!
+      Realize that the above rates are just examples! <br />
+      Depending on your location, experience, and how marketable you are
+      to prospective families, <br />
+      those rates can be as high as you are willing to push them!
             </p>
           </div>
 
@@ -162,8 +171,8 @@ export const CreateAccount = ({
               <div className="Flex Col JustifyCenter AlignItems">
                 <div className="CursiveFont PinkFont SuperFont PaddingTop">Preschool Patch Leader Registration Form</div>
                 <p>
-                  Upon completion, you will be able to customize your profile
-                  and appear in local searches.
+          Upon completion, you will be able to customize your profile
+          and appear in local searches.
                 </p>
 
                 <div className="Flex Col LoginForm BoxShadow">
@@ -246,29 +255,30 @@ export const CreateAccount = ({
                   </div>
 
                   {emailError || passwordError ? (
-                    <div className="FakeButton">
-                      Enter Valid Email and Password
-                    </div>
+                    <div className="FakeButton">Enter Valid Email and Password</div>
                   ) : (
-                    <button type="submit" className="RegisterButton">
-                        Register
-                    </button>
-                  )}
+                    <>
+                      {!newUserUnVerified ? (
+                        <button type="submit" className="RegisterButton">Register</button>)
+                        : (<Loader />)}
+                    </>)}
                 </div>
                 {loginError && <Error errorMessage={loginError} />}
               </div>
             </form>
 
             <div className="PinkFill Margins BoxShadow RoundBorder PaddingBoost">
-              * <strong>Please Note!</strong> While a background check is{' '}
+      * <strong>Please Note!</strong> While a background check is{' '}
               <strong>not required</strong> to become a Preschool Patch leader,
               <br />
-              it does help potential families feel at ease leaving their
-              children with you and is <strong>highly recommended</strong>
+      it does help potential families feel at ease leaving their
+      children with you and is <strong>highly recommended</strong>
             </div>
 
           </div>
         </div>
+
+
       </div>
 
       <img src={Elegant} alt="decorative" className="filter-green responsive" />
@@ -279,3 +289,4 @@ export const CreateAccount = ({
     </div>
   );
 };
+export default withRouter(CreateAccount);

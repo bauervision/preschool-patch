@@ -75,7 +75,7 @@ const Header = ({
             {/* Show Teachers Social page Icon, if we're not already there */}
             {(!isSocial && currentlyEnrolled) && (
               <Link
-                to={`/teacherSocial/${loggedInUser.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName}`}
+                to={`/teacherSocial/${loggedInUser.isLeader ? loggedInUser.id : loggedInUser.enrollment?.submittedTo}`}
                 className="Header_MessageBtn">
                 <img
                   src={Enrolled}
@@ -87,7 +87,7 @@ const Header = ({
             )}
 
             {/* Show Payment page Icon, if we're not already there */}
-            {(!isPayment && currentlyEnrolled) && (
+            {(!isPayment && currentlyEnrolled && !isLeader) && (
               <Link to={`/payments/${userId}`} className="Header_MessageBtn">
                 <img
                   src={Pay}

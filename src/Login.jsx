@@ -39,21 +39,26 @@ const Login = ({ handleLogin, history }) => {
 
   const handleSubmitLogin = useCallback(async () => {
     setLoadingUser(true);
-    const status = await LoginUserEmailPassword(email, password);
 
-    // if we didn't get a user back, then there was an error
-    if (!status.user) {
-      setLoadingUser(false);
-      const errorMessage = status.error.message;
-      setLoginError(errorMessage);
-    } else {
-      // otherwise we had a successful login
-      handleLogin(status.user);
-      if (status.user.emailVerified) {
-        history.push('/');
+    try {
+      const status = await LoginUserEmailPassword(email, password);
+
+      // if we didn't get a user back, then there was an error
+      if (!status.user) {
+        setLoadingUser(false);
+        const errorMessage = status.error.message;
+        setLoginError(errorMessage);
       } else {
-        setNewUserUnVerified(true);
+        // otherwise we had a successful login
+        handleLogin(status.user);
+        if (status.user.emailVerified) {
+          history.push('/');
+        } else {
+          setNewUserUnVerified(true);
+        }
       }
+    } catch (err) {
+      setLoginError(err);
     }
   }, [email, handleLogin, history, password]);
 

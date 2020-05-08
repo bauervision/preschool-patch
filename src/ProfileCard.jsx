@@ -23,15 +23,13 @@ const ProfileCard = ({ data, handleSelection, history }) => {
 
   return (
     <div
-      className="Card Flex Col FullSize" onClick={getSelection} style={{
-        backgroundColor: available && '#FF4C76'
-      }}>
+      className={`Card Flex Col FullSize ${available && 'Card_Available_BG'}`} onClick={getSelection} >
 
       {/* Pic, Name and Rating */}
       <div className="Flex AlignItems JustifyCenter SmallBuffer">
         <img alt="profile pic" className="Card_Pic" src={photoUrl} />
         <div className="MarginHSmall Flex JustifyCenter Col">
-          <div className={`MarginTopSmall CursiveFont LargeFont TextCenter ${available ? 'WhiteFont' : 'PinkFont'} `}>{name}</div>
+          <div className={`MarginTopSmall CursiveFont LargeFont TextCenter ${available ? 'Card_Available_Pink' : 'PinkFont'} `}>{name}</div>
           <div className="textMargin">
             <Ratings rating={rating} />
           </div>
@@ -41,13 +39,13 @@ const ProfileCard = ({ data, handleSelection, history }) => {
       {/* Data row 1*/}
       <div className=" Flex AlignItems JustifyCenter">
         <div className="textMargin">
-          <span className={`SmallFont ${available && 'WhiteFont'}`}>Years of Experience with Children:</span>
-          <strong className={available ? 'WhiteFont' : 'PinkFont'}>{experience}</strong>
+          <span className={`SmallFont ${available && 'Card_Available_Text'}`}>Years of Experience with Children:</span>
+          <strong className={available ? 'Card_Available_Pink' : 'PinkFont'}>{experience}</strong>
         </div>
         {infants && (
           <div className="textMargin">
-            <span className={`SmallFont ${available && 'WhiteFont'}`}>Infants?:</span>{' '}
-            <strong className={available ? 'WhiteFont' : 'PinkFont'}>{ 'Yes!' }</strong>
+            <span className={`SmallFont ${available && 'Card_Available_Text'}`}>Infants?:</span>{' '}
+            <strong className={available ? 'Card_Available_Pink' : 'PinkFont'}>{ 'Yes!' }</strong>
           </div>
         )}
       </div>
@@ -60,9 +58,9 @@ const ProfileCard = ({ data, handleSelection, history }) => {
       </div>
 
       <div className="Flex JustifyCenter ShowMobile">
-        FT<span className={`Price LargeFont  MarginHSmall ${available ? 'WhiteFont' : 'PinkFont'}`}>${rates?.ft}</span>
-        PT<span className={`Price LargeFont  MarginHSmall ${available ? 'WhiteFont' : 'PinkFont'}`}>${rates?.pt}</span>
-        Drop-In<span className={`Price LargeFont  MarginHSmall ${available ? 'WhiteFont' : 'PinkFont'}`}>${rates?.di}</span>
+        FT<span className={`Price LargeFont  MarginHSmall ${available ? 'Card_Available_Text' : 'PinkFont'}`}>${rates?.ft}</span>
+        PT<span className={`Price LargeFont  MarginHSmall ${available ? 'Card_Available_Text' : 'PinkFont'}`}>${rates?.pt}</span>
+        Drop-In<span className={`Price LargeFont  MarginHSmall ${available ? 'Card_Available_Text' : 'PinkFont'}`}>${rates?.di}</span>
       </div>
 
       {/* Show Ribbon if they are enrolling: only shown on desktop */}

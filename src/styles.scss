@@ -447,6 +447,28 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
     }
   }
 
+  .Card_Available_BG{
+    @include respond(phone){
+      background-color: $PARADISEPINK;
+    }
+    
+  }
+
+  .Card_Available_Text{
+    color: $PATCHGREEN;
+    @include respond(phone){
+     color: $GHOSTWHITE;
+    }
+  }
+
+  .Card_Available_Pink{
+    color: $PARADISEPINK;
+    @include respond(phone){
+     color: $GHOSTWHITE;
+    }
+  }
+
+
   .AdminPic{
     border-radius: 4em;
       width: 8em;

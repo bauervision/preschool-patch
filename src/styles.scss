@@ -427,8 +427,7 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
 
     @include respond(phone){
       max-width: 100%;
-      //max-height: 20em;
-     
+      max-height: 20em;
     }
 
     &:hover {
@@ -583,8 +582,8 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
 
 /* top left*/
 .ribbon-top-left {
-  top:-15.5em;
-  left: -1.3em;
+  top:-15em;
+  left: -1em;
 
   @include respond(phone){
     top:-16.2em;
@@ -594,6 +593,7 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
 .ribbon-top-left span {
   top: 0.5em;
   transform: rotate(-30deg);
+  -webkit-transform: rotate(-30deg);
 }
 
 
@@ -1161,8 +1161,6 @@ transition: opacity  0s linear 1.5s;
     transform: rotate(-359deg);
   }
 }
-
-
 
 
 .arrow_box {

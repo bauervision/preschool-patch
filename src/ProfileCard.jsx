@@ -22,13 +22,16 @@ const ProfileCard = ({ data, handleSelection, history }) => {
   };
 
   return (
-    <div className="Card Flex Col FullSize" onClick={getSelection}>
+    <div
+      className="Card Flex Col FullSize" onClick={getSelection} style={{
+        backgroundColor: available && '#FF4C76'
+      }}>
 
       {/* Pic, Name and Rating */}
       <div className="Flex AlignItems JustifyCenter SmallBuffer">
         <img alt="profile pic" className="Card_Pic" src={photoUrl} />
         <div className="MarginHSmall Flex JustifyCenter Col">
-          <div className="MarginTopSmall CursiveFont LargeFont PinkFont TextCenter" >{name}</div>
+          <div className={`MarginTopSmall CursiveFont LargeFont TextCenter ${available ? 'WhiteFont' : 'PinkFont'} `}>{name}</div>
           <div className="textMargin">
             <Ratings rating={rating} />
           </div>
@@ -38,13 +41,13 @@ const ProfileCard = ({ data, handleSelection, history }) => {
       {/* Data row 1*/}
       <div className=" Flex AlignItems JustifyCenter">
         <div className="textMargin">
-          <span className="SmallFont">Years of Experience with Children:</span>
-          <strong className="PinkFont">{experience}</strong>
+          <span className={`SmallFont ${available && 'WhiteFont'}`}>Years of Experience with Children:</span>
+          <strong className={available ? 'WhiteFont' : 'PinkFont'}>{experience}</strong>
         </div>
         {infants && (
           <div className="textMargin">
-            <span className="SmallFont">Infants?:</span>{' '}
-            <strong className="PinkFont">{ 'Yes!' }</strong>
+            <span className={`SmallFont ${available && 'WhiteFont'}`}>Infants?:</span>{' '}
+            <strong className={available ? 'WhiteFont' : 'PinkFont'}>{ 'Yes!' }</strong>
           </div>
         )}
       </div>
@@ -57,13 +60,13 @@ const ProfileCard = ({ data, handleSelection, history }) => {
       </div>
 
       <div className="Flex JustifyCenter ShowMobile">
-        FT<span className="Price LargeFont PinkFont MarginHSmall">${rates?.ft}</span>
-        PT<span className="Price LargeFont PinkFont MarginHSmall">${rates?.pt}</span>
-        Drop-In<span className="Price LargeFont PinkFont MarginHSmall">${rates?.di}</span>
+        FT<span className={`Price LargeFont  MarginHSmall ${available ? 'WhiteFont' : 'PinkFont'}`}>${rates?.ft}</span>
+        PT<span className={`Price LargeFont  MarginHSmall ${available ? 'WhiteFont' : 'PinkFont'}`}>${rates?.pt}</span>
+        Drop-In<span className={`Price LargeFont  MarginHSmall ${available ? 'WhiteFont' : 'PinkFont'}`}>${rates?.di}</span>
       </div>
 
-      {/* Show Ribbon if they are enrolling */}
-      {available && <div className="ribbon ribbon-top-left mobile-top-left"><span>Enrolling</span></div>}
+      {/* Show Ribbon if they are enrolling: only shown on desktop */}
+      {available && <div className="ribbon ribbon-top-left mobile-top-left HideMobile"><span>Enrolling</span></div>}
     </div>
   );
 };

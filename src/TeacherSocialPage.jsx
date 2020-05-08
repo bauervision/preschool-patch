@@ -9,6 +9,7 @@ import { database } from './config';
 
 
 export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts, updateSuccess, launchToast }) => {
+  const [userData, setUserData] = useState(null);
   const [updatedPosts, setUpdatedPosts] = useState(null);
   const [thisPatchName, setThisPatchName] = useState(null);
 

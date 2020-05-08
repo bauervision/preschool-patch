@@ -17,7 +17,6 @@ const ProfilePage = (props) => {
     if (!props.data) {
     // we lost data on refresh so grab the id from the url
       const pathId = window.location.pathname.split('/');
-      console.log('fetching data for', pathId[2]);
       // and fetch this users data directly
       database.ref(`leaders/${pathId[2]}`).once('value', (snapshot) => {
         if (snapshot.val() !== null) {
@@ -114,37 +113,41 @@ const ProfilePage = (props) => {
 
                   {/* Contact Button: If loggedInUser and email verified, otherwise notify to login,*/}
                   <div className="FullSize">
-
-                    <button
-                      disabled={loggedInUser && !emailVerified}// disable if logged in user hasnt yet verified email
-                      onClick={() => {
-                        if (loggedInUser && emailVerified) {
-                          history.push('/messages');
-                        } else if (!loggedInUser) {
-                          history.push('/login');
-                        }
-                      }}
-                      className="transparent NoMargin"
-                      title={(loggedInUser && emailVerified) ? 'Message this teacher' : 'Verify your email first!'}
-                    >
-                      <div
-                        className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder PaddingLite"
-                        style={{ borderLeft: 'none', borderRight: 'none', fontSize: '2em' }}>
-
-
-                        {(loggedInUser && emailVerified) ? (
-                          <>
-                            <div>Contact</div>
-                            <img src={Contact} alt="contact"/>
-                            {buttonLabel}
-                          </>
-                        ) : (
-                          <div> { buttonLabel }</div>
-                        )}
+                    {!emailVerified ? (
+                      <div>Verify email to enable messaging this teacher</div>
+                    ) : (
+                      <button
+                        disabled={!loggedInUser }// disable if logged in user hasnt yet verified email
+                        onClick={() => {
+                          if (loggedInUser && emailVerified) {
+                            history.push('/messages');
+                          } else if (!loggedInUser) {
+                            history.push('/login');
+                          }
+                        }}
+                        className="transparent NoMargin"
+                        title={(loggedInUser && emailVerified) ? 'Message this teacher' : 'Verify your email first!'}
+                      >
+                        <div
+                          className="Flex AlignItems JustifyCenter CursiveFont MediumFont PinkBorder RoundBorder PaddingLite"
+                          style={{ borderLeft: 'none', borderRight: 'none', fontSize: '2em' }}>
 
 
-                      </div>
-                    </button>
+                          {(loggedInUser && emailVerified) ? (
+                            <>
+                              <div>Contact</div>
+                              <img src={Contact} alt="contact"/>
+                              {buttonLabel}
+                            </>
+                          ) : (
+                            <div> { buttonLabel }</div>
+                          )}
+
+
+                        </div>
+                      </button>
+                    )}
+
                   </div>
 
                 </div>

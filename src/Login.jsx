@@ -412,7 +412,15 @@ const Login = ({ handleLogin, history }) => {
                               ? (
                                 <form onSubmit={() => setLoadingUser(true)}>
                                   <div className="Flex Col JustifyCenter AlignItems">
-                                    <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
+
+                                    {/* Show login error up at the top so users can see it clearly */}
+                                    {loginError ? (
+                                      <div className="LoginError">{loginError}</div>
+                                    ) : (
+                                      <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
+                                    )}
+
+
                                     <div className="Flex Col LoginForm BoxShadow">
                                       <BasicInput
                                         title="Email"
@@ -442,9 +450,7 @@ const Login = ({ handleLogin, history }) => {
 
                                     <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
 
-                                    {loginError && (
-                                      <div className="LoginError">{loginError}</div>
-                                    )}
+
                                   </div>
                                 </form>)
                               : (

@@ -35,12 +35,14 @@ const Safety = ({ pageUpdate, loggedInUser }) => {
             </div>
 
             <div className="MarginTop">
-              <div className="MediumFont Margins">Ultimately the parent is responsible for who they decide to enroll their child with,
+              <div className="MediumFont Margins SimpleBorder PinkFont">
+                Ultimately the parent is responsible for who they decide to enroll their child with,
                 <br/>
               and the teacher is responsible for who they accept an enrollment for in their business.</div>
-              <br/><br/>
+
               <div className="MediumFont Margins">
-                Key things you can do to protect yourself is to require Meet and Greets before beginning any enrollments.
+                Key things you can do to protect yourself is to
+                require Meet and Greets before beginning any enrollments:
                 <br/><br/>
                 This will allow parents to verify the in-home preschool conditions,
                 <br/><br/>

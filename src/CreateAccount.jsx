@@ -103,14 +103,14 @@ const CreateAccount = ({
           newMessageAlert={newMessageAlert}
         />
 
-        <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Create Leader Account</div>
+        <div className="CursiveFont SuperFont TextLeft Buffer HideMobile" style={{ marginLeft: 30 }}>Create Leader Account</div>
 
 
         <div
-          className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter Margins"
+          className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter Margins MarginTopMobileLarge"
 
         >
-          <div className="Flex Col JustifyCenter AlignItems Tab PinkFill FullSize" >
+          {/* <div className="Flex Col JustifyCenter AlignItems Tab PinkFill FullSize " >
             <div className="CursiveFont SuperFont">What you get as a Patch Leader</div>
 
             <ul className="TextLeft">
@@ -121,49 +121,35 @@ const CreateAccount = ({
               <li>{'Free seasonal activity examples'}</li>
               <li>{"Free app that allows you to communicate with your student's parents"}</li>
             </ul>
-          </div>
+          </div> */}
 
 
           <div className="Flex Col JustifyCenter AlignItems RoundBorder WhiteFill PinkFont Margins">
-            <div className="CursiveFont SuperFont">Typical Earning Potential</div>
-
-            <ul className="TextLeft">
-              <li>{'$35   - Average price for a Full time student ( per day )'}</li>
-              <li>{'3     - number of FT students enrolled ( recommended )'}</li>
+            <div className="CursiveFont SuperFont">FT Earning Potential</div>
+            <ul className="TextLeft MediumFont">
+              <li>{'$40   - Daily rate'}</li>
+              <li>{'6     - FT students enrolled'}</li>
               <li> {'5     - days a week'} </li>
-              <li> {'$525  - weekly'} </li>
-              <li> {'$2100 - monthly'} </li>
+              <li> {'$1,200  - weekly'} </li>
+              <li > {'$4,800 - monthly'} </li>
             </ul>
           </div>
 
           <div className="Flex Col JustifyCenter AlignItems Buffer FullSize GreenFill RoundBorder Margins">
-            <div className="CursiveFont SuperFont">Additional Revenue Options</div>
+            <div className="CursiveFont LargeFont">Additional Revenue Options</div>
 
             <ul className="TextLeft">
-              <li>
-                {
-                  '$45   - Part Time rate ( students enrolled between 3 to 4 days a week)'
-                }
+              <li>{'$45   - Part Time rate ( students enrolled between 3 to 4 days a week)'}
               </li>
               <li>
                 {
-                  '$55   - Drop-in rate ( students who attend 1 to 2 days a week, or as needed)'
+                  '$50   - Drop-in rate ( students who attend 1 to 2 days a week, or as needed)'
                 }
               </li>
             </ul>
           </div>
 
           <br />
-
-          <div className="Flex Col JustifyCenter AlignItems" >
-            <div className="CursiveFont SuperFont">Are you ready to earn an extra $2000+ a month?!!</div>
-            <p>
-      Realize that the above rates are just examples! <br />
-      Depending on your location, experience, and how marketable you are
-      to prospective families, <br />
-      those rates can be as high as you are willing to push them!
-            </p>
-          </div>
 
 
           <div className="Flex Col JustifyCenter AlignItems RoundBorder BoxShadow WhiteFill">
@@ -267,13 +253,23 @@ const CreateAccount = ({
               </div>
             </form>
 
-            <div className="PinkFill Margins BoxShadow RoundBorder PaddingBoost">
+            <div className="Flex Col JustifyCenter AlignItems" >
+
+              <p>
+      Realize that the above rates are just examples! <br />
+      Depending on your location, experience, and how marketable you are
+      to prospective families, <br />
+      those rates can be as high as you are willing to push them!
+              </p>
+            </div>
+
+            {/* <div className="PinkFill Margins BoxShadow RoundBorder PaddingBoost">
       * <strong>Please Note!</strong> While a background check is{' '}
               <strong>not required</strong> to become a Preschool Patch leader,
               <br />
       it does help potential families feel at ease leaving their
       children with you and is <strong>highly recommended</strong>
-            </div>
+            </div> */}
 
           </div>
         </div>

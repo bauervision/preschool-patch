@@ -6,7 +6,7 @@ import { database } from './config';
 import ProfileCard from './ProfileCard';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
-import { Toast, Loader, EditField } from './Components';
+import { Toast, Loader, EditField, PatchLogo } from './Components';
 
 import { Logo, Elegant, Corner, IvyHeart } from './images';
 
@@ -168,107 +168,38 @@ const PublicLanding = ({
         <>
           <div className="Flex AlignItems JustifyCenter Buffer ">
 
-            <img
-              src={Logo}
-              alt="logo"
-              className="Logo HideMobile"
-
-            />
-
-            <div className="HowItWorks PinkFill RoundBorder MarginTopMobileHome Mobile3 Nunito" >
-              {/* TODO all of this needs to be revamped */}
-              <h3>How It Works</h3>
+            <div className="HideMobile">
+              <PatchLogo/></div>
 
 
-              <div className="Flex Row AlignItems JustifyCenter MarginBottom">
-                {showTeacher ? (
-                  <div className="Flex Row AlignItems MarginHSmall">
-                    <div onClick={() => setShowTeacher(false)} className="cursor Hover WhiteBorder Padding RoundBorder"> As a Parent</div>
-                    <div className="WhiteFill PinkFont MarginHSmall Padding RoundBorder"><strong>As a Teacher</strong></div>
-                  </div>
-                ) : (
-                  <div className=" Flex Row AlignItems MarginHSmall">
-                    <div className="WhiteFill PinkFont MarginHSmall Padding RoundBorder"><strong>As a Parent</strong></div>
-                    <div onClick={() => { setShowTeacher(true); }} className="cursor Hover WhiteBorder Padding RoundBorder">As a Teacher</div>
-                  </div>
-                )}
-
-                <img src={Corner} alt='corner' className='filter-white Rotate Flower' />
-              </div>
-            </div>
           </div>
 
 
-          <div className="Flex Col JustifyCenter Buffer ">
+          <div className="Flex Col JustifyCenter Buffer MarginTopMobileHome">
 
-            <div className="Tab SeeThru PaddingTop">
+            <div className="Tab SeeThru">
 
-              {/* How it Works: Steps */}
-              {showTeacher ? (
-                <div className="Step Raleway">
-                  <div className="Step_Child arrow_box">{'Sign-up as a Patch Leader'}</div>
-                  <div className="Step_Child arrow_box" >{'Enroll students'}</div>
-                  <div className="Step_Child arrow_box_end">{'Get paid!'}</div>
-
-                </div>
-              ) : (
-                <div className="Step Raleway">
-
-                  <div className="Step_Child arrow_box">{'Search Local Patches'}</div>
-                  <div className="Step_Child arrow_box">{'Enroll your child'}</div>
-                  <div className="Step_Child arrow_box_end">{'Relax!'} </div>
-
-                </div>
-              )}
 
               <div>
-                <img src={IvyHeart} alt="ivy" className="Padding" style={{ width: '30em' }}/>
+                <img src={IvyHeart} alt="ivy" className="Padding MarginTopMobileHome" style={{ width: '30em' }}/>
               </div>
 
 
               {/* How it Works: Details */}
-              <div className="Flex JustifyCenter AlignItems GreenFill TabBottom">
-                {showTeacher ? (
-                  <div className="Flex Col JustifyCenter AlignItems Buffer">
-                    <p className="Raleway">
-            After you signup, your profile will be added to our database
-            and will show up in local searches.
-                      <br />
-                      <br />
-                    </p>
-                    <div className="Flex Col AlignItems JustifyCenter">
-                      <div className="CursiveFont LargeFont ">Keys to success: </div>
-                      <ul className=" SimpleBorder TextLeft HalfSize">
-                        <li>
-                Convert a space in your home to a warm preschool
-                environment, take pictures and upload them to your profile
-                to impress prospective clients. This is the best thing you
-                can do to create interest in your business!
-                        </li>
-                        {/* <li>
-                Complete a simple background check. It costs $20 and
-                offers some valuable peace of mind for parents.
-                        </li> */}
-                        <li>
-                Post your profile on local Social Media Mom pages to
-                further spread the word about your availability!
-                        </li>
-                        <li>
-                Create Social Media pages for your business and update
-                them regularly.
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="Buffer Raleway MediumFont">
-                    {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
-                    <br />
-                    <br />
+              <div className="Flex Col JustifyCenter AlignItems GreenFill TabBottom">
+
+                <div className="Buffer Raleway MediumFont">
+                  {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
+                  <br />
+                  <br />
             Max class size of 5 means that your child will not be just a
             number, but a nurtured student.
-                  </div>
-                )}
+                </div>
+
+                <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/createAccount')}>
+                          Do you want to be a Teacher?
+                </button>
+
               </div>
             </div>
 
@@ -286,18 +217,18 @@ const PublicLanding = ({
       {loadingLeaders ? (
         <Loader />
       ) : (
-        <div className="Flex Col JustifyCenter  SeeThru MarginTopMobileLarge">
+        <div className="Flex Col JustifyCenter  SeeThru ">
 
           {/* If we're not a teacher, then show search options */}
           {!showTeacher ? (
             <>
               <div className="CursiveFont SuperFont Buffer PinkFont ">
-                Find a local preschool teacher for your child!
+                Find a local preschool teacher!
               </div>
 
               {/* Filter data by zipcode */}
-              <div className="Flex JustifyCenter AlignItems">
-                <div className="Flex AlignItems">
+              <div className="Flex JustifyCenter AlignItems MobileRowToCol">
+                <div className="Flex AlignItems MediumFont">
                 Show only Teachers in your zipcode?
                   <EditField
                     isCheck
@@ -309,7 +240,7 @@ const PublicLanding = ({
                 </div>
                 {filterZip
                 && (
-                  <>
+                  <div className="">
                     <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
                     <input
                       placeholder="Enter your Zipcode"
@@ -319,13 +250,13 @@ const PublicLanding = ({
                       maxLength="5"
                     />
                     <button type="button" onClick={handleZipFilter}>Update</button>
-                  </>)
+                  </div>)
                 }
               </div>
 
               <div className="Flex JustifyCenter AlignItems Padding">
                 <div className="Flex AlignItems Padding">
-                  <label> Show Only Available Teachers?</label>
+                  <label className="MediumFont"> Show Only Available Teachers?</label>
                   <EditField
                     isCheck
                     type="checkbox"
@@ -335,7 +266,7 @@ const PublicLanding = ({
                   />
                 </div>
                 <div className="Flex AlignItems Padding">
-                  <label>Teachers Accepting Infants?</label>
+                  <label className="MediumFont">Teachers Accepting Infants?</label>
                   <EditField
                     isCheck
                     type="checkbox"
@@ -352,8 +283,11 @@ const PublicLanding = ({
                 Explore some example profiles of our most successful Patches!
             </div>
           )}
+          {filteredData?.length > 0
+            && <div className="MediumFont">{filteredData?.length} teachers found</div>}
 
           <div className="PublicLanding_Container JustifyCenter BoxShadow ">
+
             {filteredData?.length !== 0 ? (
                 filteredData?.map((elem) => {
                   return (

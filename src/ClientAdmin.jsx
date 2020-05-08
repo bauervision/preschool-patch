@@ -77,15 +77,12 @@ const ClientAdmin = ({ emailVerified, loggedInUser, myMessages, loadingClients, 
 
         {/* Client Data*/}
         <div
-          className="Flex AlignItems SeeThru "
-          style={{
-            justifyContent: 'space-evenly',
+          className="Flex AlignItems SeeThru MarginTopMobileHome"
 
-          }}
         >
 
           {/* My Clients */}
-          <div className="Flex Col Buffer MarginTop">
+          <div className="Flex Col Buffer MarginTop ">
             <div>
               <div className="CursiveFont SuperFont PinkFont">My Clients</div>
               <Ratings rating={rating}/>

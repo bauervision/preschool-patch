@@ -80,9 +80,9 @@ export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isL
           <div className="Flex Col JustifyCenter AlignItems FullSize">
 
 
-            <div className="Flex AlignItems Buffer ">
+            <div className="Flex AlignItems Buffer MarginTopMobileHome">
               <img src={MiniFlower} alt="flower left" style={{ height: 100, width: 'auto' }} className="HideMobile"/>
-              <div className="CursiveFont SuperFont PinkFont  MarginTopMobile">{thisPatchName}</div>
+              <div className="CursiveFont SuperFont PinkFont  MarginTopMobileHome">{thisPatchName}</div>
               <img src={MiniFlowerFlip} alt="flower right" style={{ height: 100, width: 'auto' }} className="HideMobile"/>
             </div>
 

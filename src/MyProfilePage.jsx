@@ -441,18 +441,6 @@ const MyProfilePage = ({ loggedInUser, isLeader, myMessages, userId, emailVerifi
                   </div>
                 </div>)}
 
-                <div className={deleteAccount ? 'PinkBorder RoundBorder Padding' : ''}>
-                  {!deleteAccount
-                  && <button type="button" onClick={() => setDeleteAccount(!deleteAccount)}>{deleteAccount ? 'Cancel Delete' : 'Delete Account'}</button>}
-                  {deleteAccount && (
-                    <div>
-                      <div className="PinkFont  MediumFont"> Are you Sure?</div>
-                      <div>This cannot be undone.</div>
-                      <button title={ 'Remove my account'} className="transparent NoMargin" type='button' onClick={confirmDelete}><img src={Accept} alt="accept change"/></button>
-                      <button title={'Cancel Removal' } className="transparent NoMargin" type='button' onClick={() => setDeleteAccount(!deleteAccount)}><img src={Cancel} alt="deny change"/></button>
-                    </div>
-                  )}
-                </div>
 
               </div>
 
@@ -736,6 +724,19 @@ const MyProfilePage = ({ loggedInUser, isLeader, myMessages, userId, emailVerifi
             </form>
           </div>
         </div>
+      </div>
+
+      <div className={deleteAccount ? 'PinkBorder RoundBorder Padding' : ''}>
+        {!deleteAccount
+                  && <button type="button" onClick={() => setDeleteAccount(!deleteAccount)}>{deleteAccount ? 'Cancel Delete' : 'Delete Account?'}</button>}
+        {deleteAccount && (
+          <div>
+            <div className="PinkFont  MediumFont"> Are you Sure?</div>
+            <div>This cannot be undone.</div>
+            <button title={ 'Remove my account'} className="transparent NoMargin" type='button' onClick={confirmDelete}><img src={Accept} alt="accept change"/></button>
+            <button title={'Cancel Removal' } className="transparent NoMargin" type='button' onClick={() => setDeleteAccount(!deleteAccount)}><img src={Cancel} alt="deny change"/></button>
+          </div>
+        )}
       </div>
 
       <div>

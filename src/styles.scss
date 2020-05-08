@@ -468,6 +468,12 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
     }
   }
 
+  .AboutPic{
+    width: 25%;
+    @include respond(phone){
+      width: 70%;
+     }
+  }
 
   .AdminPic{
     border-radius: 4em;
@@ -498,7 +504,7 @@ background: linear-gradient(177deg, rgba(11,142,81,1) 0%, rgba(11,142,81,1) 46%,
   .InnerShadowWhite { box-shadow: inset 7px 7px 2em rgba(225, 225, 225, 1); }
   .MarginAuto{margin:auto}
   .NoMargin{margin:0}
-  .Margins{ margin: 3em; }
+  .Margins{ margin: 3em; @include respond(phone){margin: 1em;} }
   .MarginTiny{ margin: 0.6em; }
   .MarginSmall{ margin: 1.3em; }
   .MarginTopSmall{ margin-top: 1em; @include respond(phone){margin-top: 0.3em;} }

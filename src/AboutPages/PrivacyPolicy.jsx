@@ -8,6 +8,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 import './style.css';
+import { PatchLogo } from '../Components';
 
 const PrivacyPolicy = ({ pageUpdate, loggedInUser }) => {
   return (
@@ -20,7 +21,7 @@ const PrivacyPolicy = ({ pageUpdate, loggedInUser }) => {
 
         {/* Page Data*/}
         <div
-          className="Flex AlignItems SeeThru "
+          className="Flex AlignItems SeeThru Margins"
           style={{
             justifyContent: 'space-evenly',
 
@@ -1296,13 +1297,11 @@ Waltham, MA 02451 USA</span></p>
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
-      </div>
+      <PatchLogo />
 
       <Footer />
     </div>

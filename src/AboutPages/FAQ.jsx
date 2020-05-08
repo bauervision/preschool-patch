@@ -5,6 +5,7 @@ import { Footer } from '../Components/Footer';
 
 
 import { Logo, Elegant } from '../images';
+import { PatchLogo } from '../Components';
 
 
 const FAQ = ({ pageUpdate, loggedInUser }) => {
@@ -34,22 +35,19 @@ const FAQ = ({ pageUpdate, loggedInUser }) => {
             </div>
 
             <div className="MarginTop">
-              <div>Message Data here</div>
+              <div className="MediumFont Margins">Questions will be displayed here</div>
             </div>
-
 
           </div>
 
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
-      </div>
+      <PatchLogo />
 
       <Footer />
     </div>

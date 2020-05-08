@@ -132,6 +132,7 @@ const ContactForm = ({ handleFormData }) => {
       && !fNameError
       && (formLastName && !lNameError)
       && (formEmail && !emailError)
+      && formComments
     ) {
       setSubmitDisabled(false);
     } else {
@@ -143,7 +144,8 @@ const ContactForm = ({ handleFormData }) => {
     formEmail,
     fNameError,
     lNameError,
-    emailError
+    emailError,
+    formComments
   ]);
 
   return (
@@ -178,7 +180,7 @@ const ContactForm = ({ handleFormData }) => {
           type="text"
           label="Comments"
           handleData={setFormComments}
-          placeholder="Please enter any optional comments here"
+          placeholder="Please enter some reason for contacting us"
         />
       </div>
       {!submitted ? (

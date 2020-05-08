@@ -8,6 +8,7 @@ import { Footer } from '../Components/Footer';
 
 import { Logo, Elegant } from '../images';
 import ContactForm from './ContactForm';
+import { PatchLogo } from '../Components';
 
 
 const Contact = ({ pageUpdate, loggedInUser }) => {
@@ -77,13 +78,11 @@ const Contact = ({ pageUpdate, loggedInUser }) => {
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
-      </div>
+      <PatchLogo />
 
       <Footer />
     </div>

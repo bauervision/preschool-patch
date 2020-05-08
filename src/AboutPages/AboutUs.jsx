@@ -6,6 +6,7 @@ import { Footer } from '../Components/Footer';
 
 import { Logo, Elegant } from '../images';
 import { Us } from '../images/photos';
+import { PatchLogo } from '../Components';
 
 
 const AboutUs = ({ pageUpdate, loggedInUser }) => {
@@ -35,17 +36,22 @@ const AboutUs = ({ pageUpdate, loggedInUser }) => {
             </div>
 
             <div className="MarginTop SmallFont">
-              <p>We started Preschool Patch because we felt that there was a need to offer a better option for preschool services, and we wanted
-                to provide valuable stay at home moms with an opportunity to earn sustainable income.  By encouraging a class size limit of around 5,
-                not only do we believe that we keep the work manageable, but also we promote a healthy learning environment for the children.
-              <br/>
-              <br/>
-                Thank you for visiting our page and expressing interest in our business, we hope that you find a warm place in our patch and that
-                we can begin continue to grow together!
-              </p>
+              <div className="MediumFont Margins">
+                We started Preschool Patch because we felt that there was a need to offer a better option for preschool services.
+                <br/> <br/> We also wanted to provide valuable stay at home moms with an opportunity to earn sustainable income.
+                <br/> <br/>
+                By encouraging a class size limit of around 5, not only do we believe that we keep the work manageable, but also we promote a healthy learning environment for the children.
+
+              </div>
 
 
-              <img src={Us} alt="family" className="responsive" style={{ width: '25%' }}/>
+              <img src={Us} alt="family" className="AboutPic"/>
+
+              <div className="MediumFont Margins">
+              Thank you for visiting our page and expressing interest in our business!
+                <br/> <br/>
+              We hope that you find a warm place in our patch where we all can grow together.
+              </div>
             </div>
 
 
@@ -54,13 +60,11 @@ const AboutUs = ({ pageUpdate, loggedInUser }) => {
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
-      </div>
+      <PatchLogo />
 
       <Footer />
     </div>

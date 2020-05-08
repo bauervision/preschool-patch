@@ -8,6 +8,7 @@ import { Footer } from '../Components/Footer';
 import { Logo, Elegant } from '../images';
 
 import './style.css';
+import { PatchLogo } from '../Components';
 
 const TermsOfUse = ({ pageUpdate, loggedInUser }) => {
   return (
@@ -20,7 +21,7 @@ const TermsOfUse = ({ pageUpdate, loggedInUser }) => {
 
         {/* Page Data*/}
         <div
-          className="Flex AlignItems SeeThru ">
+          className="Flex AlignItems SeeThru Margins">
 
 
           {/* Page Title */}
@@ -2270,13 +2271,11 @@ Chesapeake, VA 23322 USA</span></p>
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
-      </div>
+      <PatchLogo />
 
       <Footer />
     </div>

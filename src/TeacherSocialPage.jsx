@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
-import { SocialPost, NewPost, Toast } from './Components';
+import { SocialPost, NewPost, Toast, PatchLogo } from './Components';
 
 import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
 import { database } from './config';
@@ -109,9 +109,7 @@ export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isL
 
         <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
       </div>
-      <div className="Buffer">
-        <img src={Logo} alt="logo" className="responsive"/>
-      </div>
+      <PatchLogo />
       <Footer />
 
       <Toast showToast={launchToast.value} message={launchToast.message} />

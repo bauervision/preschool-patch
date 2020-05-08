@@ -5,6 +5,7 @@ import { Footer } from '../Components/Footer';
 
 
 import { Logo, Elegant } from '../images';
+import { PatchLogo } from '../Components';
 
 
 const Safety = ({ pageUpdate, loggedInUser }) => {
@@ -34,7 +35,17 @@ const Safety = ({ pageUpdate, loggedInUser }) => {
             </div>
 
             <div className="MarginTop">
-              <div>Message Data here</div>
+              <div className="MediumFont Margins">Ultimately the parent is responsible for who they decide to enroll their child with,
+                <br/>
+              and the teacher is responsible for who they accept an enrollment for in their business.</div>
+              <br/><br/>
+              <div className="MediumFont Margins">
+                Key things you can do to protect yourself is to require Meet and Greets before beginning any enrollments.
+                <br/><br/>
+                This will allow parents to verify the in-home preschool conditions,
+                <br/><br/>
+                and give teachers the opportunity to evaluate any possible behaviorial challenges which may affect their ability to provide quality instruction.
+              </div>
             </div>
 
 
@@ -43,14 +54,11 @@ const Safety = ({ pageUpdate, loggedInUser }) => {
 
         </div>
 
-        <img src={Elegant} alt="decorative" className="filter-green Margins" />
+        <img src={Elegant} alt="decorative" className="filter-green Margins responsive" />
 
       </div>
 
-      <div className="Buffer">
-        <img src={Logo} alt="logo" style={{ width: 600, height: 'auto' }} />
-      </div>
-
+      <PatchLogo />
       <Footer />
     </div>
   );

@@ -45,10 +45,12 @@ const Login = ({ handleLogin, history }) => {
 
       // if we didn't get a user back, then there was an error
       if (!status.user) {
+        console.log('handleSubmitLogin: !status.user ERROR', status);
         setLoadingUser(false);
         const errorMessage = status.error.message;
         setLoginError(errorMessage);
       } else {
+        console.log('handleSubmitLogin: status.user success', status);
         // otherwise we had a successful login
         handleLogin(status.user);
         if (status.user.emailVerified) {
@@ -58,6 +60,7 @@ const Login = ({ handleLogin, history }) => {
         }
       }
     } catch (err) {
+      console.log('handleSubmitLogin: ERROR', err);
       setLoginError(err);
     }
   }, [email, handleLogin, history, password]);
@@ -99,9 +102,9 @@ const Login = ({ handleLogin, history }) => {
 
     };
 
-
     const status = await RegisterUser(email, password);
 
+    console.log('handleSubmitNew: status ', status);
     if (!status.user) {
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
@@ -110,10 +113,8 @@ const Login = ({ handleLogin, history }) => {
       SendValidationEmail(status.user);
       // and inform the user they need to verify that email before they can get into the site
       setNewUserUnVerified(true);
-      // TODO: not sure we want to do this
-      // still want to process the user account...?
       handleLogin(status.user, newUserData);
-      // history.push('/');
+      /* We don't push the user any where as we will notify them on this page to verify their email */
     }
   };
 

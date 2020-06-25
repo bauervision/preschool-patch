@@ -1,6 +1,29 @@
 {
   "rules": {
-    ".read": "true",
-    ".write": "auth != null"
+    "admin":{
+      ".read": "true",
+      ".write" : "false"
+    },
+     "users": {
+      "$uid": {
+        ".read" : "auth.token.email_verified === true",
+        ".write": "$uid === auth.uid"
+      }
+    },
+      "leaders": {
+      "$uid": {
+        ".read" : "auth.token.email_verified === true",
+        ".write": "$uid === auth.uid"
+      }
+    },
+      "messages": {
+        ".read" : "auth.token.email_verified === true",
+        ".write": "auth.token.email_verified === true"
+    },
+      "social": {
+        ".read" : "auth.token.email_verified === true",
+        ".write": "auth.token.email_verified === true"
+    }
+   
   }
 }

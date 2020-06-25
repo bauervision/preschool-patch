@@ -54,7 +54,7 @@ const Header = ({
 
         {/* Show Home Icon, if we're not on home page' */}
         {!isHome && (
-          <Link to="/" title="Return to Home page">
+          <Link to="/home" title="Return to Home page">
             <img
               src={Home}
               alt="Home icon"

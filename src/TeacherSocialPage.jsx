@@ -4,12 +4,12 @@ import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { SocialPost, NewPost, Toast, PatchLogo } from './Components';
 
-import { Logo, Elegant, MiniFlower, MiniFlowerFlip } from './images';
+import { Elegant, MiniFlower, MiniFlowerFlip } from './images';
 import { database } from './config';
 
 
 export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isLeader, myMessages, userId, handlePostUpdates, socialPosts, updateSuccess, launchToast }) => {
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
   const [updatedPosts, setUpdatedPosts] = useState(null);
   const [thisPatchName, setThisPatchName] = useState(null);
 

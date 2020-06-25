@@ -45,19 +45,20 @@ const Login = ({ handleLogin, history }) => {
 
       // if we didn't get a user back, then there was an error
       if (!status.user) {
-        console.log('handleSubmitLogin: !status.user ERROR', status);
+        // console.log('handleSubmitLogin: !status.user ERROR', status);
         setLoadingUser(false);
         const errorMessage = status.error.message;
         setLoginError(errorMessage);
       } else {
         console.log('handleSubmitLogin: status.user success', status);
+        setLoadingUser(false);
         // otherwise we had a successful login
         handleLogin(status.user);
-        if (status.user.emailVerified) {
-          history.push('/');
-        } else {
-          setNewUserUnVerified(true);
-        }
+        // if (status.user.emailVerified) {
+        history.push('/');
+        // } else {
+        //   setNewUserUnVerified(true);
+        // }
       }
     } catch (err) {
       console.log('handleSubmitLogin: ERROR', err);

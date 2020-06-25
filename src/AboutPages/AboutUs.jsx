@@ -4,7 +4,7 @@ import Header from '../Components/Header';
 import { Footer } from '../Components/Footer';
 
 
-import { Logo, Elegant } from '../images';
+import { Elegant } from '../images';
 import { Us } from '../images/photos';
 import { PatchLogo } from '../Components';
 

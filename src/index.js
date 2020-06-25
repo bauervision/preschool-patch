@@ -18,6 +18,7 @@ import { TeacherSocialPage } from './TeacherSocialPage';
 import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 import { NotFound } from './NotFound';
+import Redirector from './Redirector';
 import Payments from './Payments';
 
 
@@ -232,7 +233,7 @@ const App = () => {
   };
 
 
-  const getUserData = (user) => {
+  const getLoggedInUserData = (user) => {
     // setuserId right away
     setUserId(user.uid);
 
@@ -378,7 +379,7 @@ const App = () => {
       if (user) {
         // make sure we arent already logged in
         if (!loggedInUser) {
-          getUserData(user);
+          getLoggedInUserData(user);
           setEmailVerified(user.emailVerified);
           updateSuccess(true, 'Welcome!');
         }
@@ -396,81 +397,82 @@ const App = () => {
   }, [loggedInUser]);
 
   const handleLogin = (user, newUserData, isaLeader) => {
-    if (!loggedInUser) {
-      // if we logged in a new user
-      if (newUserData) {
-        // create new user data with what we do know about the user, as well as some defaults
-        let newUser = {};
-        if (isaLeader) {
-          newUser = {
-            private: {
-              joined: user.metadata.creationTime,
-              lastLogin: user.metadata.lastSignInTime
-            },
-            public: {
-              aboutMe:
+    // if (!user) {
+    // if we logged in a new user
+    if (newUserData) {
+      // create new user data with what we do know about the user, as well as some defaults
+      let newUser = {};
+      if (isaLeader) {
+        newUser = {
+          private: {
+            joined: user.metadata.creationTime,
+            lastLogin: user.metadata.lastSignInTime
+          },
+          public: {
+            aboutMe:
                 'I am brand new to Preschool Patch!  I will update my profile ASAP.',
-              active: true,
-              age: newUserData.age,
-              available: true,
-              email: newUserData.email,
-              bgCheckWilling: newUserData.backgroundCheck,
-              bgCheckComplete: false,
-              experience: newUserData.experience,
-              gallery: {
-                description: 'My home is ready for preschool learning!',
-                features: ['Warm and Inviting', 'Fenced in backyard'],
-                files: []
-              },
-              id: user.uid,
-              infants: newUserData.infants,
-              isLeader: true,
-              kidTotal: 0,
-              name: newUserData.displayName,
-              patchName: 'My Preschool Patch',
-              phone: newUserData.phoneNumber,
-              photoUrl: newUserData.photoUrl,
-              rating: 0,
-              rates: {
-                ft: 35,
-                pt: 45,
-                di: 60
-              },
-              zipcode: newUserData.zipcode
-            }
-          };
-        } else {
-          newUser = {
-            private: {
-              joined: user.metadata.creationTime,
-              lastLogin: user.metadata.lastSignInTime
+            active: true,
+            age: newUserData.age,
+            available: true,
+            email: newUserData.email,
+            bgCheckWilling: newUserData.backgroundCheck,
+            bgCheckComplete: false,
+            experience: newUserData.experience,
+            gallery: {
+              description: 'My home is ready for preschool learning!',
+              features: ['Warm and Inviting', 'Fenced in backyard'],
+              files: []
             },
-            public: {
-              active: true,
-              email: newUserData.email,
-              enrollment: { submitted: false },
-              id: user.uid,
-              isLeader: false,
-              children: newUserData.children,
-              name: newUserData.name,
-              zipcode: newUserData.zipcode,
-              photoUrl: newUserData.photoUrl,
-              phone: newUserData.phone,
-            }
-          };
-        }
-
-        // now that we have some essential data in place, store this user into the database
-        // make sure we check to see if we are storing a leader, or simply a user in doing so
-        database
-          .ref(`${isaLeader ? 'leaders' : 'users'}/${user.uid}`)
-          .set(newUser).then(() => {
-            setLoggedInUser(newUser);
-          });
+            id: user.uid,
+            infants: newUserData.infants,
+            isLeader: true,
+            kidTotal: 0,
+            name: newUserData.displayName,
+            patchName: 'My Preschool Patch',
+            phone: newUserData.phoneNumber,
+            photoUrl: newUserData.photoUrl,
+            rating: 0,
+            rates: {
+              ft: 35,
+              pt: 45,
+              di: 60
+            },
+            zipcode: newUserData.zipcode
+          }
+        };
+      } else {
+        newUser = {
+          private: {
+            joined: user.metadata.creationTime,
+            lastLogin: user.metadata.lastSignInTime
+          },
+          public: {
+            active: true,
+            email: newUserData.email,
+            enrollment: { submitted: false },
+            id: user.uid,
+            isLeader: false,
+            children: newUserData.children,
+            name: newUserData.name,
+            zipcode: newUserData.zipcode,
+            photoUrl: newUserData.photoUrl,
+            phone: newUserData.phone,
+          }
+        };
       }
-      // regardless of who logged in...
-      handleLoginCheck(user);
+
+      // now that we have some essential data in place, store this user into the database
+      // make sure we check to see if we are storing a leader, or simply a user in doing so
+      database
+        .ref(`${isaLeader ? 'leaders' : 'users'}/${user.uid}`)
+        .set(newUser).then(() => {
+          setLoggedInUser(newUser);
+        });
+      // }
     }
+
+    // regardless of who logged in...
+    handleLoginCheck(user);
   };
 
   const addNewChildInfo = () => {
@@ -634,6 +636,25 @@ const App = () => {
                 emailVerified={emailVerified}
               />}/>
           </PrivateRoute>
+
+          <Route
+            path='/home'
+            exact
+            render={() => <PublicLanding
+              emailVerified={emailVerified}
+              handleMemberSelection={handleMemberSelection}
+              handleLogin={handleLogin}
+              handleLogOut={handleLogOut}
+              loggedInUser={loggedInUser}
+              launchToast={toast}
+              isLeader={isLeader}
+              clientData={clientData}
+              myMessages={myMessages && myMessages}
+              userId={userId}
+              redirect={redirect}
+
+            />
+            } />
 
           <Route
             path='/'

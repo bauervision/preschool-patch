@@ -8,7 +8,7 @@ import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { Toast, Loader, EditField, PatchLogo } from './Components';
 
-import { Logo, Elegant, Corner, IvyHeart } from './images';
+import { Elegant, IvyHeart } from './images';
 
 
 const PublicLanding = ({
@@ -20,8 +20,8 @@ const PublicLanding = ({
   myMessages,
   userId,
   history,
-  redirect,
-  emailVerified
+  emailVerified,
+  redirect
 }) => {
   // handle local state
   const [leaderData, setLeaderData] = useState(null);
@@ -32,6 +32,7 @@ const PublicLanding = ({
   const [showTeacher, setShowTeacher] = useState(false);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
   const [userZip, setUserZip] = useState('');
+  const [initialLoad, setInitialLoad] = useState(true);
 
   // const getZip = async () => {
   //   axios
@@ -72,9 +73,12 @@ const PublicLanding = ({
 
 
   // handle initial login re-directs
-  useEffect(() => {
-    history.push(redirect.with);
-  }, [history, redirect]);
+  // useEffect(() => {
+  //   if (initialLoad) {
+  //     setInitialLoad(false);
+  //     history.push(redirect.to);
+  //   }
+  // }, [history, initialLoad, redirect]);
 
   useEffect(() => {
     if (loggedInUser) {
@@ -214,31 +218,33 @@ const PublicLanding = ({
       )}
 
       {/* Show loader if data is still coming in */}
-      {loadingLeaders ? (
-        <Loader />
-      ) : (
-        <div className="Flex Col JustifyCenter  SeeThru ">
+      {loggedInUser ? (
+        <>
+          {loadingLeaders ? (
+            <Loader />
+          ) : (
+            <div className="Flex Col JustifyCenter  SeeThru ">
 
-          {/* If we're not a teacher, then show search options */}
-          {!showTeacher ? (
-            <>
-              <div className="CursiveFont SuperFont Buffer PinkFont ">
+              {/* If we're not a teacher, then show search options */}
+              {!showTeacher ? (
+                <>
+                  <div className="CursiveFont SuperFont Buffer PinkFont ">
                 Find a local preschool teacher!
-              </div>
+                  </div>
 
-              {/* Filter data by zipcode */}
-              <div className="Flex JustifyCenter AlignItems MobileRowToCol">
-                <div className="Flex AlignItems MediumFont">
+                  {/* Filter data by zipcode */}
+                  <div className="Flex JustifyCenter AlignItems MobileRowToCol">
+                    <div className="Flex AlignItems MediumFont">
                 Show only Teachers in your zipcode?
-                  <EditField
-                    isCheck
-                    type="checkbox"
-                    forLabel="Available"
-                    onChange={(e) => filterZipcode(e)}
-                    value={filterZip}
-                  />
-                </div>
-                {filterZip
+                      <EditField
+                        isCheck
+                        type="checkbox"
+                        forLabel="Available"
+                        onChange={(e) => filterZipcode(e)}
+                        value={filterZip}
+                      />
+                    </div>
+                    {filterZip
                 && (
                   <div className="">
                     <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
@@ -251,44 +257,44 @@ const PublicLanding = ({
                     />
                     <button type="button" onClick={handleZipFilter}>Update</button>
                   </div>)
-                }
-              </div>
+                    }
+                  </div>
 
-              <div className="Flex JustifyCenter AlignItems Padding">
-                <div className="Flex AlignItems Padding">
-                  <label className="MediumFont"> Show Only Available Teachers?</label>
-                  <EditField
-                    isCheck
-                    type="checkbox"
-                    forLabel="Available"
-                    onChange={() => filterAvailable()}
-                    value={filterAvail}
-                  />
-                </div>
-                <div className="Flex AlignItems Padding">
-                  <label className="MediumFont">Teachers Accepting Infants?</label>
-                  <EditField
-                    isCheck
-                    type="checkbox"
-                    forLabel="Available"
-                    onChange={() => filterInfants()}
-                    value={filterAcceptingInfants}
-                  />
-                </div>
+                  <div className="Flex JustifyCenter AlignItems Padding">
+                    <div className="Flex AlignItems Padding">
+                      <label className="MediumFont"> Show Only Available Teachers?</label>
+                      <EditField
+                        isCheck
+                        type="checkbox"
+                        forLabel="Available"
+                        onChange={() => filterAvailable()}
+                        value={filterAvail}
+                      />
+                    </div>
+                    <div className="Flex AlignItems Padding">
+                      <label className="MediumFont">Teachers Accepting Infants?</label>
+                      <EditField
+                        isCheck
+                        type="checkbox"
+                        forLabel="Available"
+                        onChange={() => filterInfants()}
+                        value={filterAcceptingInfants}
+                      />
+                    </div>
 
-              </div>
-            </>
-          ) : (
-            <div className="CursiveFont SuperFont Buffer">
+                  </div>
+                </>
+              ) : (
+                <div className="CursiveFont SuperFont Buffer">
                 Explore some example profiles of our most successful Patches!
-            </div>
-          )}
-          {filteredData?.length > 0
+                </div>
+              )}
+              {filteredData?.length > 0
             && <div className="MediumFont">{filteredData?.length} teachers found</div>}
 
-          <div className="PublicLanding_Container JustifyCenter BoxShadow ">
+              <div className="PublicLanding_Container JustifyCenter BoxShadow ">
 
-            {filteredData?.length !== 0 ? (
+                {filteredData?.length !== 0 ? (
                 filteredData?.map((elem) => {
                   return (
                     <ProfileCard
@@ -298,19 +304,32 @@ const PublicLanding = ({
                     />
                   );
                 })) : (
-              <div style={{ padding: 40 }}>
-                <h3>{'No Patch Leaders yet. :('}</h3>
-                <div>Maybe you can be the first.....?</div>
-                <div>
-                  <button onClick={() => history.push('/createAccount')}>Become a Patch Leader!</button>
-                </div>
+                  <div style={{ padding: 40 }}>
+                    <h3>{'No Patch Leaders yet. :('}</h3>
+                    <div>Maybe you can be the first.....?</div>
+                    <div>
+                      <button onClick={() => history.push('/createAccount')}>Become a Patch Leader!</button>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+
+
+            </div>
+          )}
+
+        </>
+      ) : (
+        <>
+          <div className="Flex JustifyCenter AlignItems Col">
+            <h2>Please Login to view our database of Preschool Patch Teachers!</h2>
+            <button type="button" onClick={() => history.push('/login')}>Login / Sign-up</button>
+
           </div>
 
-
-        </div>
+        </>
       )}
+
 
       <div>
         <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />

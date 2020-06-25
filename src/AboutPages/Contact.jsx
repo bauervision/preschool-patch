@@ -6,7 +6,7 @@ import Header from '../Components/Header';
 import { Footer } from '../Components/Footer';
 
 
-import { Logo, Elegant } from '../images';
+import { Elegant } from '../images';
 import ContactForm from './ContactForm';
 import { PatchLogo } from '../Components';
 

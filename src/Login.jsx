@@ -9,9 +9,6 @@ import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection, Load
 
 // import { SignUp } from "./SignUp";
 import { RegisterUser, LoginUserEmailPassword, PasswordReset, SendValidationEmail } from './helpers/auth';
-
-import Verify from './Components/Verify';
-
 import { Add, Elegant } from './images';
 
 
@@ -34,7 +31,6 @@ const Login = ({ handleLogin, history }) => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [newUserUnVerified, setNewUserUnVerified] = useState(false);
-  const [isHuman, setIsHuman] = useState(false);
   const [formComplete, setFormComplete] = useState(false);
 
   const handleSubmitLogin = useCallback(async () => {
@@ -105,7 +101,6 @@ const Login = ({ handleLogin, history }) => {
 
     const status = await RegisterUser(email, password);
 
-    console.log('handleSubmitNew: status ', status);
     if (!status.user) {
       const errorMessage = status.error.message;
       setLoginError(errorMessage);
@@ -374,26 +369,17 @@ const Login = ({ handleLogin, history }) => {
 
                                 {formComplete && (
                                   <>
-
-                                    {!isHuman
-                                && <Verify handleVerify={setIsHuman} />
-                                    }
-
                                     {emailError || passwordError ? (
                                       <div className="FakeButton">
                                         Enter Valid Email and Password
                                       </div>
                                     ) : (
                                       <>
-                                        {!isHuman ? (
-                                          <div className="CursiveFont LargeFont">Please complete the Human verification above</div>
-                                        ) : (
-                                          <div className="Flex JustifyCenter AlignItems">
-                                            <button type="submit" className="RegisterButton HalfSize">
+                                        <div className="Flex JustifyCenter AlignItems">
+                                          <button type="submit" className="RegisterButton HalfSize">
                                             Register
-                                            </button>
-                                          </div>
-                                        )}
+                                          </button>
+                                        </div>
 
                                       </>
                                     )}
@@ -422,7 +408,7 @@ const Login = ({ handleLogin, history }) => {
 
                                     {/* Show login error up at the top so users can see it clearly */}
                                     {loginError ? (
-                                      <div className="LoginError">{loginError}</div>
+                                      <Error errorMessage={loginError}/>
                                     ) : (
                                       <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
                                     )}

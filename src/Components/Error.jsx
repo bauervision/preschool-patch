@@ -1,5 +1,5 @@
-import React from "react";
-import { ErrorIcon } from "../images";
+import React from 'react';
+import { ErrorIcon } from '../images';
 
 const Error = ({ errorMessage }) => (
   <div className="LoginError Flex JustifyCenter AlignItems">

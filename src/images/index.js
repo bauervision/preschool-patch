@@ -39,3 +39,4 @@ export { default as Return } from './return.png';
 export { default as Contact } from './contact.png';
 export { default as Table } from './table.png';
 export { default as Pay } from './payments.png';
+export { default as LoginPatch } from './loginPatch.png';

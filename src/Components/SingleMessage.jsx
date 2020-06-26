@@ -10,7 +10,7 @@ const SingleMessage = ({ data, userId, lastMessage, seen }) => {
     <div className={` ${myMessage ? 'TextRight' : 'TextLeft'} MarginTopSmall MarginHSmall`}>
       <div className="" style={{ fontSize: 10, color: 'grey', marginLeft: 10 }}>{moment(data.date).fromNow()}</div>
       <div className={`MessageBorder ${!myMessage ? 'MessageBubble TextLeft' : 'TextRight'}`}>
-        <div className="MediumFont MobileMessagesPadding">{data.message}</div>
+        <div className="MediumFont MobileMessagesPadding CursiveFont">{data.message}</div>
       </div>
 
       {(lastMessage && myMessage) && (

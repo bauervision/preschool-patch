@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import './styles.scss';
 import moment from 'moment';
+import Home from './Home';
 import PublicLanding from './PublicLanding';
 import CreateAccount from './CreateAccount';
 import Login from './Login';
@@ -636,10 +637,11 @@ const App = () => {
               />}/>
           </PrivateRoute>
 
+          {/* Home is for logged in users with authenticated priviledges */}
           <Route
             path='/home'
             exact
-            render={() => <PublicLanding
+            render={() => <Home
               emailVerified={emailVerified}
               handleMemberSelection={handleMemberSelection}
               handleLogin={handleLogin}
@@ -653,6 +655,7 @@ const App = () => {
             />
             } />
 
+          {/* PublicLanding is for random visitors to the page */}
           <Route
             path='/'
             exact

@@ -32,7 +32,6 @@ const PublicLanding = ({
   const [showTeacher, setShowTeacher] = useState(false);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
   const [userZip, setUserZip] = useState('');
-  const [initialLoad, setInitialLoad] = useState(true);
 
   // const getZip = async () => {
   //   axios
@@ -73,12 +72,13 @@ const PublicLanding = ({
 
 
   // handle initial login re-directs
-  // useEffect(() => {
-  //   if (initialLoad) {
-  //     setInitialLoad(false);
-  //     history.push(redirect.to);
-  //   }
-  // }, [history, initialLoad, redirect]);
+  useEffect(() => {
+    // if we have a redirect, than this is the '/' route which means we want to push the user
+    // to a desired location upon initial login
+    if (redirect) {
+      history.push(redirect.to);
+    }
+  }, [history, redirect]);
 
   useEffect(() => {
     if (loggedInUser) {

@@ -93,7 +93,7 @@ const MyProfilePage = ({ loggedInUser, isLeader, myMessages, userId, emailVerifi
         gallery: {
           description: updatedGalleryDesription,
           features: updatedGalleryFeatures,
-          images: updatedGalleryImages
+          images: updatedGalleryImages || null // user might not have gottenm around to loading these yet
         },
         rates: {
           ft: updatedFTRates,

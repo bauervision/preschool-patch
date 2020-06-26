@@ -16,10 +16,15 @@ export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isL
 
   // grab the patch name of our patch based on if we're the leader or not
   useEffect(() => {
-    const patchName = loggedInUser?.isLeader ? loggedInUser.patchName : loggedInUser.enrollment.patchName;
+    // brand new users will have their public data still attached for whatever reason
+    // TODO: figure out and remove the reason
+    console.log(loggedInUser);
+
+    const patchName = loggedInUser?.isLeader ? loggedInUser?.patchName : loggedInUser?.enrollment.patchName;
+
     setThisPatchName(patchName);
 
-    const patchId = loggedInUser?.isLeader ? loggedInUser.id : loggedInUser?.enrollment.submittedTo;
+    const patchId = loggedInUser?.isLeader ? loggedInUser?.id : loggedInUser?.enrollment.submittedTo;
 
     // if we dont have posts to view
     if (!updatedPosts) {
@@ -82,7 +87,7 @@ export const TeacherSocialPage = ({ emailVerified, pageUpdate, loggedInUser, isL
 
             <div className="Flex AlignItems Buffer MarginTopMobileHome">
               <img src={MiniFlower} alt="flower left" style={{ height: 100, width: 'auto' }} className="HideMobile"/>
-              <div className="CursiveFont SuperFont PinkFont  MarginTopMobileHome">{thisPatchName}</div>
+              <div className="CursiveFont SuperFont PinkFont">{thisPatchName}</div>
               <img src={MiniFlowerFlip} alt="flower right" style={{ height: 100, width: 'auto' }} className="HideMobile"/>
             </div>
 

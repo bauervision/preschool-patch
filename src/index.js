@@ -18,7 +18,6 @@ import { TeacherSocialPage } from './TeacherSocialPage';
 import ScrollToTop from './Components/ScrollToTop';
 import { About, Contact, FAQ, Privacy, Safety, Terms } from './AboutPages';
 import { NotFound } from './NotFound';
-import Redirector from './Redirector';
 import Payments from './Payments';
 
 
@@ -366,6 +365,7 @@ const App = () => {
               fetchSocialActivity(curUser.public.enrollment.submittedTo);
               setRedirect({ to: `/teacherSocial/${curUser.public.enrollment.patchName}` });
             }
+            /* if there are no accepted enrollments, then the user will simply land on the home page */
           }
         });
       }
@@ -397,7 +397,6 @@ const App = () => {
   }, [loggedInUser]);
 
   const handleLogin = (user, newUserData, isaLeader) => {
-    // if (!user) {
     // if we logged in a new user
     if (newUserData) {
       // create new user data with what we do know about the user, as well as some defaults
@@ -651,8 +650,6 @@ const App = () => {
               clientData={clientData}
               myMessages={myMessages && myMessages}
               userId={userId}
-              redirect={redirect}
-
             />
             } />
 

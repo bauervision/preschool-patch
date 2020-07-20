@@ -41,7 +41,7 @@ const Login = ({ handleLogin, history }) => {
 
       // if we didn't get a user back, then there was an error
       if (!status.user) {
-        // console.log('handleSubmitLogin: !status.user ERROR', status);
+        console.log('handleSubmitLogin: !status.user ERROR', status);
         setLoadingUser(false);
         const errorMessage = status.error.message;
         setLoginError(errorMessage);

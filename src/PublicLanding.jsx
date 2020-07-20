@@ -24,7 +24,7 @@ const PublicLanding = ({
     if (loggedInUser) {
       history.push(redirect.to);
     }
-  }, [history, loggedInUser, redirect.to]);
+  }, [history, loggedInUser, redirect, redirect.to]);
 
 
   return (
@@ -67,7 +67,7 @@ const PublicLanding = ({
                 </div>
 
                 <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/createAccount')}>
-                          Do you want to be a Teacher?
+                         Do you want to be a Teacher?
                 </button>
 
               </div>

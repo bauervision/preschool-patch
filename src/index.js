@@ -43,7 +43,7 @@ const App = () => {
   const [loadingSocial, setLoadingSocial] = useState(true);
   const [socialPosts, setSocialPosts] = useState(null);
   const [socialPostId, setSocialPostId] = useState(null);
-  const [redirect, setRedirect] = useState({ to: '/' });
+  const [redirect, setRedirect] = useState({ to: '/home' });
 
 
   // keep messages updated
@@ -184,7 +184,7 @@ const App = () => {
   };
 
   const handleLogOut = () => {
-    setRedirect({ to: '/' });
+    setRedirect({ to: '/home' });
     setPatchData(null);
     setClientData(null);
     setLoggedInUser(null);

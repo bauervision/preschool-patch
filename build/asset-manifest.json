@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c719a45a.chunk.css",
+    "main.js": "/static/js/main.ec89db57.chunk.js",
+    "main.js.map": "/static/js/main.ec89db57.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.217dfd05.js",
+    "runtime-main.js.map": "/static/js/runtime-main.217dfd05.js.map",
+    "static/js/2.c960a185.chunk.js": "/static/js/2.c960a185.chunk.js",
+    "static/js/2.c960a185.chunk.js.map": "/static/js/2.c960a185.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.19df5765166d4e01204c8b6c7d9d2c2e.js": "/precache-manifest.19df5765166d4e01204c8b6c7d9d2c2e.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.c719a45a.chunk.css.map": "/static/css/main.c719a45a.chunk.css.map",
+    "static/js/2.c960a185.chunk.js.LICENSE.txt": "/static/js/2.c960a185.chunk.js.LICENSE.txt",
+    "static/media/Leaves.png": "/static/media/Leaves.c7d243d7.png",
+    "static/media/LeavesFlipped.png": "/static/media/LeavesFlipped.7515c7fd.png",
+    "static/media/Minor Logo.png": "/static/media/Minor Logo.fdb4774e.png",
+    "static/media/aboutUs.jpg": "/static/media/aboutUs.11073f50.jpg",
+    "static/media/loginPatch.png": "/static/media/loginPatch.ed06b717.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.217dfd05.js",
+    "static/js/2.c960a185.chunk.js",
+    "static/css/main.c719a45a.chunk.css",
+    "static/js/main.ec89db57.chunk.js"
+  ]
+}

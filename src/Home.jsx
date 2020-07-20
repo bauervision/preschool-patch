@@ -6,6 +6,7 @@ import { database } from './config';
 import ProfileCard from './ProfileCard';
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
+import Error from './Components/Error';
 import { Toast, Loader, EditField, PatchLogo } from './Components';
 
 import { Elegant, IvyHeart, LoginPatch } from './images';
@@ -32,6 +33,7 @@ const Home = ({
   const [showTeacher, setShowTeacher] = useState(false);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
   const [userZip, setUserZip] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // const getZip = async () => {
   //   axios
@@ -51,8 +53,9 @@ const Home = ({
 
   /* make sure we fetch leader data for searching */
   useEffect(() => {
-    if (!filteredData) {
+    if (filteredData === null) {
       setLoadingLeaders(true);
+
       database.ref('leaders').once('value', (snapshot) => {
         if (snapshot.val()) {
           const leadersArray = Object.entries(snapshot.val());
@@ -60,11 +63,15 @@ const Home = ({
           leadersArray.forEach((elem) => { if (elem[1].public.active) { newData.push(elem[1].public); } });
           setLeaderData(newData);
           setFilteredData(newData);
+          setLoadingLeaders(false);
         }
+      }).catch((err) => {
+        console.error(err.message);
+        setLoadingLeaders(false);
+        setErrorMessage('Error Retrieving Teacher Data');
       });
-    } else {
-      setLoadingLeaders(false);
     }
+
 
     // also let's get the zipcode for the current user while we're in mount
     // TODO: getZip();
@@ -72,13 +79,13 @@ const Home = ({
 
 
   // handle initial login re-directs
-  useEffect(() => {
-    // if we have a redirect, than this is the '/' route which means we want to push the user
-    // to a desired location upon initial login
-    if (redirect) {
-      history.push(redirect.to);
-    }
-  }, [history, redirect]);
+  // useEffect(() => {
+  //   // if we have a redirect, than this is the '/' route which means we want to push the user
+  //   // to a desired location upon initial login
+  //   if (redirect) {
+  //     history.push(redirect.to);
+  //   }
+  // }, [history, redirect]);
 
   useEffect(() => {
     if (loggedInUser) {
@@ -220,31 +227,35 @@ const Home = ({
       {/* Show loader if data is still coming in */}
       {loggedInUser ? (
         <>
-          {loadingLeaders ? (
-            <Loader />
+          {errorMessage !== null ? (
+            <Error errorMessage = {errorMessage}/>
           ) : (
-            <div className="Flex Col JustifyCenter  SeeThru ">
+            <>
+              {loadingLeaders ? (
+                <Loader />
+              ) : (
+                <div className="Flex Col JustifyCenter  SeeThru ">
 
-              {/* If we're not a teacher, then show search options */}
-              {!showTeacher ? (
-                <>
-                  <div className="CursiveFont SuperFont Buffer PinkFont ">
+                  {/* If we're not a teacher, then show search options */}
+                  {!showTeacher ? (
+                    <>
+                      <div className="CursiveFont SuperFont Buffer PinkFont ">
                 Find a local preschool teacher!
-                  </div>
+                      </div>
 
-                  {/* Filter data by zipcode */}
-                  <div className="Flex JustifyCenter AlignItems MobileRowToCol">
-                    <div className="Flex AlignItems MediumFont">
+                      {/* Filter data by zipcode */}
+                      <div className="Flex JustifyCenter AlignItems MobileRowToCol">
+                        <div className="Flex AlignItems MediumFont">
                 Show only Teachers in your zipcode?
-                      <EditField
-                        isCheck
-                        type="checkbox"
-                        forLabel="Available"
-                        onChange={(e) => filterZipcode(e)}
-                        value={filterZip}
-                      />
-                    </div>
-                    {filterZip
+                          <EditField
+                            isCheck
+                            type="checkbox"
+                            forLabel="Available"
+                            onChange={(e) => filterZipcode(e)}
+                            value={filterZip}
+                          />
+                        </div>
+                        {filterZip
                 && (
                   <div className="">
                     <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
@@ -257,44 +268,44 @@ const Home = ({
                     />
                     <button type="button" onClick={handleZipFilter}>Update</button>
                   </div>)
-                    }
-                  </div>
+                        }
+                      </div>
 
-                  <div className="Flex JustifyCenter AlignItems Padding">
-                    <div className="Flex AlignItems Padding">
-                      <label className="MediumFont"> Show Only Available Teachers?</label>
-                      <EditField
-                        isCheck
-                        type="checkbox"
-                        forLabel="Available"
-                        onChange={() => filterAvailable()}
-                        value={filterAvail}
-                      />
-                    </div>
-                    <div className="Flex AlignItems Padding">
-                      <label className="MediumFont">Teachers Accepting Infants?</label>
-                      <EditField
-                        isCheck
-                        type="checkbox"
-                        forLabel="Available"
-                        onChange={() => filterInfants()}
-                        value={filterAcceptingInfants}
-                      />
-                    </div>
+                      <div className="Flex JustifyCenter AlignItems Padding">
+                        <div className="Flex AlignItems Padding">
+                          <label className="MediumFont"> Show Only Available Teachers?</label>
+                          <EditField
+                            isCheck
+                            type="checkbox"
+                            forLabel="Available"
+                            onChange={() => filterAvailable()}
+                            value={filterAvail}
+                          />
+                        </div>
+                        <div className="Flex AlignItems Padding">
+                          <label className="MediumFont">Teachers Accepting Infants?</label>
+                          <EditField
+                            isCheck
+                            type="checkbox"
+                            forLabel="Available"
+                            onChange={() => filterInfants()}
+                            value={filterAcceptingInfants}
+                          />
+                        </div>
 
-                  </div>
-                </>
-              ) : (
-                <div className="CursiveFont SuperFont Buffer">
+                      </div>
+                    </>
+                  ) : (
+                    <div className="CursiveFont SuperFont Buffer">
                 Explore some example profiles of our most successful Patches!
-                </div>
-              )}
-              {filteredData?.length > 0
+                    </div>
+                  )}
+                  {filteredData?.length > 0
             && <div className="MediumFont">{filteredData?.length} teachers found</div>}
 
-              <div className="PublicLanding_Container JustifyCenter BoxShadow ">
+                  <div className="PublicLanding_Container JustifyCenter BoxShadow ">
 
-                {filteredData?.length !== 0 ? (
+                    {filteredData?.length !== 0 ? (
                 filteredData?.map((elem) => {
                   return (
                     <ProfileCard
@@ -304,18 +315,20 @@ const Home = ({
                     />
                   );
                 })) : (
-                  <div style={{ padding: 40 }}>
-                    <h3>{'No Patch Leaders yet. :('}</h3>
-                    <div>Maybe you can be the first.....?</div>
-                    <div>
-                      <button onClick={() => history.push('/createAccount')}>Become a Patch Leader!</button>
-                    </div>
+                      <div style={{ padding: 40 }}>
+                        <h3>{'No Patch Leaders yet. :('}</h3>
+                        <div>Maybe you can be the first.....?</div>
+                        <div>
+                          <button onClick={() => history.push('/createAccount')}>Become a Patch Leader!</button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
 
-            </div>
+                </div>
+              )}
+            </>
           )}
 
         </>

@@ -8,8 +8,10 @@ import { Footer } from './Components/Footer';
 import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection, Loader } from './Components';
 
 // import { SignUp } from "./SignUp";
-import { RegisterUser, LoginUserEmailPassword, PasswordReset, SendValidationEmail } from './helpers/auth';
+import { RegisterUser, LoginUserEmailPassword, SendValidationEmail } from './helpers/auth';
 import { Add, Elegant } from './images';
+
+import FirebaseUI from './Components/FirebaseUI';
 
 
 const Login = ({ handleLogin, history }) => {
@@ -28,10 +30,11 @@ const Login = ({ handleLogin, history }) => {
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
   const [kidTotal, setKidTotal] = useState([]);
   const [loadingUser, setLoadingUser] = useState(false);
-  const [forgotPassword, setForgotPassword] = useState(false);
-  const [resetSuccess, setResetSuccess] = useState(false);
+  // const [forgotPassword, setForgotPassword] = useState(false);
+  // const [resetSuccess, setResetSuccess] = useState(false);
   const [newUserUnVerified, setNewUserUnVerified] = useState(false);
   const [formComplete, setFormComplete] = useState(false);
+
 
   const handleSubmitLogin = useCallback(async () => {
     setLoadingUser(true);
@@ -199,13 +202,13 @@ const Login = ({ handleLogin, history }) => {
     setKidTotal(kids);
   };
 
-  const sendPasswordReset = async (e) => {
-    e.preventDefault();
-    if (!emailError) {
-      PasswordReset(email);
-      setResetSuccess(true);
-    }
-  };
+  // const sendPasswordReset = async (e) => {
+  //   e.preventDefault();
+  //   if (!emailError) {
+  //     PasswordReset(email);
+  //     setResetSuccess(true);
+  //   }
+  // };
 
   return (
     <div >
@@ -399,95 +402,96 @@ const Login = ({ handleLogin, history }) => {
                         {loadingUser ? (
                           <Loader/>
                         ) : (
-                          <>
-                            {/* Login Form */}
-                            {!forgotPassword
-                              ? (
-                                <form onSubmit={() => setLoadingUser(true)}>
-                                  <div className="Flex Col JustifyCenter AlignItems">
+                          <FirebaseUI />
+                          // <>
+                          //   {/* Login Form */}
+                          //   {!forgotPassword
+                          //     ? (
+                          //       <form onSubmit={() => setLoadingUser(true)}>
+                          //         <div className="Flex Col JustifyCenter AlignItems">
 
-                                    {/* Show login error up at the top so users can see it clearly */}
-                                    {loginError ? (
-                                      <Error errorMessage={loginError}/>
-                                    ) : (
-                                      <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
-                                    )}
-
-
-                                    <div className="Flex Col LoginForm BoxShadow">
-                                      <BasicInput
-                                        title="Email"
-                                        type="email"
-                                        forLabel="email"
-                                        onChange={setEmail}
-                                        value={email}
-                                      />
-
-                                      <PasswordInput
-                                        handlePasswordVisibility={handlePasswordVisibility}
-                                        setPassword={setPassword}
-                                        password={password}
-                                        passwordType={passwordType}
-                                        passwordError={passwordError}
-                                      />
+                        //           {/* Show login error up at the top so users can see it clearly */}
+                        //           {loginError ? (
+                        //             <Error errorMessage={loginError}/>
+                        //           ) : (
+                        //             <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
+                        //           )}
 
 
-                                      {emailError || passwordError ? (
-                                        <div className="FakeButton">
-                              Enter Valid Email and Password
-                                        </div>
-                                      ) : (
-                                        <button type="submit">Login</button>
-                                      )}
-                                    </div>
+                        //           <div className="Flex Col LoginForm BoxShadow">
+                        //             <BasicInput
+                        //               title="Email"
+                        //               type="email"
+                        //               forLabel="email"
+                        //               onChange={setEmail}
+                        //               value={email}
+                        //             />
 
-                                    <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
-
-
-                                  </div>
-                                </form>)
-                              : (
-
-                            // Password Reset Form
-                                <>
-                                  {!resetSuccess ? (
-                                    <form onSubmit={sendPasswordReset}>
-                                      <div className="Flex Col JustifyCenter AlignItems">
-                                        <div className="CursiveFont PinkFont LargeFont">Request Password Reset</div>
-                                        <div className="Flex Col LoginForm BoxShadow">
-                                          <BasicInput
-                                            title="Email"
-                                            type="email"
-                                            forLabel="email"
-                                            onChange={setEmail}
-                                            value={email}
-                                          />
-
-                                          {emailError ? (
-                                            <div className="FakeButton">
-                                              Enter Valid Email
-                                            </div>
-                                          ) : (
-                                            <button type="submit">Reset Password</button>
-                                          )}
-                                        </div>
-
-                                        <button type="button" onClick={() => setForgotPassword(!forgotPassword)}>Oh! I remember it now!</button>
-
-                                      </div>
-                                    </form>
-                                  ) : (
-                                    <>
-                                      <div className="PinkFont CursiveFont LargeFont"> Password has been reset!</div>
-                                      <p>Please check your email</p>
-                                    </>
-                                  )}
+                        //             <PasswordInput
+                        //               handlePasswordVisibility={handlePasswordVisibility}
+                        //               setPassword={setPassword}
+                        //               password={password}
+                        //               passwordType={passwordType}
+                        //               passwordError={passwordError}
+                        //             />
 
 
-                                </>
-                              )}
+                        //             {emailError || passwordError ? (
+                        //               <div className="FakeButton">
+                        //     Enter Valid Email and Password
+                        //               </div>
+                        //             ) : (
+                        //               <button type="submit">Login</button>
+                        //             )}
+                        //           </div>
 
-                          </>
+                        //           <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
+
+
+                        //         </div>
+                        //       </form>)
+                        //     : (
+
+                        //   // Password Reset Form
+                        //       <>
+                        //         {!resetSuccess ? (
+                        //           <form onSubmit={sendPasswordReset}>
+                        //             <div className="Flex Col JustifyCenter AlignItems">
+                        //               <div className="CursiveFont PinkFont LargeFont">Request Password Reset</div>
+                        //               <div className="Flex Col LoginForm BoxShadow">
+                        //                 <BasicInput
+                        //                   title="Email"
+                        //                   type="email"
+                        //                   forLabel="email"
+                        //                   onChange={setEmail}
+                        //                   value={email}
+                        //                 />
+
+                        //                 {emailError ? (
+                        //                   <div className="FakeButton">
+                        //                     Enter Valid Email
+                        //                   </div>
+                        //                 ) : (
+                        //                   <button type="submit">Reset Password</button>
+                        //                 )}
+                        //               </div>
+
+                        //               <button type="button" onClick={() => setForgotPassword(!forgotPassword)}>Oh! I remember it now!</button>
+
+                        //             </div>
+                        //           </form>
+                        //         ) : (
+                        //           <>
+                        //             <div className="PinkFont CursiveFont LargeFont"> Password has been reset!</div>
+                        //             <p>Please check your email</p>
+                        //           </>
+                        //         )}
+
+
+                        //       </>
+                        //     )}
+
+                        // </>
                         )}
 
                       </>

@@ -1,214 +1,71 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
 import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 
 // Components
-import { BasicInput, PasswordInput, Error, PageLogo, PatchLogo, KidSection, Loader } from './Components';
+import { PageLogo, PatchLogo } from './Components';
 
-// import { SignUp } from "./SignUp";
-import { RegisterUser, LoginUserEmailPassword, SendValidationEmail } from './helpers/auth';
-import { Add, Elegant } from './images';
-
+import { Elegant } from './images';
+import { f } from './config';
 import FirebaseUI from './Components/FirebaseUI';
 
 
-const Login = ({ handleLogin, history }) => {
+const Login = ({ history, handleLogin, handleNewLogin }) => {
+  const handleNewLoginAfterFirebase = (user) => {
+    handleNewLogin(user, false);
+    history.push('/home');
+  };
+
+  const handleLoginAfterFirebase = (user) => {
+    handleLogin(user, false);
+    history.push('/home');
+  };
+  // Configure FirebaseUI.
+  const uiConfigReturningUser = {
+  // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+    signInSuccessUrl: '/home',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      f.auth.FacebookAuthProvider.PROVIDER_ID,
+      f.auth.GoogleAuthProvider.PROVIDER_ID,
+      f.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+    // Avoid redirects after sign-in.
+      signInSuccessWithAuthResult: (user) => handleLoginAfterFirebase(user)
+    }
+  };
+
+  const uiConfigNewUser = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      f.auth.FacebookAuthProvider.PROVIDER_ID,
+      f.auth.GoogleAuthProvider.PROVIDER_ID,
+      f.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+      // Avoid redirects after sign-in.
+      signInSuccessWithAuthResult: (user) => handleNewLoginAfterFirebase(user)
+    }
+  };
+
   // handle local state
-  const [emailError, setEmailError] = useState(true);
-  const [passwordError, setPasswordError] = useState(true);
-  const [loginError, setLoginError] = useState(null);
-  const [email, setEmailLogin] = useState('');
-  const [password, setPasswordLogin] = useState('');
-  const [name, setNameLogin] = useState('');
-  const [phone, setPhoneLogin] = useState('');
-  const [zipcode, setZipcodeLogin] = useState('');
+
+
   const [userType, setUserType] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [passwordType, setPasswordType] = useState('password');
   const [choice, setChoice] = useState(0); // 0: no choice, 1: parent, 2: teacher
-  const [kidTotal, setKidTotal] = useState([]);
-  const [loadingUser, setLoadingUser] = useState(false);
-  // const [forgotPassword, setForgotPassword] = useState(false);
-  // const [resetSuccess, setResetSuccess] = useState(false);
-  const [newUserUnVerified, setNewUserUnVerified] = useState(false);
-  const [formComplete, setFormComplete] = useState(false);
 
-
-  const handleSubmitLogin = useCallback(async () => {
-    setLoadingUser(true);
-
-    try {
-      const status = await LoginUserEmailPassword(email, password);
-
-      // if we didn't get a user back, then there was an error
-      if (!status.user) {
-        console.log('handleSubmitLogin: !status.user ERROR', status);
-        setLoadingUser(false);
-        const errorMessage = status.error.message;
-        setLoginError(errorMessage);
-      } else {
-        console.log('handleSubmitLogin: status.user success', status);
-        setLoadingUser(false);
-        // otherwise we had a successful login
-        handleLogin(status.user);
-        // if (status.user.emailVerified) {
-        history.push('/');
-        // } else {
-        //   setNewUserUnVerified(true);
-        // }
-      }
-    } catch (err) {
-      console.log('handleSubmitLogin: ERROR', err);
-      setLoginError(err);
-    }
-  }, [email, handleLogin, history, password]);
-
-
-  // verify when we have all the data we need
-  useEffect(() => {
-    if (email && name && phone && zipcode) {
-      setFormComplete(true);
-    } else {
-      setFormComplete(false);
-    }
-  }, [email, name, phone, zipcode]);
-
-  useEffect(() => {
-    if (loadingUser) {
-      handleSubmitLogin();
-    }
-  }, [handleSubmitLogin, loadingUser]);
-
-
-  const validEmailRegex = RegExp(
-    // eslint-disable-next-line
-    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-  );
-
-  const handleSubmitNew = async (e) => {
-    e.preventDefault();
-
-    const newUserData = {
-      email,
-      password,
-      name,
-      phone,
-      zipcode,
-      children: kidTotal,
-      photoUrl:
-        'https://firebasestorage.googleapis.com/v0/b/preschoolpatch-f04be.appspot.com/o/public%2Favatar.png?alt=media&token=b5f43a4b-4e65-4e4a-b096-54a69de16490'
-
-    };
-
-    const status = await RegisterUser(email, password);
-
-    if (!status.user) {
-      const errorMessage = status.error.message;
-      setLoginError(errorMessage);
-    } else if (status) {
-      // otherwise successful account creation so send the email
-      SendValidationEmail(status.user);
-      // and inform the user they need to verify that email before they can get into the site
-      setNewUserUnVerified(true);
-      handleLogin(status.user, newUserData);
-      /* We don't push the user any where as we will notify them on this page to verify their email */
-    }
-  };
-
-  const setEmail = (e) => {
-    const error = validEmailRegex.test(e) ? '' : 'Email is not valid!';
-    setEmailError(error);
-    setEmailLogin(e);
-  };
-
-  const setPassword = (pw) => {
-    const error = pw.length < 6;
-    setPasswordError(error);
-    setPasswordLogin(pw);
-  };
-
-  const handlePasswordVisibility = () => {
-    setPasswordType(!showPassword ? 'text' : 'password');
-    setShowPassword(!showPassword);
-  };
 
   const handleUserTypeSwitch = (ut) => {
     setUserType(ut);
-    setLoginError(null);
   };
 
-  const handleSetChildName = (n, index) => {
-    // get kid
-    const kids = [...kidTotal];
-    const thisKid = kids[index];
-    // update their data
-    thisKid.name = n;
-    kids[index] = thisKid;
-
-    // update state
-    setKidTotal(kids);
-  };
-
-  const handleSetChildAge = (age, index) => {
-    const kids = [...kidTotal];
-    const thisKid = kids[index];
-    thisKid.age = Number(age);
-    kids[index] = thisKid;
-    setKidTotal(kids);
-  };
-
-  const addNewChildInfo = (e) => {
-    e.preventDefault();
-    const newKid = { name: '', age: '', enrollment: '' };
-    const updatedInfo = [...kidTotal];
-    if (updatedInfo.length <= 4) {
-      updatedInfo.push(newKid);
-      setKidTotal([...updatedInfo]);
-    }
-  };
-
-  const handleSetChildInterest = (interest, index) => {
-    const kids = [...kidTotal];
-    const thisKid = kids[index];
-    thisKid.enrollment = interest;
-    kids[index] = thisKid;
-    setKidTotal(kids);
-  };
-
-
-  const handleSetBirthYear = (year, index) => {
-    const kids = [...kidTotal];
-    const thisKid = { ...kids[index], year: Number(year) };
-    kids[index] = thisKid;
-    setKidTotal(kids);
-  };
-
-  const handleSetBirthDay = (day, index) => {
-    const kids = [...kidTotal];
-    const thisKid = { ...kids[index], day: Number(day) };
-    kids[index] = thisKid;
-    setKidTotal(kids);
-  };
-
-  const handleSetBirthMonth = (month, index) => {
-    const kids = [...kidTotal];
-    // if user selects None, this will remove the child from the list
-    if (month !== 'Select Month...') {
-      const thisKid = { ...kids[index], month };
-      kids[index] = thisKid;
-    }
-    setKidTotal(kids);
-  };
-
-  // const sendPasswordReset = async (e) => {
-  //   e.preventDefault();
-  //   if (!emailError) {
-  //     PasswordReset(email);
-  //     setResetSuccess(true);
-  //   }
-  // };
 
   return (
     <div >
@@ -218,295 +75,71 @@ const Login = ({ handleLogin, history }) => {
 
         <div className="CursiveFont SuperFont TextLeft Buffer " style={{ marginLeft: 30 }}>Login / Sign-up!</div>
 
-        {!newUserUnVerified ? (
-          <>
-            {/* Login Box */}
-            <div className="MarginTop">
-              <div
-                className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter ThreeQuarters MarginAuto"
-              >
-                <div>
-                  <PageLogo
-                    isLogin
-                    title=""
-                    handleUserTypeSwitch={handleUserTypeSwitch}
-                    userType={userType}
-                  />
-                </div>
+        {/* Login Box */}
+        <div className="MarginTop">
+          <div
+            className="Flex Col SeeThru RoundBorder SimpleBorder AlignItems JustifyCenter ThreeQuarters MarginAuto"
+          >
+            <div>
+              <PageLogo
+                isLogin
+                title=""
+                handleUserTypeSwitch={handleUserTypeSwitch}
+                userType={userType}
+              />
+            </div>
 
 
-                {userType !== null && (
+            {userType !== null && (
+              <>
+                {userType === 0 ? (
+                // New User
                   <>
-                    {userType === 0 ? (
-                    // New User
-                      <>
 
-                        {/* Are we wanting to be a Parent, or a Leader? */}
-                        <div className="Flex Col AlignItems JustifyCenter ">
+                    {/* Are we wanting to be a Parent, or a Leader? */}
+                    <div className="Flex Col AlignItems JustifyCenter ">
 
-                          <div className="CursiveFont PinkFont LargeFont">Please Select Account Type</div>
+                      <div className="CursiveFont PinkFont LargeFont">Please Select Account Type</div>
 
-                          <div className="Col">
-                            <button
-                              type="button" onClick={() => setChoice(1)}>
+                      <div className="Col">
+                        <button
+                          type="button" onClick={() => setChoice(1)}>
                           Are you a Parent?
-                            </button>
+                        </button>
 
-                            <button type="button"onClick={() => history.push('/createAccount')}>
+                        <button type="button"onClick={() => history.push('/createAccount')}>
                           Do you want to be a Teacher?
-                            </button>
+                        </button>
 
-                          </div>
-
-
-                        </div>
-
-                        {/* Display the proper form based on their choice */}
-                        {/* New User Enrolling */}
-                        {choice === 1 && (
-                          <form onSubmit={handleSubmitNew}>
-                            <div className="Flex Col JustifyCenter AlignItems">
-                              <h3>Thank you for Joining Preschool Patch!!</h3>
-                              <p>
-                            This will create your basic account so you can search and submit
-                            requests to local Patch Leaders.
-                              </p>
-
-                              <div className="Flex Col LoginForm BoxShadow FullSize">
-
-                                <BasicInput
-                                  title="Full Name"
-                                  type="text"
-                                  forLabel="name"
-                                  onChange={setNameLogin}
-                                  value={name}
-                                />
-
-                                <BasicInput
-                                  title="Email"
-                                  type="email"
-                                  forLabel="email"
-                                  onChange={setEmail}
-                                  value={email}
-                                />
-
-                                <BasicInput
-                                  title="Phone"
-                                  type="text"
-                                  forLabel="phone"
-                                  onChange={setPhoneLogin}
-                                  value={phone}
-                                />
-
-                                <BasicInput
-                                  title="Zipcode"
-                                  type="number"
-                                  forLabel="postal-code"
-                                  onChange={setZipcodeLogin}
-                                  value={zipcode}
-                                />
+                      </div>
 
 
-                                {/* Kid section */}
-                                <div className="Flex Col AlignItems SimpleBorder JustifyCenter" >
+                    </div>
 
-                                  <div className="PinkFont CursiveFont LargeFont">Children Info</div>
-                                  <p className="italic SmallFont">You can fill this out later.</p>
-
-                                  {kidTotal && kidTotal.map((kid, index) => (
-                                    <KidSection
-                                      key={kid.name + index.toString()}
-                                      location={index}
-                                      name={kid.name}
-                                      year={kid.year}
-                                      month={kid.month}
-                                      day={kid.day}
-                                      interest={kid.enrollment}
-                                      handleSetChildAge={handleSetChildAge}
-                                      handleSetChildName={handleSetChildName}
-                                      handleSetChildInterest={handleSetChildInterest}
-                                      handleSetBirthYear={handleSetBirthYear}
-                                      handleSetBirthMonth={handleSetBirthMonth}
-                                      handleSetBirthDay={handleSetBirthDay}
-                                    />
-                                  ))}
-
-                                  {/* Add new Kid Info */}
-                                  {kidTotal.length <= 4 ? (
-                                    <>
-                                      <button id={kidTotal.length} className="Add" type='button' onClick={(e) => addNewChildInfo(e)}>
-                                        <div> Add Additonal Child?</div>
-                                        <img src={Add} alt="Add new child info" />
-                                      </button>
-
-                                      {kidTotal.length > 0 && <div >
-                                        <div> Set Enrollment Level to None to remove a child from the list </div>
-
-                                      </div>
-                                      }
-                                    </>
-                                  )
-                                  // Once we hit our kid limit, disable adding more
-                                    : (
-                                      <div className="PinkFont">5 is the max for any single Preschool Patch!</div>
-                                    )}
-
-
-                                </div>
-
-                                <div>
-                                  <PasswordInput
-                                    handlePasswordVisibility={handlePasswordVisibility}
-                                    setPassword={setPassword}
-                                    password={password}
-                                    passwordType={passwordType}
-                                    passwordError={passwordError}
-                                  />
-                                </div>
-
-                                <div className="Margins SmallFont">{"By clicking 'Register,' you agree to our:"}
-                                  <br/>
-                                  <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
-                                </div>
-
-
-                                {formComplete && (
-                                  <>
-                                    {emailError || passwordError ? (
-                                      <div className="FakeButton">
-                                        Enter Valid Email and Password
-                                      </div>
-                                    ) : (
-                                      <>
-                                        <div className="Flex JustifyCenter AlignItems">
-                                          <button type="submit" className="RegisterButton HalfSize">
-                                            Register
-                                          </button>
-                                        </div>
-
-                                      </>
-                                    )}
-                                  </>
-                                )}
-
-                              </div>
-                              {loginError && <Error errorMessage={loginError} />}
-                            </div>
-                          </form>
-                        )}
-
-                      </>
-                    ) : (
-                    // Existing User
+                    {/* Display the proper form based on their choice */}
+                    {/* New User Enrolling */}
+                    {choice === 1 && (
                       <>
-                        {loadingUser ? (
-                          <Loader/>
-                        ) : (
-                          <FirebaseUI />
-                          // <>
-                          //   {/* Login Form */}
-                          //   {!forgotPassword
-                          //     ? (
-                          //       <form onSubmit={() => setLoadingUser(true)}>
-                          //         <div className="Flex Col JustifyCenter AlignItems">
-
-                        //           {/* Show login error up at the top so users can see it clearly */}
-                        //           {loginError ? (
-                        //             <Error errorMessage={loginError}/>
-                        //           ) : (
-                        //             <div className="CursiveFont PinkFont LargeFont">Welcome Back!</div>
-                        //           )}
-
-
-                        //           <div className="Flex Col LoginForm BoxShadow">
-                        //             <BasicInput
-                        //               title="Email"
-                        //               type="email"
-                        //               forLabel="email"
-                        //               onChange={setEmail}
-                        //               value={email}
-                        //             />
-
-                        //             <PasswordInput
-                        //               handlePasswordVisibility={handlePasswordVisibility}
-                        //               setPassword={setPassword}
-                        //               password={password}
-                        //               passwordType={passwordType}
-                        //               passwordError={passwordError}
-                        //             />
-
-
-                        //             {emailError || passwordError ? (
-                        //               <div className="FakeButton">
-                        //     Enter Valid Email and Password
-                        //               </div>
-                        //             ) : (
-                        //               <button type="submit">Login</button>
-                        //             )}
-                        //           </div>
-
-                        //           <button type="button" onClick={() => setForgotPassword(!forgotPassword)}> Forgot Password?</button>
-
-
-                        //         </div>
-                        //       </form>)
-                        //     : (
-
-                        //   // Password Reset Form
-                        //       <>
-                        //         {!resetSuccess ? (
-                        //           <form onSubmit={sendPasswordReset}>
-                        //             <div className="Flex Col JustifyCenter AlignItems">
-                        //               <div className="CursiveFont PinkFont LargeFont">Request Password Reset</div>
-                        //               <div className="Flex Col LoginForm BoxShadow">
-                        //                 <BasicInput
-                        //                   title="Email"
-                        //                   type="email"
-                        //                   forLabel="email"
-                        //                   onChange={setEmail}
-                        //                   value={email}
-                        //                 />
-
-                        //                 {emailError ? (
-                        //                   <div className="FakeButton">
-                        //                     Enter Valid Email
-                        //                   </div>
-                        //                 ) : (
-                        //                   <button type="submit">Reset Password</button>
-                        //                 )}
-                        //               </div>
-
-                        //               <button type="button" onClick={() => setForgotPassword(!forgotPassword)}>Oh! I remember it now!</button>
-
-                        //             </div>
-                        //           </form>
-                        //         ) : (
-                        //           <>
-                        //             <div className="PinkFont CursiveFont LargeFont"> Password has been reset!</div>
-                        //             <p>Please check your email</p>
-                        //           </>
-                        //         )}
-
-
-                        //       </>
-                        //     )}
-
-                        // </>
-                        )}
-
+                        <div className="Margins SmallFont">By Signing in, you agree to our:
+                          <br/>
+                          <Link to="/terms">Terms of Use</Link> and <Link to="/privacyPolicy">Privacy Policy.</Link>
+                        </div>
+                        <FirebaseUI uiConfig={uiConfigNewUser} isNewUser={true}/>
                       </>
                     )}
+
+                  </>
+                ) : (
+                // Existing User
+                  <>
+                    <FirebaseUI uiConfig={uiConfigReturningUser} isNewUser={false}/>
+
                   </>
                 )}
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="Flex JustifyCenter AlignItems">
-            <div className="PinkFont CursiveFont LargeFont SimpleBorder SeeThru ThreeQuarters">Please Check your email and verify your account before continuing</div>
+              </>
+            )}
           </div>
-        )
-        }
+        </div>
 
 
       </div>

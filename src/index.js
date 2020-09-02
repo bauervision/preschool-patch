@@ -46,7 +46,7 @@ const App = () => {
   const [redirect, setRedirect] = useState({ to: '/home' });
 
 
-  // keep messages updated
+  // TODO: replace with cloud messaging!
   useEffect(() => {
     if (myMessages?.length > 0) {
       myMessages.forEach((id) => {
@@ -184,7 +184,7 @@ const App = () => {
   };
 
   const handleLogOut = () => {
-    setRedirect({ to: '/home' });
+    setRedirect({ to: '/' });
     setPatchData(null);
     setClientData(null);
     setLoggedInUser(null);
@@ -371,6 +371,11 @@ const App = () => {
         });
       }
     }
+
+
+    if (loggedInUser === null) {
+      updateSuccess(false, 'No User Data Found');
+    }
   };
 
 
@@ -397,83 +402,86 @@ const App = () => {
     // eslint-disable-next-line
   }, [loggedInUser]);
 
-  const handleLogin = (user, newUserData, isaLeader) => {
-    // if we logged in a new user
-    if (newUserData) {
-      // create new user data with what we do know about the user, as well as some defaults
-      let newUser = {};
-      if (isaLeader) {
-        newUser = {
-          private: {
-            joined: user.metadata.creationTime,
-            lastLogin: user.metadata.lastSignInTime
-          },
-          public: {
-            aboutMe:
-                'I am brand new to Preschool Patch!  I will update my profile ASAP.',
-            active: true,
-            age: newUserData.age,
-            available: true,
-            email: newUserData.email,
-            bgCheckWilling: newUserData.backgroundCheck,
-            bgCheckComplete: false,
-            experience: newUserData.experience,
-            gallery: {
-              description: 'My home is ready for preschool learning!',
-              features: ['Warm and Inviting', 'Fenced in backyard'],
-              files: []
-            },
-            id: user.uid,
-            infants: newUserData.infants,
-            isLeader: true,
-            kidTotal: 0,
-            name: newUserData.displayName,
-            patchName: 'My Preschool Patch',
-            phone: newUserData.phoneNumber,
-            photoUrl: newUserData.photoUrl,
-            rating: 0,
-            rates: {
-              ft: 35,
-              pt: 45,
-              di: 60
-            },
-            zipcode: newUserData.zipcode
-          }
-        };
-      } else {
-        newUser = {
-          private: {
-            joined: user.metadata.creationTime,
-            lastLogin: user.metadata.lastSignInTime
-          },
-          public: {
-            active: true,
-            email: newUserData.email,
-            enrollment: { submitted: false },
-            id: user.uid,
-            isLeader: false,
-            children: newUserData.children,
-            name: newUserData.name,
-            zipcode: newUserData.zipcode,
-            photoUrl: newUserData.photoUrl,
-            phone: newUserData.phone,
-          }
-        };
-      }
+  const handleLogin = (data) => {
+    handleLoginCheck();
+  };
 
-      // now that we have some essential data in place, store this user into the database
-      // make sure we check to see if we are storing a leader, or simply a user in doing so
-      database
-        .ref(`${isaLeader ? 'leaders' : 'users'}/${user.uid}`)
-        .set(newUser).then(() => {
-          setLoggedInUser(newUser);
-        });
-      // }
+  const handleNewLogin = (data, isaLeader) => {
+    // create new user data with what we do know about the user, as well as some defaults
+    let newUser = {};
+    if (isaLeader) {
+      newUser = {
+        private: {
+          joined: data.user.metadata.creationTime,
+          lastLogin: data.user.metadata.lastSignInTime
+        },
+        public: {
+          aboutMe:
+                'I am brand new to Preschool Patch!  I will update my profile ASAP.',
+          active: true,
+          age: 18,
+          available: true,
+          email: data.user.email,
+          bgCheckWilling: false,
+          bgCheckComplete: false,
+          experience: '0',
+          gallery: {
+            description: 'My home is ready for preschool learning!',
+            features: ['Warm and Inviting', 'Safe and secure neighborhood'],
+            files: []
+          },
+          id: data.user.uid,
+          infants: false,
+          isLeader: true,
+          kidTotal: 0,
+          name: data.user.displayName,
+          patchName: 'My Preschool Patch',
+          phone: data.user.phoneNumber,
+          photoUrl: data.user.photoURL,
+          rating: 0,
+          rates: {
+            ft: 35,
+            pt: 45,
+            di: 60
+          },
+          zipcode: 0
+        }
+      };
+    } else {
+      newUser = {
+        private: {
+          joined: data.user.metadata?.creationTime,
+          lastLogin: data.user.metadata?.lastSignInTime
+        },
+        public: {
+          active: true,
+          email: data.user.email,
+          enrollment: { submitted: false },
+          id: data.user.uid,
+          isLeader: false,
+          children: [],
+          name: data.user.displayName,
+          zipcode: 0,
+          photoUrl: data.user.photoURL,
+          phone: data.user.phoneNumber,
+        }
+      };
     }
 
+    // now that we have some essential data in place, store this user into the database
+    // make sure we check to see if we are storing a leader, or simply a user in doing so
+    database
+      .ref(`${isaLeader ? 'leaders' : 'users'}/${data.user.uid}`)
+      .set(newUser).then(() => {
+        setLoggedInUser(newUser);
+      });
+    // }
+
+
     // regardless of who logged in...
-    handleLoginCheck(user);
+    handleLoginCheck(data.user);
   };
+
 
   const addNewChildInfo = () => {
     const newKid = { name: "Child's name", age: 2 };
@@ -494,7 +502,7 @@ const App = () => {
           <Route
             path="/createAccount"
             render={() => <CreateAccount
-              handleLogin={handleLogin}
+              handleLogin={handleNewLogin}
               loggedInUser={loggedInUser}
               isLeader={isLeader}
               clientData={clientData}
@@ -619,11 +627,10 @@ const App = () => {
           <Route
             path="/login" render={() => <Login
               handleLogin={handleLogin}
+              handleNewLogin={handleNewLogin}
               handleLogOut={handleLogOut}
               loggedInUser={loggedInUser}
-              kidTotal={kidTotal}
-              addNewChildInfo={addNewChildInfo}
-              clientData={clientData}
+
             />}/>
 
           <PrivateRoute path = '/payments/*' loggedInUser={loggedInUser}>

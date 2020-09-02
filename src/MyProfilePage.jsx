@@ -377,6 +377,7 @@ const MyProfilePage = ({ loggedInUser, isLeader, myMessages, userId, emailVerifi
     // });
   };
 
+
   return (
     <div>
       <div>

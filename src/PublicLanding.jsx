@@ -6,7 +6,7 @@ import Header from './Components/Header';
 import { Footer } from './Components/Footer';
 import { PatchLogo } from './Components';
 
-import { Elegant, IvyHeart, LoginPatch } from './images';
+import { Elegant, IvyHeart } from './images';
 
 
 const PublicLanding = ({
@@ -65,36 +65,23 @@ const PublicLanding = ({
             Max class size of 5 means that your child will not be just a
             number, but a nurtured student.
                 </div>
+                <div className="Flex">
+                  <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/login')}>
+                          Are you a Parent?
+                  </button>
 
-                <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/createAccount')}>
-                         Do you want to be a Teacher?
-                </button>
+                  <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/createAccount')}>
+                          Do you want to be a Teacher?
+                  </button>
+                </div>
 
               </div>
             </div>
 
           </div>
 
-          <div>
-            <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />
-          </div>
         </>
       )}
-
-      {/* no one logged in yet so just show the button to login */}
-      {!loggedInUser && (
-        <>
-          <div className="Flex JustifyCenter AlignItems Col">
-
-            <button className="ImageButton" type="button" onClick={() => history.push('/login')}>
-              <img src={LoginPatch} alt="login to view teachers" style={{ width: 400, height: 'auto' }}/>
-            </button>
-
-          </div>
-
-        </>
-      )}
-
 
       <div>
         <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />

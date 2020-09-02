@@ -9,7 +9,7 @@ import { Footer } from './Components/Footer';
 import Error from './Components/Error';
 import { Toast, Loader, EditField, PatchLogo } from './Components';
 
-import { Elegant, IvyHeart, LoginPatch } from './images';
+import { Elegant, IvyHeart } from './images';
 
 
 const Home = ({
@@ -22,9 +22,10 @@ const Home = ({
   userId,
   history,
   emailVerified,
-  redirect
+
 }) => {
   // handle local state
+
   const [leaderData, setLeaderData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
   const [filterAvail, setFilterAvail] = useState(false);
@@ -35,21 +36,14 @@ const Home = ({
   const [userZip, setUserZip] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // const getZip = async () => {
-  //   axios
-  //     .get('https://ipinfo.io?token=dda6c95f86991f')
-  //     .then((response) => {
-  //       // handle success
-  //       setUserZip(response.data.postal);
-  //     })
-  //     .catch((error) => {
-  //       // handle error
-  //       console.log(error);
-  //     })
-  //     .finally(() => {
-  //       // always executed
-  //     });
-  // };
+  useEffect(() => {
+    if (!loggedInUser) {
+      setErrorMessage('No account found with this login. Please login in again as a New User to create your account.');
+    } else {
+      setErrorMessage(null);
+    }
+  }, [loggedInUser]);
+
 
   /* make sure we fetch leader data for searching */
   useEffect(() => {
@@ -66,26 +60,14 @@ const Home = ({
           setLoadingLeaders(false);
         }
       }).catch((err) => {
-        console.error(err.message);
         setLoadingLeaders(false);
-        setErrorMessage('Error Retrieving Teacher Data');
+        setErrorMessage(err.message);
       });
     }
-
 
     // also let's get the zipcode for the current user while we're in mount
     // TODO: getZip();
   }, [filteredData]);
-
-
-  // handle initial login re-directs
-  // useEffect(() => {
-  //   // if we have a redirect, than this is the '/' route which means we want to push the user
-  //   // to a desired location upon initial login
-  //   if (redirect) {
-  //     history.push(redirect.to);
-  //   }
-  // }, [history, redirect]);
 
   useEffect(() => {
     if (loggedInUser) {
@@ -171,61 +153,67 @@ const Home = ({
 
       {/* Top Left Title if we're logged in*/}
       {loggedInUser
-      && <div className="CursiveFont SuperFont TextLeft Buffer HideMobile">Preschool Patch</div>
+      && <div className="CursiveFont SuperFont TextLeft Buffer HideMobile">Preschool Patch!</div>
       }
 
       {/* Initial Public display */}
-      {!loggedInUser && (
+      {!loggedInUser ? (
         <>
-          <div className="Flex AlignItems JustifyCenter Buffer ">
-
-            <div className="HideMobile">
-              <PatchLogo/></div>
-
-
-          </div>
-
-
-          <div className="Flex Col JustifyCenter Buffer MarginTopMobileHome">
-
-            <div className="Tab SeeThru">
-
-
-              <div>
-                <img src={IvyHeart} alt="ivy" className="Padding MarginTopMobileHome" style={{ width: '30em' }}/>
+          {errorMessage !== null ? (
+            <div>
+              <div className="Flex AlignItems JustifyCenter Buffer ">
+                <div className="HideMobile">
+                  <PatchLogo/></div>
+              </div>
+              <Error errorMessage = {errorMessage}/>
+              <button style={{ width: '25%' }} className="Margins TeacherButton TextCenter" type="button" onClick={() => history.push('/login')}> Login</button>
+            </div>
+          ) : (
+            <>
+              <div className="Flex AlignItems JustifyCenter Buffer ">
+                <div className="HideMobile">
+                  <PatchLogo/></div>
               </div>
 
 
-              {/* How it Works: Details */}
-              <div className="Flex Col JustifyCenter AlignItems GreenFill TabBottom">
+              <div className="Flex Col JustifyCenter Buffer MarginTopMobileHome">
 
-                <div className="Buffer Raleway MediumFont">
-                  {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
-                  <br />
-                  <br />
+                <div className="Tab SeeThru">
+
+
+                  <div>
+                    <img src={IvyHeart} alt="ivy" className="Padding MarginTopMobileHome" style={{ width: '30em' }}/>
+                  </div>
+
+
+                  {/* How it Works: Details */}
+                  <div className="Flex Col JustifyCenter AlignItems GreenFill TabBottom">
+
+                    <div className="Buffer Raleway MediumFont">
+                      {"Preschool Patch offers a small group setting designed to elevate your child's education and social interactions in a warm, inviting, and safe space."}
+                      <br />
+                      <br />
             Max class size of 5 means that your child will not be just a
             number, but a nurtured student.
+                    </div>
+                    <div className="Flex">
+                      <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/login')}>
+                          Are you a Parent?
+                      </button>
+
+                      <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/createAccount')}>
+                          Do you want to be a Teacher?
+                      </button>
+                    </div>
+
+                  </div>
                 </div>
 
-                <button className="Margins TeacherButton TextCenter" type="button"onClick={() => history.push('/createAccount')}>
-                          Do you want to be a Teacher?
-                </button>
-
               </div>
-            </div>
-
-          </div>
-
-          <div>
-            <img src={Elegant} alt="decorative" className="responsive filter-green Margins" />
-          </div>
-
+            </>)}
 
         </>
-      )}
-
-      {/* Show loader if data is still coming in */}
-      {loggedInUser ? (
+      ) : (
         <>
           {errorMessage !== null ? (
             <Error errorMessage = {errorMessage}/>
@@ -240,13 +228,13 @@ const Home = ({
                   {!showTeacher ? (
                     <>
                       <div className="CursiveFont SuperFont Buffer PinkFont ">
-                Find a local preschool teacher!
+                  Find a local preschool teacher!
                       </div>
 
                       {/* Filter data by zipcode */}
                       <div className="Flex JustifyCenter AlignItems MobileRowToCol">
                         <div className="Flex AlignItems MediumFont">
-                Show only Teachers in your zipcode?
+                  Show only Teachers in your zipcode?
                           <EditField
                             isCheck
                             type="checkbox"
@@ -256,18 +244,18 @@ const Home = ({
                           />
                         </div>
                         {filterZip
-                && (
-                  <div className="">
-                    <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
-                    <input
-                      placeholder="Enter your Zipcode"
-                      style={{ width: 200 }}
-                      className="InputStyle"
-                      onChange={(e) => setUserZip(e.target.value)}
-                      maxLength="5"
-                    />
-                    <button type="button" onClick={handleZipFilter}>Update</button>
-                  </div>)
+                  && (
+                    <div className="">
+                      <div className="LargeFont PinkFont MarginTiny">{userZip}</div>
+                      <input
+                        placeholder="Enter your Zipcode"
+                        style={{ width: 200 }}
+                        className="InputStyle"
+                        onChange={(e) => setUserZip(e.target.value)}
+                        maxLength="5"
+                      />
+                      <button type="button" onClick={handleZipFilter}>Update</button>
+                    </div>)
                         }
                       </div>
 
@@ -297,24 +285,24 @@ const Home = ({
                     </>
                   ) : (
                     <div className="CursiveFont SuperFont Buffer">
-                Explore some example profiles of our most successful Patches!
+                  Explore some example profiles of our most successful Patches!
                     </div>
                   )}
                   {filteredData?.length > 0
-            && <div className="MediumFont">{filteredData?.length} teachers found</div>}
+              && <div className="MediumFont">{filteredData?.length} teachers found</div>}
 
                   <div className="PublicLanding_Container JustifyCenter BoxShadow ">
 
                     {filteredData?.length !== 0 ? (
-                filteredData?.map((elem) => {
-                  return (
-                    <ProfileCard
-                      key={elem.name}
-                      data={elem}
-                      handleSelection={handleSelection}
-                    />
-                  );
-                })) : (
+                  filteredData?.map((elem) => {
+                    return (
+                      <ProfileCard
+                        key={elem.name}
+                        data={elem}
+                        handleSelection={handleSelection}
+                      />
+                    );
+                  })) : (
                       <div style={{ padding: 40 }}>
                         <h3>{'No Patch Leaders yet. :('}</h3>
                         <div>Maybe you can be the first.....?</div>
@@ -330,18 +318,6 @@ const Home = ({
               )}
             </>
           )}
-
-        </>
-      ) : (
-        <>
-          <div className="Flex JustifyCenter AlignItems Col">
-            <h2>Please Login to view our database of Preschool Patch Teachers!</h2>
-            <button className="ImageButton" type="button" onClick={() => history.push('/login')}>
-              <img src={LoginPatch} alt="login to view teachers" style={{ width: 400, height: 'auto' }}/>
-            </button>
-
-          </div>
-
         </>
       )}
 

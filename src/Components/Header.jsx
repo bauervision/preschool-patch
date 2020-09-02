@@ -33,8 +33,8 @@ const Header = ({
   }, [myMessages, userId]);
 
   const LogOut = () => {
-    history.push('/');
     SignUserOut();
+    history.push('/login');
   };
 
 

@@ -11,6 +11,8 @@
       }
     },
       "leaders": {
+        ".read" : "auth.token.email_verified === true",
+        ".write": "auth.token.email_verified === true",
       "$uid": {
         ".read" : "auth.token.email_verified === true",
         ".write": "$uid === auth.uid"

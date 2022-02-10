@@ -11,7 +11,7 @@
     "firebase": "^7.14.2",
     "firebaseui": "^4.6.1",
     "moment": "^2.24.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "nodemailer": "^6.4.6",
     "react": "16.12.0",
     "react-dom": "16.12.0",
